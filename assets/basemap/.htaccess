@@ -1,0 +1,11 @@
+# Векторные тайлы подложки: правильный тип, сжатие и кэш (Apache)
+<IfModule mod_mime.c>
+  AddType application/x-protobuf .pbf
+</IfModule>
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/x-protobuf application/json
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType application/x-protobuf "access plus 30 days"
+</IfModule>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ГИС-реконструкция поселений Екатеринбургской агломерации</title>
+<link rel="stylesheet" href="css/style.css?v=20260912-kartograf">
+</head>
+<body>
+
+<!-- НАВИГАЦИЯ -->
+<nav class="nav">
+  <div class="nav-logo">Е</div>
+  <div class="nav-title">ГИС<br>Екатеринбург</div>
+  <button class="burger" id="burgerBtn" type="button" aria-label="Открыть меню" aria-controls="mobileMenu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="nav-items">
+    <a class="nav-item active" data-page="map"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 8L8 14L20 20L32 14Z"/><path d="M8 20L20 26L32 20"/></svg>Карта</a>
+    <a class="nav-item" data-page="method"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="13" cy="13" r="3.5"/><circle cx="27" cy="13" r="3.5"/><circle cx="13" cy="27" r="3.5"/><circle cx="27" cy="27" r="3.5"/><line x1="13" y1="16.5" x2="13" y2="23.5"/><line x1="27" y1="16.5" x2="27" y2="23.5"/><line x1="16.5" y1="13" x2="23.5" y2="13"/><line x1="16.5" y1="27" x2="23.5" y2="27"/></svg>Методология</a>
+    <a class="nav-item" data-page="glossary"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="5" width="22" height="30" rx="1.5"/><line x1="15" y1="12" x2="25" y2="12"/><line x1="15" y1="18" x2="25" y2="18"/><line x1="15" y1="24" x2="22" y2="24"/></svg>Глоссарий</a>
+    <a class="nav-item" data-page="info"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="22" width="6" height="12" rx="0.5"/><rect x="17" y="14" width="6" height="20" rx="0.5"/><rect x="26" y="6" width="6" height="28" rx="0.5"/><line x1="8" y1="34" x2="32" y2="34"/></svg>Инфографика</a>
+    <a class="nav-item" data-page="data"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="20" cy="10" rx="11" ry="4.5"/><path d="M9 10v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V10"/><path d="M9 16v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V16"/><path d="M9 22v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V22"/></svg>Данные</a>
+    <a class="nav-item" data-page="team"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="13" r="5.5"/><path d="M9 34c0-5 4.5-9.5 11-9.5s11 4.5 11 9.5"/></svg>Команда</a>
+  </div>
+  <div class="nav-counter" id="navCounter">Показано: <b id="statShown">0</b> / <span id="statTotal">0</span></div>
+
+<!-- Плавающая кнопка переключения темы -->
+<button class="theme-toggle floating" id="themeToggle" type="button" title="Переключить тему" aria-label="Переключить тему">
+  <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+  <svg class="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+</button>
+
+</nav>
+
+<!-- МОБИЛЬНОЕ МЕНЮ -->
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <a class="nav-item active" data-page="map" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 8L8 14L20 20L32 14Z"/><path d="M8 20L20 26L32 20"/></svg>Карта</a>
+  <a class="nav-item" data-page="method" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="13" cy="13" r="3.5"/><circle cx="27" cy="13" r="3.5"/><circle cx="13" cy="27" r="3.5"/><circle cx="27" cy="27" r="3.5"/><line x1="13" y1="16.5" x2="13" y2="23.5"/><line x1="27" y1="16.5" x2="27" y2="23.5"/><line x1="16.5" y1="13" x2="23.5" y2="13"/><line x1="16.5" y1="27" x2="23.5" y2="27"/></svg>Методология</a>
+  <a class="nav-item" data-page="glossary" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="5" width="22" height="30" rx="1.5"/><line x1="15" y1="12" x2="25" y2="12"/><line x1="15" y1="18" x2="25" y2="18"/><line x1="15" y1="24" x2="22" y2="24"/></svg>Глоссарий</a>
+  <a class="nav-item" data-page="info" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="22" width="6" height="12" rx="0.5"/><rect x="17" y="14" width="6" height="20" rx="0.5"/><rect x="26" y="6" width="6" height="28" rx="0.5"/><line x1="8" y1="34" x2="32" y2="34"/></svg>Инфографика</a>
+  <a class="nav-item" data-page="data" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="20" cy="10" rx="11" ry="4.5"/><path d="M9 10v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V10"/><path d="M9 16v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V16"/><path d="M9 22v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V22"/></svg>Данные</a>
+  <a class="nav-item" data-page="team" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="13" r="5.5"/><path d="M9 34c0-5 4.5-9.5 11-9.5s11 4.5 11 9.5"/></svg>Команда</a>
+</div>
+
+<!-- СТРАНИЦА: КАРТА -->
+<div class="page map-page active" id="page-map">
+  <button class="sidebar-toggle" id="sidebarToggle">Фильтры</button>
+  <button class="sidebar-backdrop" id="sidebarBackdrop" type="button" aria-label="Закрыть фильтры" tabindex="-1"></button>
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-handle" id="sidebarHandle" type="button" aria-controls="sidebarContent" aria-expanded="false">
+      <span class="sidebar-handle-bar"></span>
+      <span class="sidebar-handle-summary">
+        <span class="sidebar-handle-label">Фильтры и поиск</span>
+        <span class="mobile-map-status" id="mobileMapStatus">Загрузка объектов…</span>
+      </span>
+      <svg class="sidebar-handle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m7 14 5-5 5 5"/></svg>
+    </button>
+    <div class="sidebar-content" id="sidebarContent" tabindex="-1">
+    <div class="welcome-panel" id="welcomePanel"><button class="welcome-close" onclick="this.parentElement.style.display='none'">×</button><div class="welcome-title">О проекте</div><div class="welcome-text">ГИС-реконструкция поселений Екатеринбургской агломерации по материалам ведомостей 1809–1810 гг. На карте отмечены 2 570 усадеб трёх поселений. Используйте фильтры и поиск по фамилии владельца.</div></div>
+    <div class="search-box">
+      <svg class="search-svg" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#8A7F70" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="12.5" y1="12.5" x2="18" y2="18" stroke-linecap="round"/></svg>
+      <input type="text" id="searchInput" placeholder="Поиск по фамилии владельца..."/>
+      <button class="search-clear" id="searchClear" onclick="clearSearch()">×</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+    <div class="active-bar" id="activeBar"><div class="active-bar-header"><span class="active-bar-label">Активные фильтры</span><button class="clear-btn" onclick="clearAll()">Сбросить</button></div><div class="tags" id="activeTags"></div></div>
+      <div class="selected-section" id="selectedSection" style="display:none"><div class="filter-title">Выбранный участок</div><div class="selected-card" id="selectedCard"></div></div>
+    <div id="filtersContainer"></div>
+    </div>
+  </aside>
+  <div class="map-area">
+    <div id="map"></div>
+    <div class="cross-badge" id="crossBadge"><span class="cross-dot"></span><span id="crossText"></span></div>
+    <div class="overlay-control" id="overlayControl" style="display:none">
+      <button class="overlay-control-toggle" id="overlayControlToggle" type="button" aria-controls="overlaySettings" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m12 3-9 5 9 5 9-5-9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></svg>
+        <span>Слои карты</span>
+      </button>
+      <div class="overlay-settings" id="overlaySettings">
+        <label><input type="checkbox" id="overlayToggle"/> Исторические планы</label>
+        <label class="overlay-opacity">Прозрачность <input type="range" id="overlayOpacity" min="0" max="100" value="45" aria-label="Прозрачность исторических планов"/></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- СТРАНИЦА: МЕТОДОЛОГИЯ (ЛОНГРИД) -->
+<div class="page" id="page-method">
+  <div class="page-scroll">
+    <div class="hero-dark">
+      <div class="hero-label">МЕТОДОЛОГИЯ РЕКОНСТРУКЦИИ</div>
+      <div class="page-title" style="font-size:36px">От архивного документа<br>к интерактивной карте</div>
+      <div class="page-sub">Поселения Екатеринбургской агломерации по ведомостям 1809–1810 гг.</div>
+    </div>
+
+    <div class="lr-section">
+      <div class="section-title">Предыстория проекта</div>
+      <div class="lr-text">Идея проекта восходит к исследованиям А. В. Злоказова. В 2023–2026 гг. командой студентов Исторического факультета УрФУ был реализован ГИС-проект по материалам ведомостей обывательских строений и планов заводских селений, составленных в 1809–1810 гг. Проект охватывает три населённых пункта: Екатеринбургский завод, Нижне-Исетский завод и Уктусский завод.</div>
+      <div class="lr-text">Ведомости обывательских строений - уникальный массовый источник, содержащий поимённые списки всех домовладельцев заводских селений с указанием их сословной принадлежности, чина, должности, характера строений и размера усадебного участка. В сочетании с сохранившимися планами застройки эти документы позволяют провести детальную пространственную реконструкцию городской среды начала XIX века.</div>
+      <div class="lr-img-placeholder">[ сюда вставим фото ведомости ]</div>
+      <div class="lr-caption">Подпись к фото ведомости</div>
+    </div>
+
+    <div class="lr-section">
+      <div class="section-title">Этапы работы</div>
+      <div class="timeline">
+        <div class="tl-step"><div class="tl-num">1</div><div style="flex:1"><div class="tl-title">Сбор и оцифровка архивных материалов</div><div class="tl-desc">Работа с ведомостями ГАСО (Ф. 59. Оп. 7. Д. 353). Фотофиксация более 120 листов рукописного текста XVIII–XIX вв. Каждый лист содержит табличную запись с информацией о домовладельце: фамилия, имя, отчество, сословие, чин или должность, характеристика строений и площадь усадебного участка в квадратных саженях.</div><div class="tl-gif">[ сюда добавим гифку с фотосъёмкой ]</div></div></div>
+        <div class="tl-step"><div class="tl-num">2</div><div style="flex:1"><div class="tl-title">Создание базы данных</div><div class="tl-desc">2 570 записей, более 20 атрибутивных полей. Расшифровка скорописи начала XIX века потребовала консультаций с палеографами и историками-архивистами. База данных включает сведения о владельце (ФИО, сословие, чин, род службы, место приписки, место службы), характеристики строения (тип постройки, материал) и параметры участка (площадь в квадратных саженях).</div><div class="tl-gif">[ сюда добавим гифку с заполнением таблицы ]</div></div></div>
+        <div class="tl-step"><div class="tl-num">3</div><div style="flex:1"><div class="tl-title">Геореферирование исторических планов</div><div class="tl-desc">Привязка исторических планов заводских селений к современной картографической основе в программе QGIS. Для каждого поселения использовался собственный подход: для Екатеринбурга - план города 1809 г. с сохранившейся регулярной сеткой улиц, для Нижне-Исетска и Уктуса - планы заводов с привязкой по характерным точкам ландшафта (русла рек, плотины, дороги).</div><div class="tl-gif">[ сюда добавим гифку с геореферированием ]</div></div></div>
+        <div class="tl-step"><div class="tl-num">4</div><div style="flex:1"><div class="tl-title">Векторизация архивного плана</div><div class="tl-desc">Обрисовка полигонов усадебных участков поверх привязанного растра в QGIS. Каждый полигон получил уникальный идентификатор, соответствующий номеру записи в ведомости. Всего оцифровано 2 570 участков в трёх поселениях.</div><div class="tl-gif">[ сюда добавим гифку с обрисовкой полигонов ]</div></div></div>
+        <div class="tl-step"><div class="tl-num">5</div><div style="flex:1"><div class="tl-title">Связывание с базой данных</div><div class="tl-desc">Соединение векторного слоя с атрибутами из базы данных через общий ключ - номер усадьбы. Результат: каждый полигон на карте содержит всю информацию о владельце, строении и участке из ведомости.</div></div></div>
+        <div class="tl-step"><div class="tl-num">6</div><div style="flex:1"><div class="tl-title">Анализ и визуализация</div><div class="tl-desc">Расчёт статистических показателей: распределение усадеб по сословиям, средние площади участков, географическая концентрация социальных групп. Создание тематических карт и инфографики.</div></div></div>
+        <div class="tl-step"><div class="tl-num">7</div><div style="flex:1"><div class="tl-title">Публикация</div><div class="tl-desc">Разработка интерактивного веб-приложения для визуализации результатов. Открытые датасеты доступны для скачивания в разделе «Данные». Результаты проекта представлены в научных публикациях.</div></div></div>
+      </div>
+    </div>
+
+    <div class="lr-section">
+      <div class="section-title">Источниковая база</div>
+      <div class="lr-columns">
+        <div>
+          <div class="lr-text">Основной источник - ведомости обывательских строений Екатеринбургского, Нижне-Исетского и Уктусского заводов, составленные в 1809–1810 гг. и хранящиеся в фондах Государственного архива Свердловской области (ГАСО).</div>
+          <div class="lr-highlight">
+            <div class="lr-highlight-num">120+</div>
+            <div class="lr-highlight-text">листов архивных документов оцифровано и введено в базу данных</div>
+          </div>
+        </div>
+        <div>
+          <div class="lr-text">Картографические источники - планы заводских селений начала XIX века, показывающие расположение кварталов, улиц и отдельных усадебных участков. Планы были геореферированы (привязаны к географическим координатам) и использованы как основа для векторизации.</div>
+          <div class="lr-highlight">
+            <div class="lr-highlight-num">3</div>
+            <div class="lr-highlight-text">исторических плана привязаны к современной карте с точностью до отдельных участков</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- СТРАНИЦА: ГЛОССАРИЙ -->
+<div class="page" id="page-glossary">
+  <div class="page-scroll">
+    <div class="page-title">Глоссарий</div>
+    <div class="page-sub">Термины, встречающиеся в ведомостях и планах 1809–1810 гг.</div>
+    <input class="gl-search" type="text" id="glSearch" placeholder="Полнотекстовый поиск по термину..."/>
+    <div class="gl-modes">
+      <div class="gl-mode active">По алфавиту</div>
+      <div class="gl-mode">По тематике</div>
+    </div>
+    <div class="gl-cats" id="glCats" style="display:none">
+      <div class="gl-cat-btn" data-cat="Сословно-профессиональные группы"><div class="gl-cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="7" r="3.5"/><path d="M2 20c0-4 3-7 7-7s7 3 7 7"/><circle cx="17" cy="9" r="2.5" opacity=".5"/><path d="M14 20c0-3 2-5.5 5-5.5" opacity=".5"/></svg></div><div class="gl-cat-name">Сословно-профессиональные группы</div></div>
+      <div class="gl-cat-btn" data-cat="Городская среда и топонимика"><div class="gl-cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2V6z"/><line x1="9" y1="4" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="20"/></svg></div><div class="gl-cat-name">Городская среда и топонимика</div></div>
+      <div class="gl-cat-btn" data-cat="Производство"><div class="gl-cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3 21V10l6 4v-4l6 4V6h4l2 15H3z"/><path d="M6 18h2m3 0h2m3 0h2"/></svg></div><div class="gl-cat-name">Производство</div></div>
+      <div class="gl-cat-btn" data-cat="Чины"><div class="gl-cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="9" r="5"/><path d="M8 13l-2 9 6-3 6 3-2-9"/><circle cx="12" cy="9" r="2" opacity=".4"/></svg></div><div class="gl-cat-name">Чины</div></div>
+      <div class="gl-cat-btn" data-cat="Метрология"><div class="gl-cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="8" width="20" height="8" rx="1"/><line x1="6" y1="8" x2="6" y2="12"/><line x1="10" y1="8" x2="10" y2="14"/><line x1="14" y1="8" x2="14" y2="12"/><line x1="18" y1="8" x2="18" y2="14"/></svg></div><div class="gl-cat-name">Метрология</div></div>
+      <div class="gl-cat-btn" data-cat="Учреждения"><div class="gl-cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18"/><path d="M5 21V10"/><path d="M19 21V10"/><path d="M9 21V10"/><path d="M15 21V10"/><path d="M12 3L2 10h20L12 3z"/></svg></div><div class="gl-cat-name">Учреждения</div></div>
+      <div class="gl-cat-btn" data-cat="Занятия"><div class="gl-cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2"/></svg></div><div class="gl-cat-name">Занятия</div></div>
+      <div class="gl-cat-btn" data-cat="Документы"><div class="gl-cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-6-6H6z"/><path d="M14 3v4a2 2 0 0 0 2 2h4"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg></div><div class="gl-cat-name">Документы</div></div>
+    </div>
+    <div class="gl-alpha" id="glAlpha"></div>
+    <div id="glossaryList">
+      <div class="gl-letter">А</div>
+      <div class="gl-entry"><div class="gl-cat">Метрология</div><div class="gl-body"><div class="gl-term">Аршин</div><div class="gl-desc">Русская мера длины, равная 0,71 м (16 вершков). В ведомостях используется для указания размеров усадеб наряду с саженями.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Метрология</div><div class="gl-body"><div class="gl-term">Ассигнация</div><div class="gl-desc">Бумажные деньги Российской империи, введённые в обращение в 1769 году. В ведомостях стоимость имущества часто указывалась в ассигнациях.</div></div></div>
+      <div class="gl-letter">Б</div>
+      <div class="gl-entry"><div class="gl-cat">Чины</div><div class="gl-body"><div class="gl-term">Берг-гешворен</div><div class="gl-desc">Горный чин XIII класса Табели о рангах. Должностное лицо при горных заводах, ведавшее рудными промыслами.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Чины</div><div class="gl-body"><div class="gl-term">Бергмейстер</div><div class="gl-desc">Горный чин VIII класса. Руководитель горнозаводского округа или крупного завода.</div></div></div>
+      <div class="gl-letter">В</div>
+      <div class="gl-entry"><div class="gl-cat">Документы</div><div class="gl-body"><div class="gl-term">Ведомость обывательских строений</div><div class="gl-desc">Документ, содержащий перечень всех строений и их владельцев в заводском селении. Основной источник для ГИС-реконструкции.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Производство</div><div class="gl-body"><div class="gl-term">Верстак</div><div class="gl-desc">Рабочее место для обработки материалов. Характерен для мастеровых при горных заводах.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Метрология</div><div class="gl-body"><div class="gl-term">Вершок</div><div class="gl-desc">Русская мера длины, равная 4,4 см. 16 вершков составляли один аршин.</div></div></div>
+      <div class="gl-letter">Г</div>
+      <div class="gl-entry"><div class="gl-cat">Чины</div><div class="gl-body"><div class="gl-term">Гитен-фервальтер</div><div class="gl-desc">Горный чин XII класса Табели о рангах. Руководил литейным производством на горном заводе.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Чины</div><div class="gl-body"><div class="gl-term">Горный начальник</div><div class="gl-desc">Должностное лицо, осуществлявшее руководство горнозаводским округом и подчинёнными ему заводами.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Чины</div><div class="gl-body"><div class="gl-term">Губернский секретарь</div><div class="gl-desc">Гражданский чин XII класса Табели о рангах. Соответствовал поручику в военной иерархии.</div></div></div>
+      <div class="gl-letter">Д</div>
+      <div class="gl-entry"><div class="gl-cat">Метрология</div><div class="gl-body"><div class="gl-term">Десятина</div><div class="gl-desc">Мера земельной площади в Российской империи. Равна приблизительно 1,09 гектара (2 400 кв. саженей).</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Сословно-профессиональные группы</div><div class="gl-body"><div class="gl-term">Дворяне</div><div class="gl-desc">Привилегированное сословие. На Урале - преимущественно горные офицеры и чиновники, владевшие крупными усадьбами в центральных кварталах.</div></div></div>
+      <div class="gl-letter">З</div>
+      <div class="gl-entry"><div class="gl-cat">Производство</div><div class="gl-body"><div class="gl-term">Заводская контора</div><div class="gl-desc">Административный центр управления горным заводом. В Екатеринбурге - Главная контора Екатеринбургских заводов.</div></div></div>
+      <div class="gl-letter">К</div>
+      <div class="gl-entry"><div class="gl-cat">Чины</div><div class="gl-body"><div class="gl-term">Канцелярист</div><div class="gl-desc">Низший гражданский чин, не включённый в Табель о рангах. Канцелярские служители занимались делопроизводством.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Чины</div><div class="gl-body"><div class="gl-term">Коллежский асессор</div><div class="gl-desc">Гражданский чин VIII класса. Давал право на потомственное дворянство. Соответствовал майору в армии.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Сословно-профессиональные группы</div><div class="gl-body"><div class="gl-term">Купец</div><div class="gl-desc">Представитель торгового сословия. Купцы делились на гильдии по размеру объявленного капитала. Владели крупными усадьбами.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Сословно-профессиональные группы</div><div class="gl-body"><div class="gl-term">Крестьяне</div><div class="gl-desc">Сельское податное сословие. В заводских селениях - преимущественно приписные крестьяне, работавшие на заводах.</div></div></div>
+      <div class="gl-letter">М</div>
+      <div class="gl-entry"><div class="gl-cat">Сословно-профессиональные группы</div><div class="gl-body"><div class="gl-term">Мастеровой</div><div class="gl-desc">Категория работников горных заводов, обладавших квалификацией. Крупнейшая социальная группа Екатеринбурга начала XIX века (1 134 усадьбы).</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Сословно-профессиональные группы</div><div class="gl-body"><div class="gl-term">Мещанин</div><div class="gl-desc">Городское податное сословие в Российской империи. Мещане занимались мелкой торговлей, ремеслом, промыслами.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Производство</div><div class="gl-body"><div class="gl-term">Монетный двор</div><div class="gl-desc">Предприятие по чеканке монет. Екатеринбургский монетный двор - одно из крупнейших производств города в начале XIX века.</div></div></div>
+      <div class="gl-letter">Н</div>
+      <div class="gl-entry"><div class="gl-cat">Сословно-профессиональные группы</div><div class="gl-body"><div class="gl-term">Непременный работник</div><div class="gl-desc">Категория казённых крестьян, приписанных к горным заводам для выполнения вспомогательных работ.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Топография</div><div class="gl-body"><div class="gl-term">Нижне-Исетский завод</div><div class="gl-desc">Казённый железоделательный завод, основанный в 1789 г. на реке Исеть. В ведомости 1809 г. учтены 243 усадьбы.</div></div></div>
+      <div class="gl-letter">О</div>
+      <div class="gl-entry"><div class="gl-cat">Чины</div><div class="gl-body"><div class="gl-term">Обергитенфервальтер</div><div class="gl-desc">Горный чин X класса. Заведующий плавильным производством на горном заводе.</div></div></div>
+      <div class="gl-letter">П</div>
+      <div class="gl-entry"><div class="gl-cat">Документы</div><div class="gl-body"><div class="gl-term">План заводского селения</div><div class="gl-desc">Картографический документ, показывающий расположение улиц, кварталов и отдельных усадебных участков. Основа для геореферирования.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Топография</div><div class="gl-body"><div class="gl-term">Плотина</div><div class="gl-desc">Гидротехническое сооружение - основа любого уральского завода. Обеспечивала энергией заводские механизмы.</div></div></div>
+      <div class="gl-letter">С</div>
+      <div class="gl-entry"><div class="gl-cat">Метрология</div><div class="gl-body"><div class="gl-term">Сажень</div><div class="gl-desc">Русская мера длины, равная 2,13 м (3 аршина). Квадратная сажень (4,55 м²) использовалась для измерения площади усадеб в ведомостях.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Сословно-профессиональные группы</div><div class="gl-body"><div class="gl-term">Солдат</div><div class="gl-desc">Военнослужащий нижнего чина. При заводах несли службу солдаты штатных команд, охранявших казённое имущество.</div></div></div>
+      <div class="gl-letter">Т</div>
+      <div class="gl-entry"><div class="gl-cat">Чины</div><div class="gl-body"><div class="gl-term">Титулярный советник</div><div class="gl-desc">Гражданский чин IX класса Табели о рангах. До 1845 г. давал право на личное дворянство.</div></div></div>
+      <div class="gl-letter">У</div>
+      <div class="gl-entry"><div class="gl-cat">Топография</div><div class="gl-body"><div class="gl-term">Уктусский завод</div><div class="gl-desc">Один из первых казённых заводов Урала (основан в 1704 г.). К 1809 г. - небольшое поселение с 224 усадьбами.</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Топография</div><div class="gl-body"><div class="gl-term">Усадьба</div><div class="gl-desc">Земельный участок с жилым домом и хозяйственными постройками. Основная единица учёта в ведомостях обывательских строений.</div></div></div>
+      <div class="gl-letter">Ш</div>
+      <div class="gl-entry"><div class="gl-cat">Чины</div><div class="gl-body"><div class="gl-term">Шихтмейстер</div><div class="gl-desc">Горный чин XIV класса (низший). Заведующий шихтованием (подготовкой руды к плавке).</div></div></div>
+      <div class="gl-entry"><div class="gl-cat">Учреждения</div><div class="gl-body"><div class="gl-term">Штатная команда</div><div class="gl-desc">Военное подразделение, несшее гарнизонную службу при заводе. Солдаты штатных команд нередко владели усадьбами.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- СТРАНИЦА: ИНФОГРАФИКА -->
+<div class="page" id="page-info">
+  <div class="page-scroll">
+    <div class="page-title">Инфографика</div>
+    <div class="page-sub">Екатеринбургская агломерация в цифрах. По данным ведомостей 1809–1810 гг.</div>
+    <div class="info-grid" id="infoGrid"></div>
+    <div class="stat-row" id="statRow"></div>
+  </div>
+</div>
+
+<!-- СТРАНИЦА: ДАННЫЕ -->
+<div class="page" id="page-data">
+  <div class="page-scroll">
+    <div class="page-title">Источники и датасеты</div>
+    <div class="page-sub">Скачайте данные проекта. Лицензия CC BY 4.0</div>
+    <div class="content-card" style="background:var(--accent-bg);margin-bottom:16px">
+      <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:1.5px;margin-bottom:4px">ЦИТИРОВАНИЕ</div>
+      <div style="font-size:12px;color:var(--body)">Пименова К. Д. и др. ГИС-реконструкция поселений Екатеринбургской агломерации (1809–1810). УрФУ, 2023–2026.</div>
+    </div>
+    <!-- <div class="ds-grid">
+      <div class="ds-card"><div class="ds-icon"><svg viewBox="0 0 40 40" fill="none" stroke="var(--ekb)" stroke-width="1.5"><ellipse cx="20" cy="10" rx="12" ry="5"/><path d="M8 10V24C8 27 13 30 20 30S32 27 32 24V10"/><path d="M8 17C8 20 13 23 20 23S32 20 32 17"/></svg></div><div><div class="ds-title">Екатеринбург</div><div class="ds-meta">2 103 усадьбы / 30 атрибутов</div></div><button class="ds-btn" onclick="downloadCSV('Екатеринбург')">Скачать CSV</button></div>
+      <div class="ds-card"><div class="ds-icon"><svg viewBox="0 0 40 40" fill="none" stroke="var(--niz)" stroke-width="1.5"><ellipse cx="20" cy="10" rx="12" ry="5"/><path d="M8 10V24C8 27 13 30 20 30S32 27 32 24V10"/><path d="M8 17C8 20 13 23 20 23S32 20 32 17"/></svg></div><div><div class="ds-title">Нижне-Исетск</div><div class="ds-meta">243 усадьбы / 20 атрибутов</div></div><button class="ds-btn" onclick="downloadCSV('Нижне-Исетск')">Скачать CSV</button></div>
+      <div class="ds-card"><div class="ds-icon"><svg viewBox="0 0 40 40" fill="none" stroke="var(--ukt)" stroke-width="1.5"><ellipse cx="20" cy="10" rx="12" ry="5"/><path d="M8 10V24C8 27 13 30 20 30S32 27 32 24V10"/><path d="M8 17C8 20 13 23 20 23S32 20 32 17"/></svg></div><div><div class="ds-title">Уктус</div><div class="ds-meta">224 усадьбы / 13 атрибутов</div></div><button class="ds-btn" onclick="downloadCSV('Уктус')">Скачать CSV</button></div>
+    </div>
+    <div style="margin-bottom:24px"><button class="ds-btn" onclick="downloadCSV()" style="width:100%;text-align:center;padding:12px;font-size:13px;border-radius:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><path d="M12 4v12m0 0l-5-5m5 5l5-5"/><line x1="4" y1="20" x2="20" y2="20"/></svg>Скачать полный датасет (все 2 570 записей)</button></div>
+    <div style="margin-bottom:24px"><button class="ds-btn" style="width:100%;text-align:center;padding:12px;font-size:13px;border-radius:8px;background:var(--card);color:var(--body)" onclick="alert('QGIS-проект будет доступен для скачивания позже')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><path d="M21 8v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8"/><path d="M1 4h22v4H1z"/><line x1="10" y1="12" x2="14" y2="12"/></svg>Скачать архив QGIS-проекта</button></div>
+    <div style="margin-bottom:16px"><a href="https://docs.google.com/spreadsheets/d/1gcdJOg1_6ainZjQa_qUE09itYSDBTYgObM-RD0twq6w/edit?usp=sharing" target="_blank" class="ds-btn" style="display:inline-block;text-decoration:none">Открыть в Google Sheets</a></div>
+    <div class="section-title">База данных онлайн</div>
+    <div class="ds-tabs" id="dsTabs"><div class="ds-tab active" onclick="filterTableByCity('', event)">Все</div><div class="ds-tab" onclick="filterTableByCity('Екатеринбург', event)">Екатеринбург</div><div class="ds-tab" onclick="filterTableByCity('Нижне-Исетск', event)">Нижне-Исетск</div><div class="ds-tab" onclick="filterTableByCity('Уктус', event)">Уктус</div></div>
+    <div class="ds-filter-row"><input class="ds-filter" type="text" id="dsFilter" placeholder="Фильтр: фамилия, сословие, улица..." oninput="filterTable()"/></div> -->
+    <div class="table-scroll-hint" aria-hidden="true">Проведите по таблице в сторону, чтобы увидеть все столбцы</div>
+    <div class="ds-table-wrap" role="region" aria-label="Таблица источников и данных" tabindex="0">
+      <table class="ds-table" id="dsTable">
+        <thead><tr><th>№</th><th>Улица / район</th><th>Тип постройки</th><th>Фамилия Имя</th><th>Сословие</th><th>Чин</th><th>Площадь</th><th>Источник</th></tr>
+        </thead>
+        <tbody id="dsTableBody"></tbody>
+      </table>
+    </div>
+    <div style="text-align:center;padding:12px;font-size:11px;color:var(--muted)" id="dsTableInfo">Показано 1–25 из 2 570</div>
+  </div>
+</div>
+
+<!-- СТРАНИЦА: КОМАНДА -->
+<div class="page" id="page-team">
+  <div class="page-scroll">
+    <div class="page-title">О проекте и команде</div>
+    <div class="page-sub">ГИС-реконструкция поселений Екатеринбургской агломерации, 1809–1810 гг.</div>
+    <div class="content-card" style="display:flex;gap:16px;align-items:center;margin-bottom:24px">
+      <div style="width:56px;height:56px;background:var(--card);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted);flex-shrink:0">Лого</div>
+      <div><div style="font-family:Georgia,serif;font-size:16px;font-weight:700">Уральский федеральный университет</div><div style="font-size:12px;color:var(--accent);margin-top:4px">Лаборатория цифровых технологий в историко-культурных исследованиях</div></div>
+    </div>
+    <div class="section-title">Команда проекта</div>
+    <div class="team-grid">
+      <div class="team-card"><div class="team-avatar"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="20" cy="14" r="6"/><path d="M8 36C8 26 13 22 20 22S32 26 32 36"/></svg></div><div class="team-name">Имя Фамилия</div><div class="team-role">Руководитель проекта</div><div class="team-info">к.и.н., доцент</div></div>
+      <div class="team-card"><div class="team-avatar"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="20" cy="14" r="6"/><path d="M8 36C8 26 13 22 20 22S32 26 32 36"/></svg></div><div class="team-name">Имя Фамилия</div><div class="team-role">ГИС-специалист</div><div class="team-info">магистрант</div></div>
+      <div class="team-card"><div class="team-avatar"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="20" cy="14" r="6"/><path d="M8 36C8 26 13 22 20 22S32 26 32 36"/></svg></div><div class="team-name">Имя Фамилия</div><div class="team-role">Исследователь</div><div class="team-info">студент</div></div>
+      <div class="team-card"><div class="team-avatar"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="20" cy="14" r="6"/><path d="M8 36C8 26 13 22 20 22S32 26 32 36"/></svg></div><div class="team-name">Имя Фамилия</div><div class="team-role">Исследователь</div><div class="team-info">студент</div></div>
+    </div>
+    <div class="section-title">Партнёры проекта</div>
+    <div class="partner-grid">
+      <div class="partner-card"><div class="partner-logo">Лого</div><div><div class="partner-name">Музей истории Екатеринбурга</div></div></div>
+      <div class="partner-card"><div class="partner-logo">Лого</div><div><div class="partner-name">Управление архивами Свердловской области</div></div></div>
+      <div class="partner-card"><div class="partner-logo">Лого</div><div><div class="partner-name">Государственный архив Свердловской области</div></div></div>
+    </div>
+    <div class="section-title">Благодарности</div>
+    <div class="content-card" style="margin-bottom:24px">
+      <div style="font-size:13px;color:var(--body);line-height:1.7">Выражаем благодарность за помощь в реализации проекта сотрудникам Государственного архива Свердловской области, Музея истории Екатеринбурга, а также всем студентам и коллегам, принимавшим участие в сборе и обработке данных.</div>
+    </div>
+    <div class="footer">
+      <div>&copy; 2023–2026 Уральский федеральный университет<br>Лаборатория цифровых технологий в историко-культурных исследованиях</div>
+      <div style="text-align:right"><a href="https://dlab-urgi.urfu.ru/ru/">dlab-urgi.urfu.ru</a><br>Лицензия CC BY 4.0</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/kartograf/mvt.js?v=20260912"></script>
+<script src="js/kartograf/render.js?v=20260912"></script>
+<script src="js/kartograf/map.js?v=20260912"></script>
+<script src="js/kartograf/basemap.js?v=20260912"></script>
+<script src="js/kartograf/layers.js?v=20260912"></script>
+<script src="js/data.js"></script>
+<script src="js/utils.js?v=20260912-kartograf"></script>
+<script src="js/map.js?v=20260912-kartograf"></script>
+<script src="js/filters.js?v=20260714-filter-cleanup"></script>
+<script src="js/ui.js?v=20260714-scan-no-referrer"></script>
+<script src="js/table.js"></script>
+<script src="js/glossary-map.js"></script>
+<script src="js/glossary.js"></script>
+<script src="js/infographics.js?v=20260714-mobile"></script>
+<script src="js/app.js?v=20260912-kartograf"></script>
+<script src="js/layers.js?v=20260912-kartograf"></script>
+</body>
+</html>
