@@ -97,8 +97,14 @@
       const key = z + "/" + px + "/" + py;
       let p = this.packs.get(key);
       if (!p) {
-        p = { tiles: null };
-        p.ready = loadScript(this.base + z + "/" + px + "_" + py + ".js").catch(() => {});
+        const inline = window.KartografOffline && window.KartografOffline.packs;
+        if (inline) {
+          // однофайловая сборка (tools/build_single.py): пачки уже в странице
+          p = { tiles: inline[key] || null, ready: Promise.resolve() };
+        } else {
+          p = { tiles: null };
+          p.ready = loadScript(this.base + z + "/" + px + "_" + py + ".js").catch(() => {});
+        }
         this.packs.set(key, p);
       }
       return p.ready.then(() => {
@@ -140,7 +146,8 @@
       } catch (err) {
         // нет сервера — пробуем автономный комплект тайлов
         try {
-          await loadScript(this.opts.offlineUrl + "basemap-offline.js");
+          // в однофайловой сборке комплект уже встроен в страницу
+          if (!window.KartografOffline) await loadScript(this.opts.offlineUrl + "basemap-offline.js");
           if (!window.KartografOffline) throw new Error("пустой комплект");
           this.meta = window.KartografOffline.meta;
           this.offline = new OfflinePacks(this.opts.offlineUrl);
@@ -156,7 +163,11 @@
       this.tileUrl = new URL(".", base).href + this.meta.tiles;
       // Точечные подписи (районы, водоёмы, станции) — один список на весь
       // город: не зависят от подгрузки тайлов и поэтому не пропадают.
-      this.pointLabels = (this.meta.labels || []).map((l, i) => {
+      // Современные станции метро и железной дороги, ЖК, кварталы и урочища
+      // на исторической карте не подписываем; остаются районы, воды и парки.
+      const HIDE_LABEL = l => l[2] === "station" ||
+        (l[2] === "place" && (l[3] === "quarter" || l[3] === "neighbourhood" || l[3] === "locality"));
+      this.pointLabels = (this.meta.labels || []).filter(l => !HIDE_LABEL(l)).map((l, i) => {
         const p = K.project(l[1], l[0]);
         return { id: "p" + i, wx: p.x, wy: p.y, k: l[2], c: l[3], t: l[4], r: l[5], minz: l[6], a: 0 };
       });

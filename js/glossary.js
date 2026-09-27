@@ -131,7 +131,7 @@ function initGlossary() {
 
   const searchInput = document.getElementById("glSearch");
   if (searchInput) {
-    searchInput.addEventListener("input", function(e) {
+    searchInput.addEventListener("input", function (e) {
       const q = e.target.value.toLowerCase();
       document.querySelectorAll(".gl-entry").forEach(el => {
         el.style.display = el.textContent.toLowerCase().indexOf(q) !== -1 ? "flex" : "none";
@@ -147,11 +147,11 @@ function initGlossary() {
       });
     });
   }
-  
+
   // Переключение режимов
   const modes = document.querySelectorAll(".gl-mode");
   modes.forEach((m, i) => {
-    m.addEventListener("click", function() {
+    m.addEventListener("click", function () {
       modes.forEach(mm => mm.classList.remove("active"));
       m.classList.add("active");
       const cats = document.getElementById("glCats");
@@ -160,22 +160,20 @@ function initGlossary() {
         document.querySelectorAll(".gl-cat-btn").forEach(b => b.classList.remove("active"));
         document.querySelectorAll(".gl-entry").forEach(el => el.style.display = "flex");
         document.querySelectorAll(".gl-letter").forEach(el => el.style.display = "block");
-        // Скрываем кнопку сброса при переключении на "По алфавиту"
         const resetBtn = document.getElementById('glossary-reset-btn');
         if (resetBtn) resetBtn.style.display = 'none';
-        // Снимаем активные термины
         document.querySelectorAll('.glossary-term-clickable').forEach(el => el.classList.remove('active-term'));
-        // Сбрасываем фильтры
         clearGlossaryFilter();
       }
     });
   });
- 
+
   // Алфавитная навигация
   const letters = [];
   document.querySelectorAll(".gl-letter").forEach(el => letters.push(el.textContent.trim()));
   const alphaNav = document.getElementById("glAlpha");
   if (alphaNav) {
+    alphaNav.innerHTML = "";
     letters.forEach(letter => {
       const btn = document.createElement("div");
       btn.className = "gl-alpha-btn";
@@ -189,91 +187,73 @@ function initGlossary() {
     });
   }
 
-  // --- НОВАЯ ЛОГИКА: Делаем термины кликабельными ---
+  // Делаем термины кликабельными, если есть маппинг
   document.querySelectorAll('.gl-entry').forEach(entry => {
     const termElement = entry.querySelector('.gl-term');
     if (!termElement) return;
 
     const termText = termElement.textContent.trim();
-    // Проверяем, есть ли термин в карте соответствия
     const mapping = GLOSSARY_FILTER_MAP[termText];
 
     if (mapping) {
-        // Термин ведет на карту
-        termElement.classList.add('glossary-term-clickable');
-        termElement.dataset.term = termText;
-        termElement.style.cursor = 'pointer';
-        
-        // Добавляем точку вместо иконки карты
+      termElement.classList.add('glossary-term-clickable');
+      termElement.dataset.term = termText;
+      termElement.style.cursor = 'pointer';
+
+      if (!termElement.querySelector('.glossary-dot')) {
         const dot = document.createElement('span');
         dot.className = 'glossary-dot';
-        dot.innerHTML = ' •';
-        dot.style.cssText = `
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 1.1em;
-            margin-left: 4px;
-            transition: all 0.2s ease;
-        `;
+        dot.textContent = ' •';
         termElement.appendChild(dot);
+      }
 
-        // Вешаем обработчик клика
-        termElement.addEventListener('click', function(e) {
-            e.stopPropagation();
-            applyGlossaryFilter(termText);
-        });
-
-        // Добавляем подсказку
-        termElement.title = 'Нажмите, чтобы показать на карте';
-
+      termElement.addEventListener('click', function (e) {
+        e.stopPropagation();
+        applyGlossaryFilter(termText);
+      });
+      termElement.title = 'Нажмите, чтобы показать на карте';
     } else {
-        // Термин НЕ ведет на карту (Аршин, Сажень, Берг-гешворен и т.д.)
-        termElement.style.cursor = 'default';
-        termElement.title = '';
+      termElement.style.cursor = 'default';
+      termElement.title = '';
     }
   });
 
-  // Кнопки категорий («Производство», «Чины» и т.д.): подключаем клик.
-  // filterByCat была определена, но нигде не вызывалась - кнопки не работали.
-  document.querySelectorAll(".gl-cat-btn").forEach(function(btn) {
-    btn.addEventListener("click", function() { filterByCat(btn); });
+  // Кнопки категорий
+  document.querySelectorAll(".gl-cat-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () { filterByCat(btn); });
   });
 
-  // Добавляем кнопку для сброса фильтра глоссария
   addGlossaryResetButton();
 }
 
-// Функция для добавления кнопки сброса
+// Кнопка сброса фильтра глоссария
 function addGlossaryResetButton() {
-    const glossaryList = document.getElementById('glossaryList');
-    if (!glossaryList) return;
+  const glossaryList = document.getElementById('glossaryList');
+  if (!glossaryList) return;
+  if (document.getElementById('glossary-reset-btn')) return;
 
-    // Проверяем, есть ли уже такая кнопка
-    if (document.getElementById('glossary-reset-btn')) return;
+  const resetBtn = document.createElement('div');
+  resetBtn.id = 'glossary-reset-btn';
+  resetBtn.style.cssText = `
+      margin: 8px 0 16px;
+      padding: 8px 16px;
+      background: var(--accent-bg);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      color: var(--accent);
+      font-size: 12px;
+      cursor: pointer;
+      display: none;
+      text-align: center;
+      font-weight: 600;
+      transition: all 0.2s ease;
+  `;
+  resetBtn.innerHTML = '✕ Сбросить фильтр глоссария';
+  resetBtn.addEventListener('click', function () {
+    clearGlossaryFilter();
+  });
 
-    const resetBtn = document.createElement('div');
-    resetBtn.id = 'glossary-reset-btn';
-    resetBtn.style.cssText = `
-        margin: 8px 0 16px;
-        padding: 8px 16px;
-        background: var(--accent-bg);
-        border: 1px solid var(--accent);
-        border-radius: 6px;
-        color: var(--accent);
-        font-size: 12px;
-        cursor: pointer;
-        display: none;
-        text-align: center;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    `;
-    resetBtn.innerHTML = '✕ Сбросить фильтр глоссария';
-    resetBtn.addEventListener('click', function() {
-        clearGlossaryFilter();
-    });
-
-    // Вставляем кнопку в начало списка
-    glossaryList.prepend(resetBtn);
+  glossaryList.prepend(resetBtn);
 }
 
 // Фильтрация по категории
@@ -283,9 +263,8 @@ function filterByCat(btn) {
   document.querySelectorAll(".gl-cat-btn").forEach(b => b.classList.remove("active"));
   if (!wasActive) btn.classList.add("active");
 
-  // Сбрасываем фильтр глоссария при фильтрации по категории
   clearGlossaryFilter();
-  
+
   document.querySelectorAll(".gl-entry").forEach(el => {
     if (wasActive) {
       el.style.display = "flex";
@@ -294,7 +273,7 @@ function filterByCat(btn) {
     const elCat = el.querySelector(".gl-cat");
     el.style.display = (elCat && elCat.dataset.cat === cat) ? "flex" : "none";
   });
-  
+
   document.querySelectorAll(".gl-letter").forEach(el => {
     if (wasActive) {
       el.style.display = "block";

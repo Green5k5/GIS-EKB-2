@@ -1,7 +1,7 @@
 // Навигация между страницами
 function initNavigation() {
   document.querySelectorAll(".nav-item").forEach(el => {
-    el.addEventListener("click", function(e) {
+    el.addEventListener("click", function (e) {
       e.preventDefault();
       const pg = this.dataset.page;
       document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
@@ -10,10 +10,10 @@ function initNavigation() {
       document.getElementById("page-" + pg).classList.add("active");
       closeMobile();
       if (pg !== "map" && typeof setMobileSidebar === "function") setMobileSidebar(false);
-      
+
       const navCounter = document.getElementById("navCounter");
       if (navCounter) navCounter.style.display = pg === "map" ? "block" : "none";
-      
+
       const mapEl = document.getElementById("map");
       const sidebar = document.querySelector(".sidebar");
       if (pg === "map") {
@@ -47,15 +47,31 @@ function initBurger() {
   }
 }
 
+// Плашка атрибуции OSM + Источники: раскрытие по клику на тач-устройствах
+function initSourcesPanel() {
+  const panel = document.getElementById("sourcesPanel");
+  if (!panel) return;
+
+  const isTouch = window.matchMedia("(hover: none)").matches;
+  if (isTouch) {
+    panel.addEventListener("click", (e) => {
+      if (e.target.tagName === "A") return;
+      e.stopPropagation();
+      panel.classList.toggle("open");
+    });
+    document.addEventListener("click", (e) => {
+      if (!panel.contains(e.target)) panel.classList.remove("open");
+    });
+  }
+}
+
 // Поиск с выпадающим списком
 function initSearch() {
   const inp = document.getElementById("searchInput");
   const clr = document.getElementById("searchClear");
-  const res = document.getElementById("searchResults");
-  
   if (!inp) return;
-  
-  inp.addEventListener("input", function() {
+
+  inp.addEventListener("input", function () {
     if (clr) clr.className = "search-clear" + (this.value ? " show" : "");
     showSearchResults(this.value);
     searchQuery = this.value.trim();
@@ -82,13 +98,82 @@ function showSearchResults(q) {
   matches.forEach(d => {
     const fn = [d.surname, d.name, d.patronymic].filter(Boolean).join(" ");
     html += `<div class="search-result" onclick="focusOnItem(${d.id})">
-              <b>${esc(fn)}</b> <span style="color:var(--muted);font-size:10px">${esc(d.settlement)}, №${esc(d.num)}</span>
+              <b>${esc(fn)}</b> <span style="color:var(--muted);font-size:10px">${esc(d.settlement)}, №${esc(formatNum(d.num))}</span>
             </div>`;
   });
   res.innerHTML = html;
   res.className = "search-results show";
 }
 
+/* =====================================================================
+   Превью скана для фона плашки.
+   Через fetch берём только ссылку (cloud-api.yandex.net отдаёт CORS),
+   а саму картинку кладём в CSS через background-image — тогда CORS
+   не нужен, и картинка работает и в Chrome, и в Safari, и на телефоне.
+   ===================================================================== */
+const scanPreviewUrlCache = new Map();   // scanUrl -> Promise<string|null>
+const scanPreviewById = new Map();       // id -> url (уже полученный)
+
+function fetchScanPreviewUrl(scanUrl) {
+  if (!scanUrl) return Promise.resolve(null);
+  if (scanPreviewUrlCache.has(scanUrl)) return scanPreviewUrlCache.get(scanUrl);
+
+  const promise = (async () => {
+    try {
+      const api = "https://cloud-api.yandex.net/v1/disk/public/resources"
+        + "?fields=preview&preview_size=L&public_key=" + encodeURIComponent(scanUrl);
+      const r = await fetch(api);
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const data = await r.json();
+      return data.preview || null;
+    } catch (err) {
+      console.warn("Не удалось получить ссылку на превью скана", scanUrl, err);
+      return null;
+    }
+  })();
+
+  scanPreviewUrlCache.set(scanUrl, promise);
+  return promise;
+}
+
+// Проверяем, что картинка реально отдаётся браузером (без CORS-обёртки).
+// Возвращает промис с url, если загрузка удалась, иначе null.
+function probeImage(url) {
+  if (!url) return Promise.resolve(null);
+  return new Promise(resolve => {
+    const img = new Image();
+    img.referrerPolicy = "no-referrer";
+    img.onload = () => resolve(url);
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+}
+
+// Кладём превью на фон .scan-block в карточке усадьбы
+function applyScanPreview(item, cardEl) {
+  if (!item || !item.scanUrl || !cardEl) return;
+  const block = cardEl.querySelector(".scan-block");
+  if (!block) return;
+
+  const apply = (url) => {
+    if (!url || !block.isConnected) return;
+    block.classList.add("has-preview");
+    block.style.setProperty("--scan-preview-url", `url("${url}")`);
+  };
+
+  const cached = scanPreviewById.get(item.id);
+  if (cached) { apply(cached); return; }
+
+  fetchScanPreviewUrl(item.scanUrl)
+    .then(url => probeImage(url))
+    .then(url => {
+      if (!url) return;
+      scanPreviewById.set(item.id, url);
+      apply(url);
+    });
+}
+
+/* ===== Модалка скана ===== */
 const scanView = {
   zoom: 1,
   x: 0,
@@ -279,9 +364,7 @@ function closeScan() {
   if (image) image.removeAttribute("src");
 }
 
-function changeScanZoom(delta) {
-  zoomScanAt(scanView.zoom + delta);
-}
+function changeScanZoom(delta) { zoomScanAt(scanView.zoom + delta); }
 
 function resetScanZoom() {
   scanView.zoom = 1;
@@ -297,17 +380,16 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape" && document.getElementById("scanModal")?.classList.contains("open")) closeScan();
 });
 
-// Показ выбранного участка
+/* ===== Показ выбранного участка ===== */
 function showSelected(item) {
   const sec = document.getElementById("selectedSection");
   if (!sec) return;
   sec.style.display = "block";
-  
-  const displayNum = Math.round(parseFloat(item.num));
+
   const fn = [item.surname, item.name, item.patronymic].filter(Boolean).join(" ");
-  let h = `<div class="selected-title">Усадьба №${esc(displayNum)}</div>
+  let h = `<div class="selected-title">Усадьба №${esc(formatNum(item.num))}</div>
            <div class="selected-owner">${esc(fn)}</div>`;
-  
+
   [
     ["Сословно-профессиональная группа", item.soslovie],
     ["Семейное положение", item.familyStatus],
@@ -322,44 +404,53 @@ function showSelected(item) {
   ].forEach(f => {
     if (f[1]) h += `<div class="sf"><span class="sl">${f[0]}</span><span class="sv">${esc(f[1])}</span></div>`;
   });
-  
+
   if (item.scanUrl) {
+    // Плашка скана. Фон-скан подставляется асинхронно после рендера карточки.
     h += `<div class="scan-block">
             <div class="scan-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C49A5C" stroke-width="1.5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <path d="M3 3C3 1.9 3.9 1 5 1H15L21 7V21C21 22.1 20.1 23 19 23H5C3.9 23 3 22.1 3 21V3Z"/>
                 <path d="M15 1V5C15 6.1 15.9 7 17 7H21"/>
                 <line x1="7" y1="11" x2="17" y2="11"/>
                 <line x1="7" y1="15" x2="15" y2="15"/>
               </svg>
             </div>
-            <div class="scan-text"><b>Скан ведомости</b><br><a href="#" onclick="openScan('${esc(item.scanUrl)}'); return false;">Открыть скан</a></div>
+            <div class="scan-text">
+              <b>Скан ведомости</b>
+              <a href="#" onclick="openScan('${esc(item.scanUrl)}'); return false;">Открыть скан</a>
+            </div>
           </div>`;
   }
-  
+
   const card = document.getElementById("selectedCard");
   if (card) card.innerHTML = h;
+
+  // Асинхронно подгружаем превью скана и кладём на фон плашки
+  if (item.scanUrl && card) {
+    applyScanPreview(item, card);
+  }
 
   if (isMobileMapLayout()) {
     if (window.map) window.map.closePopup();
     setMobileSidebar(true);
     window.setTimeout(() => {
       const content = document.getElementById("sidebarContent");
-      if (content) content.scrollTo({ top: Math.max(0, sec.offsetTop - 12), behavior: "smooth" });
+      if (content) content.scrollTo({ top: Math.max(0, sec.offsetTop - 72), behavior: "smooth" });
     }, 220);
   }
 }
 
-// Обновление статистики и бейджа
+/* ===== Обновление статистики и бейджа ===== */
 function updateStats(filtered) {
   const statShown = document.getElementById("statShown");
   const statTotal = document.getElementById("statTotal");
   if (statShown) statShown.textContent = filtered.length;
   if (statTotal) statTotal.textContent = allData.length;
-  
+
   let dims = 0;
   FILTERS.forEach(f => { if (state[f.key].size) dims++; });
-  
+
   const badge = document.getElementById("crossBadge");
   if (badge) {
     badge.className = dims >= 2 ? "cross-badge show" : "cross-badge";
@@ -375,7 +466,6 @@ function updateStats(filtered) {
   }
 }
 
-// Предупреждение о повороте экрана
 function initOrientationWarning() {
   const hint = document.getElementById("landscapeHint");
   if (hint) hint.remove();
@@ -411,26 +501,22 @@ function setMobileSidebar(open) {
   document.body.classList.toggle("mobile-sidebar-open", shouldOpen);
 }
 
-// Перетаскивание и управление мобильной шторкой фильтров
 function initSidebarDrag() {
   const sidebar = document.querySelector(".sidebar");
   const handle = document.querySelector(".sidebar-handle");
   const backdrop = document.getElementById("sidebarBackdrop");
   if (!handle || !sidebar) return;
-  
+
   let startY = 0, startTransform = 0, dragging = false, moved = false, suppressClick = false;
 
   handle.addEventListener("click", () => {
-    if (suppressClick) {
-      suppressClick = false;
-      return;
-    }
+    if (suppressClick) { suppressClick = false; return; }
     setMobileSidebar(!sidebar.classList.contains("show"));
   });
 
   if (backdrop) backdrop.addEventListener("click", () => setMobileSidebar(false));
-  
-  handle.addEventListener("touchstart", function(e) {
+
+  handle.addEventListener("touchstart", function (e) {
     if (!window.matchMedia("(max-width: 768px) and (orientation: portrait)").matches) return;
     dragging = true;
     moved = false;
@@ -440,8 +526,8 @@ function initSidebarDrag() {
     startTransform = matrix.m42;
     sidebar.style.transition = "none";
   });
-  
-  document.addEventListener("touchmove", function(e) {
+
+  document.addEventListener("touchmove", function (e) {
     if (!dragging) return;
     const dy = e.touches[0].clientY - startY;
     moved = moved || Math.abs(dy) > 6;
@@ -450,15 +536,12 @@ function initSidebarDrag() {
     sidebar.style.transform = `translateY(${newY}px)`;
     if (moved) e.preventDefault();
   }, { passive: false });
-  
-  document.addEventListener("touchend", function() {
+
+  document.addEventListener("touchend", function () {
     if (!dragging) return;
     dragging = false;
     sidebar.style.transition = "transform .3s ease";
-    if (!moved) {
-      sidebar.style.transform = "";
-      return;
-    }
+    if (!moved) { sidebar.style.transform = ""; return; }
     const style = getComputedStyle(sidebar);
     const matrix = new DOMMatrix(style.transform);
     const currentY = matrix.m42;

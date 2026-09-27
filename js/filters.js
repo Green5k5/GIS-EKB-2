@@ -75,7 +75,7 @@ function renderFilters() {
   const container = document.getElementById("filtersContainer");
   if (!container) return;
   container.innerHTML = "";
-  
+
   FILTERS.forEach(cfg => {
     let title = cfg.title;
     if (cfg.key === "soslovie") title = "Сословно-профессиональная группа";
@@ -92,17 +92,17 @@ function renderFilters() {
     });
     vals.sort((a, b) => (cross[b] || 0) - (cross[a] || 0));
     if (!vals.length) return;
-    
+
     const activeN = state[cfg.key].size;
     const limit = cfg.limit || 999;
     const isExp = expanded[cfg.key];
     const show = isExp ? vals : vals.slice(0, limit);
-    
+
     const div = document.createElement("div");
     div.className = "filter-section";
     let h = `<div class="filter-title">${title}${activeN ? `<span class="filter-count">${activeN}</span>` : ""}</div>`;
     if (cfg.inline) h += '<div class="filter-row">';
-    
+
     show.forEach(v => {
       const cnt = cross[v] || 0;
       const isA = state[cfg.key].has(v);
@@ -110,14 +110,16 @@ function renderFilters() {
       const swatch = cfg.key === "soslovie" && typeof getSoslovieColor === "function"
         ? `<span class="filter-swatch" style="background:${esc(getSoslovieColor({ soslovie: v }))}"></span>`
         : "";
+      // Отображаемое значение — без .0 для числовых номеров
+      const displayV = formatNum(v) || v;
       h += `<button type="button" class="filter-option${isA ? " active" : ""}${dis ? " disabled" : ""}" data-key="${esc(cfg.key)}" data-val="${esc(v)}" aria-pressed="${isA}"${dis ? " disabled" : ""}>
               <span class="cb" aria-hidden="true">${isA ? "✓" : ""}</span>
               ${swatch}
-              <span>${esc(v)}</span>
+              <span>${esc(displayV)}</span>
               <span class="fb">${cnt}</span>
             </button>`;
     });
-    
+
     if (cfg.inline) h += "</div>";
     if (vals.length > limit && !isExp) {
       h += `<button type="button" class="filter-expand" data-key="${esc(cfg.key)}">Ещё ${vals.length - limit} ▾</button>`;
@@ -125,9 +127,9 @@ function renderFilters() {
     div.innerHTML = h;
     container.appendChild(div);
   });
-  
+
   // Обработчики событий
-  container.onclick = function(e) {
+  container.onclick = function (e) {
     const opt = e.target.closest(".filter-option");
     if (opt) {
       toggle(opt.dataset.key, opt.dataset.val);
@@ -150,22 +152,23 @@ function renderActiveTags() {
     });
   });
   if (searchQuery) tags.push({ key: "search", val: searchQuery });
-  
+
   const activeBar = document.getElementById("activeBar");
   if (activeBar) {
     activeBar.className = "active-bar" + (tags.length ? " show" : "");
   }
-  
+
   const container = document.getElementById("activeTags");
   if (!container) return;
   container.innerHTML = "";
-  
+
   tags.forEach(t => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "tag";
-    button.textContent = (t.key === "search" ? `«${t.val}»` : t.val) + " ×";
-    button.setAttribute("aria-label", `Убрать фильтр ${t.val}`);
+    const label = t.key === "search" ? `«${t.val}»` : (formatNum(t.val) || t.val);
+    button.textContent = label + " ×";
+    button.setAttribute("aria-label", `Убрать фильтр ${label}`);
     button.onclick = () => {
       if (t.key === "search") {
         clearSearch();

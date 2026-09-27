@@ -19,7 +19,7 @@ const DEFAULT_COLOR = "#C49A5C";
 
 // Пределы перемещения карты — чуть шире покрытия подложки
 const MAP_MAX_BOUNDS = [[56.655, 60.24], [56.98, 60.92]];
-const BASEMAP_VERSION = "20260912";
+const BASEMAP_VERSION = "20260927";
 
 const SETTLEMENT_BOUNDS = {
   "Екатеринбург": [[56.7927911754743, 60.5750235922242], [56.8551170611752, 60.6562421757520]],
@@ -29,7 +29,8 @@ const SETTLEMENT_BOUNDS = {
 
 const OVERLAY_BASE_PATH = "assets/overlays-lite";
 const OVERLAY_VERSION = "20260619-ni-no-mode-1";
-const overlayUrl = fileName => `${OVERLAY_BASE_PATH}/${fileName}?v=${OVERLAY_VERSION}`;
+const overlayUrl = fileName => (window.KH_INLINE_ASSETS && window.KH_INLINE_ASSETS[fileName]) ||
+  `${OVERLAY_BASE_PATH}/${fileName}?v=${OVERLAY_VERSION}`;
 
 const HISTORICAL_OVERLAYS = [
   { url: overlayUrl("ekb-plan-1.webp"), bounds: [[56.8377931146054, 60.5702035731542], [56.8522689721454, 60.6079379255312]] },
@@ -98,9 +99,10 @@ function initMap() {
       // автономный комплект тайлов: карта работает и без сервера (file://)
       offlineUrl: "assets/basemap/offline/",
       // элементы сайта поверх карты, под которые не ставим подписи
-      obstacles: "#overlayControl, .theme-toggle.floating, .cross-badge.show",
+      obstacles: "#overlayControl, .theme-toggle.floating, .cross-badge.show, .sources-panel",
       // ?kg=main — принудительно рисовать в основном потоке (для отладки)
-      forceMainThread: new URLSearchParams(location.search).get("kg") === "main"
+      forceMainThread: new URLSearchParams(location.search).get("kg") === "main",
+      keepAttribution: true
     }
   });
   map.container.setAttribute("aria-label", "Карта усадеб. Стрелки — перемещение, плюс и минус — масштаб");
@@ -119,7 +121,7 @@ function initMap() {
 
   map.on("click", () => estateLayer.setSelected(null));
   map.on("basemaperror", () => {
-    map.setAttribution("Подложка недоступна: нет папки assets/basemap");
+    console.warn("Подложка недоступна: нет папки assets/basemap");
   });
 
   initOverlay(HISTORICAL_OVERLAYS);
@@ -176,7 +178,7 @@ function renderMap(filtered) {
 }
 
 function estatePopupHtml(item) {
-  const displayNum = Math.round(parseFloat(item.num));
+  const displayNum = formatNum(item.num);
   const fullName = [item.surname, item.name, item.patronymic].filter(Boolean).join(" ");
   let html = `<div class="popup-inner"><div class="popup-title">Усадьба №${esc(displayNum)}</div>`;
   [

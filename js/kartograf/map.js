@@ -641,7 +641,9 @@
       cv.addEventListener("pointerup", e => this._onUp(e));
       cv.addEventListener("pointercancel", e => this._onUp(e, true));
       cv.addEventListener("pointerleave", e => {
-        if (e.pointerType === "mouse" && !this._pointers.size) { this.hideTooltip(); cv.style.cursor = ""; }
+        if (e.pointerType === "mouse" && !this._pointers.size) {
+          this.hideTooltip(); cv.style.cursor = "";
+        }
       });
       cv.addEventListener("wheel", e => this._onWheel(e), { passive: false });
       cv.addEventListener("dblclick", e => {

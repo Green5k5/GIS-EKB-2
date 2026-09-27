@@ -1,14 +1,18 @@
 // js/glossary-map.js
 
 // Карта соответствия между терминами глоссария и фильтрами
-// Термины, которых нет в этом объекте, НЕ будут вести на карту
 const GLOSSARY_FILTER_MAP = {
-    // ===== СОСЛОВНО-ПРОФЕССИОНАЛЬНЫЕ ГРУППЫ (из скрина) =====
+    // ===== СОСЛОВНО-ПРОФЕССИОНАЛЬНЫЕ ГРУППЫ =====
     "Мастеровые": { filterKey: "soslovie", filterValue: "Мастеровые" },
+    "Мастеровой": { filterKey: "soslovie", filterValue: "Мастеровые" },
     "Мещане": { filterKey: "soslovie", filterValue: "Мещане" },
+    "Мещанин": { filterKey: "soslovie", filterValue: "Мещане" },
     "Солдаты": { filterKey: "soslovie", filterValue: "Солдаты" },
+    "Солдат": { filterKey: "soslovie", filterValue: "Солдаты" },
     "Купцы": { filterKey: "soslovie", filterValue: "Купцы" },
+    "Купец": { filterKey: "soslovie", filterValue: "Купцы" },
     "Непременные работники": { filterKey: "soslovie", filterValue: "Непременные работники" },
+    "Непременный работник": { filterKey: "soslovie", filterValue: "Непременные работники" },
     "Дворяне": { filterKey: "soslovie", filterValue: "Дворяне" },
     "Канцелярские служители": { filterKey: "soslovie", filterValue: "Канцелярские служители" },
     "Младшие офицеры": { filterKey: "soslovie", filterValue: "Младшие офицеры" },
@@ -23,21 +27,22 @@ const GLOSSARY_FILTER_MAP = {
     "Именитые граждане": { filterKey: "soslovie", filterValue: "Именитые граждане" },
     "Казаки": { filterKey: "soslovie", filterValue: "Казаки" },
     "Отпущенники": { filterKey: "soslovie", filterValue: "Отпущенники" },
-    
-    // ===== ТИП ПОСТРОЙКИ (из скрина) =====
+
+    // ===== ТИП ПОСТРОЙКИ =====
     "Дом деревянный": { filterKey: "buildingType", filterValue: "Дом деревянный" },
     "Обывательский дом": { filterKey: "buildingType", filterValue: "Обывательский дом" },
     "Огород": { filterKey: "buildingType", filterValue: "Огород" },
     "Дом каменный": { filterKey: "buildingType", filterValue: "Дом каменный" },
     "Казённый дом": { filterKey: "buildingType", filterValue: "Казённый дом" },
-    
-    // ===== СЕМЕЙНОЕ ПОЛОЖЕНИЕ (из скрина) =====
+    "Усадьба": { filterKey: "buildingType", filterValue: "Дом деревянный" },
+
+    // ===== СЕМЕЙНОЕ ПОЛОЖЕНИЕ =====
     "Вдова": { filterKey: "familyStatus", filterValue: "Вдова" },
     "Жена": { filterKey: "familyStatus", filterValue: "Жена" },
     "Дочь": { filterKey: "familyStatus", filterValue: "Дочь" },
     "Девица": { filterKey: "familyStatus", filterValue: "Девица" },
-    
-    // ===== МЕСТО ПРИПИСКИ (из скрина) =====
+
+    // ===== МЕСТО ПРИПИСКИ =====
     "Екатеринбургская волость": { filterKey: "registrationPlace", filterValue: "Екатеринбургская волость" },
     "Шарташский участок": { filterKey: "registrationPlace", filterValue: "Шарташский участок" },
     "Камышлов": { filterKey: "registrationPlace", filterValue: "Камышлов" },
@@ -47,8 +52,8 @@ const GLOSSARY_FILTER_MAP = {
     "Березовский": { filterKey: "registrationPlace", filterValue: "Березовский" },
     "Березовский завод": { filterKey: "registrationPlace", filterValue: "Березовский завод" },
     "Вольск": { filterKey: "registrationPlace", filterValue: "Вольск" },
-    
-    // ===== МЕСТО СЛУЖБЫ (из скрина) =====
+
+    // ===== МЕСТО СЛУЖБЫ =====
     "Екатеринбургский монетный двор": { filterKey: "servicePlace", filterValue: "Екатеринбургский монетный двор" },
     "Екатеринбургская горная команда": { filterKey: "servicePlace", filterValue: "Екатеринбургская горная команда" },
     "Екатеринбургская гранильная фабрика": { filterKey: "servicePlace", filterValue: "Екатеринбургская гранильная фабрика и Горнощитский мраморный завод" },
@@ -74,16 +79,15 @@ const GLOSSARY_FILTER_MAP = {
     "Верх-Исетский завод": { filterKey: "servicePlace", filterValue: "Верх-Исетский завод" },
     "Екатеринбургская заводская школа": { filterKey: "servicePlace", filterValue: "Екатеринбургская заводская школа" },
     "Тобольский гарнизон": { filterKey: "servicePlace", filterValue: "Тобольский гарнизон" },
-    
+
     // ===== РОД СЛУЖБЫ =====
     "Гражданская": { filterKey: "serviceType", filterValue: "Гражданская" },
     "Военная": { filterKey: "serviceType", filterValue: "Военная" },
     "Горная": { filterKey: "serviceType", filterValue: "Горная" },
-    
-    // ===== ПОСЕЛЕНИЯ (для терминов из глоссария) =====
+
+    // ===== ПОСЕЛЕНИЯ =====
     "Нижне-Исетский завод": { filterKey: "settlement", filterValue: "Нижне-Исетск" },
     "Уктусский завод": { filterKey: "settlement", filterValue: "Уктус" },
-    "Усадьба": { filterKey: "buildingType", filterValue: "Дом деревянный" },
 };
 
 // Функция для применения фильтра по клику на термин
@@ -97,11 +101,8 @@ function applyGlossaryFilter(term) {
         mapNavItem.click();
     }
 
-    // 2. Применяем фильтр
-    // Сначала сбрасываем все фильтры, чтобы не было конфликтов
+    // 2. Сбрасываем все фильтры и ставим нужный
     resetAllFilters();
-
-    // Устанавливаем фильтр
     const { filterKey, filterValue } = mapping;
     if (state[filterKey]) {
         state[filterKey].add(filterValue);
@@ -111,40 +112,33 @@ function applyGlossaryFilter(term) {
     if (typeof renderFilters === 'function') renderFilters();
     if (typeof renderActiveTags === 'function') renderActiveTags();
 
-    // Получаем отфильтрованные данные
     const filtered = getFiltered();
     if (typeof renderMap === 'function') renderMap(filtered);
     if (typeof updateStats === 'function') updateStats(filtered);
 
-    // Убираем активную подсветку терминов в глоссарии
+    // 4. Подсветка активного термина
     document.querySelectorAll('.glossary-term-clickable').forEach(el => el.classList.remove('active-term'));
-    // Подсвечиваем кликнутый термин
     const termElement = document.querySelector(`.glossary-term-clickable[data-term="${term}"]`);
     if (termElement) {
         termElement.classList.add('active-term');
         termElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-    
-    // Показываем кнопку сброса
+
+    // 5. Показ кнопки сброса
     showGlossaryResetButton();
 }
 
-// Функция для очистки фильтра глоссария
+// Очистка фильтра глоссария
 function clearGlossaryFilter() {
     const activeTerm = document.querySelector('.glossary-term-clickable.active-term');
-    if (activeTerm) {
-        activeTerm.classList.remove('active-term');
-    }
-    // Сбрасываем фильтры
+    if (activeTerm) activeTerm.classList.remove('active-term');
     resetAllFilters();
-    // Скрываем кнопку сброса
     const btn = document.getElementById('glossary-reset-btn');
     if (btn) btn.style.display = 'none';
-    // Обновляем карту
     if (typeof update === 'function') update();
 }
 
-// Функция для отображения кнопки сброса
+// Показ кнопки сброса
 function showGlossaryResetButton() {
     const btn = document.getElementById('glossary-reset-btn');
     if (btn) btn.style.display = 'block';

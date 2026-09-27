@@ -13,6 +13,12 @@ function formatArchiveSource(source) {
   return /^ГАСО(?:\.|\s)/i.test(value) ? value : `ГАСО. ${value}`;
 }
 
+function formatNum(num) {
+  if (num === undefined || num === null || num === "") return "";
+  const n = parseFloat(num);
+  return Number.isNaN(n) ? String(num) : String(Math.round(n));
+}
+
 // Скачивание CSV
 /* function downloadCSV(settlement) {
   let data = settlement ? allData.filter(d => d.settlement === settlement) : allData;
@@ -74,8 +80,11 @@ function clearAll() {
 function focusOnItem(id) {
   const item = allData.find(d => d.id === id);
   if (!item || !item.lat || !item.lng) return;
+  const mapPage = document.getElementById("page-map");
+  const mapNav = document.querySelector('.nav-item[data-page="map"]');
+  if (mapNav && mapPage && !mapPage.classList.contains("active")) mapNav.click();
   if (window.map && window.map.flyTo) {
-    window.map.flyTo([item.lat, item.lng], 17);
+    window.map.flyTo([item.lat, item.lng], 17, { duration: 1 });
   }
   if (typeof estateLayer !== "undefined" && estateLayer) estateLayer.setSelected(item.id);
   if (typeof showSelected === 'function') showSelected(item);

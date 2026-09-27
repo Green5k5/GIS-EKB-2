@@ -3197,3 +3197,566 @@ input:focus-visible,
   font-size: 11px;
   line-height: 1.4;
 }
+
+/* ===== НОВЫЙ БЛОК: ИСТОЧНИКИ И ИНФОРМАЦИЯ ===== */
+.info-panel {
+  position: absolute;
+  bottom: 30px;
+  left: 10px;
+  z-index: 1000;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+  font-size: 11px;
+  max-width: 300px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.info-panel-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: var(--white);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.info-panel-toggle svg {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.info-panel-toggle:hover {
+  background: var(--accent-bg);
+}
+
+.info-panel-content {
+  display: none;
+  padding: 0 12px 12px;
+  border-top: 1px solid var(--border);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.info-panel.expanded .info-panel-content {
+  display: block;
+}
+
+.info-section {
+  margin-top: 10px;
+}
+
+.info-section h4 {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.info-section p,
+.info-section ul {
+  font-size: 10px;
+  color: var(--body);
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.info-section ul li {
+  margin-bottom: 4px;
+}
+
+.info-section a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.info-section a:hover {
+  text-decoration: underline;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+  .info-panel {
+    bottom: calc(var(--mobile-sheet-peek) + 28px);
+    left: 12px;
+    max-width: calc(100% - 80px);
+  }
+
+  .info-panel-toggle {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
+  .info-panel-content {
+    max-height: 200px;
+  }
+}
+
+/* ===== БЛОК «ИСТОЧНИКИ» (правый нижний угол) ===== */
+.sources-panel {
+  position: absolute;
+  right: 10px;
+  bottom: 30px;
+  z-index: 1000;
+  font-size: 11px;
+  pointer-events: none; /* чтобы не перекрывать карту, пока закрыт */
+}
+
+.sources-panel-trigger,
+.sources-panel-body {
+  pointer-events: auto;
+}
+
+.sources-panel-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 11px;
+  cursor: default;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+  transition: background .15s, border-color .15s;
+  user-select: none;
+}
+
+.sources-panel-trigger svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.sources-panel-trigger:hover {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+}
+
+.sources-panel-body {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  width: max-content;
+  max-width: min(360px, calc(100vw - 24px));
+  padding: 10px 12px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity .18s ease, transform .18s ease, visibility .18s;
+  line-height: 1.5;
+}
+
+.sources-panel-body a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.sources-panel-body a:hover {
+  text-decoration: underline;
+}
+
+.sources-item {
+  padding: 6px 0;
+  font-size: 11px;
+  color: var(--body);
+  border-bottom: 1px solid var(--border);
+}
+
+.sources-item:last-child {
+  border-bottom: none;
+}
+
+.sources-desc {
+  margin-top: 2px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* Наведение мышью — раскрываем */
+@media (hover: hover) and (pointer: fine) {
+  .sources-panel:hover .sources-panel-body,
+  .sources-panel-trigger:hover + .sources-panel-body {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+/* На тач-устройствах — раскрытие по клику через .open */
+.sources-panel.open .sources-panel-body {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+  .sources-panel {
+    right: 12px;
+    bottom: calc(var(--mobile-sheet-peek, 62px) + 20px);
+  }
+
+  .sources-panel-trigger {
+    cursor: pointer;
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
+  .sources-panel-body {
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}
+
+/* ===== РАСШИРЕННАЯ ПЛАШКА АТРИБУЦИИ (правый нижний угол) ===== */
+.sources-panel {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.sources-panel-trigger,
+.sources-panel-body {
+  pointer-events: auto;
+}
+
+/* Верхняя строка — «© участники OpenStreetMap» — всегда видна */
+.sources-panel-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: color-mix(in srgb, var(--white) 85%, transparent);
+  border-top-left-radius: 6px;
+  border: 1px solid var(--border);
+  border-right: 0;
+  border-bottom: 0;
+  color: var(--body);
+  font-size: 10px;
+  line-height: 1.5;
+  cursor: default;
+  user-select: none;
+  backdrop-filter: blur(4px);
+  transition: background .15s ease;
+}
+
+.sources-panel-trigger a {
+  color: var(--body);
+  text-decoration: none;
+}
+
+.sources-panel-trigger a:hover {
+  text-decoration: underline;
+}
+
+/* Раскрывающийся блок с планами */
+.sources-panel-body {
+  width: min(360px, calc(100vw - 24px));
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--white) 96%, transparent);
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  box-shadow: 0 -4px 18px rgba(0, 0, 0, .12);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity .18s ease, transform .18s ease, visibility .18s;
+  backdrop-filter: blur(6px);
+}
+
+.sources-panel-body .sources-heading {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.sources-item {
+  padding: 6px 0;
+  font-size: 11px;
+  color: var(--body);
+  line-height: 1.5;
+  border-bottom: 1px solid var(--border);
+}
+
+.sources-item:last-child {
+  border-bottom: none;
+}
+
+.sources-item a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.sources-item a:hover {
+  text-decoration: underline;
+}
+
+/* ПК: раскрытие при наведении */
+@media (hover: hover) and (pointer: fine) {
+  .sources-panel:hover .sources-panel-body {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+/* Мобильные: раскрытие по клику через .open */
+.sources-panel.open .sources-panel-body {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .sources-panel-trigger {
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+
+  .sources-panel-body {
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}
+
+/* ===== ПЛАШКА «СКАН ВЕДОМОСТИ» — фон из скана документа ===== */
+.scan-block {
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+  padding: 10px 20px 10px 12px;
+  /* Тёплая бумага в тон сайту: чуть темнее --card, но теплее */
+  background: #efe7d8;
+  border: 1px solid #e2d5be;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  transition: border-color .15s, background .3s;
+}
+
+.scan-block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--scan-preview-url, none);
+  background-size: cover;
+  background-position: 65% 40%;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity .35s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Плёнка в тон бумаге, а не серо-зелёная */
+.scan-block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(250, 245, 235, 0.92) 0%,
+    rgba(250, 245, 235, 0.82) 55%,
+    rgba(250, 245, 235, 0.66) 100%
+  );
+  opacity: 0;
+  transition: opacity .35s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.scan-block.has-preview::before { opacity: 1; }
+.scan-block.has-preview::after  { opacity: 1; }
+.scan-block.has-preview         { background: transparent; }
+
+.scan-icon,
+.scan-text {
+  position: relative;
+  z-index: 2;
+}
+
+/* Тёмная тема: уголь с лёгким тёплым подтоном, в тон --dark */
+body.dark-theme .scan-block {
+  background: #2a2620;
+  border-color: #423a2d;
+}
+
+body.dark-theme .scan-block::after {
+  background: linear-gradient(
+    90deg,
+    rgba(26, 24, 20, 0.92) 0%,
+    rgba(26, 24, 20, 0.80) 55%,
+    rgba(26, 24, 20, 0.64) 100%
+  );
+}
+
+body.dark-theme .scan-block::before {
+  filter: brightness(0.7);
+}
+
+.scan-block:hover { border-color: #d6c5a8; }
+body.dark-theme .scan-block:hover { border-color: #4f4636; }
+
+/* Иконка: лист бумаги, лежит на фоне-скане */
+.scan-icon {
+  width: 38px;
+  height: 38px;
+  background: #fbf6ec;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid #e2d5be;
+}
+
+.scan-block.has-preview .scan-icon {
+  background: rgba(251, 246, 236, 0.94);
+  backdrop-filter: blur(2px);
+}
+
+body.dark-theme .scan-icon {
+  background: #38322a;
+  border-color: #4a4133;
+}
+
+body.dark-theme .scan-block.has-preview .scan-icon {
+  background: rgba(56, 50, 42, 0.94);
+}
+
+/* Иконка — тёплый акцент вместо зелёного */
+.scan-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #a07a3d;
+}
+
+body.dark-theme .scan-icon svg { color: #c49a5c; }
+
+.scan-text {
+  font-size: 11px;
+  color: #5a4f3d;
+  line-height: 1.4;
+}
+
+body.dark-theme .scan-text { color: #c9bfae; }
+
+.scan-text b {
+  display: block;
+  font-size: 11px;
+  color: #2c2418;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+body.dark-theme .scan-text b { color: #ece2cf; }
+
+/* Кнопка — мягкий тёплый акцент, в стиле сайта */
+.scan-text a {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #8a6a2f;
+  background: #fbf6ec;
+  border: 1px solid #d6b378;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+
+.scan-text a:hover {
+  background: #c49a5c;
+  color: #ffffff;
+  border-color: #c49a5c;
+}
+
+body.dark-theme .scan-text a {
+  color: #e2c896;
+  background: #38322a;
+  border-color: #6f5a35;
+}
+
+body.dark-theme .scan-text a:hover {
+  background: #c49a5c;
+  color: #1a1814;
+  border-color: #c49a5c;
+}
+
+/* ===== Плашка OSM + Источники: мобильная позиция ===== */
+@media (max-width: 768px) {
+  /* Поднимаем плашку над нижней шторкой фильтров.
+     Высота «ручки» шторки = --mobile-sheet-peek (62px) + небольшой отступ. */
+  .sources-panel {
+    right: 8px;
+    bottom: calc(var(--mobile-sheet-peek, 62px) + env(safe-area-inset-bottom, 0px) + 8px);
+  }
+
+  .sources-panel-trigger {
+    padding: 4px 8px;
+    font-size: 9px;
+    border-radius: 6px 6px 0 0;
+  }
+
+  /* На телефоне блок раскрывается вверх и не должен уходить за верх экрана */
+  .sources-panel-body {
+    max-height: 45vh;
+    overflow-y: auto;
+  }
+}
+
+/* ===== Точки-индикаторы в глоссарии (всегда акцентные) ===== */
+.glossary-term-clickable .glossary-dot,
+.glossary-term-clickable.active-term .glossary-dot {
+  color: var(--accent) !important;
+  font-weight: 700;
+  margin-left: 4px;
+  transition: transform .2s ease;
+}
+
+.glossary-term-clickable:hover .glossary-dot {
+  color: var(--accent) !important;
+  transform: scale(1.3);
+}
+
+/* Сам термин при наведении/активности — тоже акцентным, но без влияния на точку */
+.glossary-term-clickable:hover,
+.glossary-term-clickable.active-term {
+  color: var(--accent);
+}

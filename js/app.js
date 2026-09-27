@@ -5,7 +5,7 @@ function update() {
   renderActiveTags();
   renderMap(filtered);
   updateStats(filtered);
-  
+
   // Подгонка карты под найденные усадьбы
   fitToEstates(16, true);
 }
@@ -39,10 +39,11 @@ function initApp() {
   initGlossary();
   initOrientationWarning();
   initSidebarDrag();
+  initSourcesPanel();
   renderInfographics();
   update();
   initThemeToggle();
-  
+
   // Стартовый вид: все усадьбы в кадре, без анимации
   if (window.map) window.map.invalidateSize();
   fitToEstates(14, false);
@@ -52,21 +53,20 @@ function initApp() {
 function initThemeToggle() {
   const toggle = document.getElementById("themeToggle");
   if (!toggle) return;
-  
+
   const lightIcon = toggle.querySelector(".theme-icon-light");
   const darkIcon = toggle.querySelector(".theme-icon-dark");
-  
-  // Проверяем сохранённую тему
+
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {
     document.body.classList.add("dark-theme");
     if (lightIcon) lightIcon.style.display = "none";
     if (darkIcon) darkIcon.style.display = "block";
   }
-  
+
   toggle.addEventListener("click", () => {
     const isDark = document.body.classList.toggle("dark-theme");
-    
+
     if (isDark) {
       if (lightIcon) lightIcon.style.display = "none";
       if (darkIcon) darkIcon.style.display = "block";
@@ -76,15 +76,8 @@ function initThemeToggle() {
       if (darkIcon) darkIcon.style.display = "none";
       localStorage.setItem("theme", "light");
     }
-    
-    // Подложка перекрашивается сама (следит за классом dark-theme)
   });
 }
 
-
-
 // Запуск приложения после загрузки DOM
 document.addEventListener("DOMContentLoaded", initApp);
-
-
-

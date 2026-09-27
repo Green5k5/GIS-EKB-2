@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ГИС-реконструкция поселений Екатеринбургской агломерации</title>
-<link rel="stylesheet" href="css/style.css?v=20260912-kartograf">
+<link rel="stylesheet" href="css/style.css?v=20260927-merged">
 </head>
 <body>
 
@@ -92,6 +92,17 @@
       <div class="overlay-settings" id="overlaySettings">
         <label><input type="checkbox" id="overlayToggle"/> Исторические планы</label>
         <label class="overlay-opacity">Прозрачность <input type="range" id="overlayOpacity" min="0" max="100" value="45" aria-label="Прозрачность исторических планов"/></label>
+      </div>
+    </div>
+    <div class="sources-panel" id="sourcesPanel">
+      <div class="sources-panel-body">
+        <div class="sources-heading">Источники карт</div>
+        <div class="sources-item">План Пермской губернии горного города Екатеринбурга. 1810. ГАСО. Ф. 59. Оп. 7. Д. 1122.</div>
+        <div class="sources-item">План казенному и обывательскому строению Уктусского золотопромывального завода. 1810. ГАСО. Ф. 59. Оп. 7. Д. 1133.</div>
+        <div class="sources-item">План Нижне-Исетского завода заводскому и обывательскому строению. 1809. ГАСО. Ф. 25. Оп. 2. Д. 7603.</div>
+      </div>
+      <div class="sources-panel-trigger" id="sourcesPanelTrigger">
+        <span>© участники <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></span>
       </div>
     </div>
   </div>
@@ -299,20 +310,20 @@
 </div>
 
 <script src="js/kartograf/mvt.js?v=20260912"></script>
-<script src="js/kartograf/render.js?v=20260912"></script>
-<script src="js/kartograf/map.js?v=20260912"></script>
-<script src="js/kartograf/basemap.js?v=20260912"></script>
-<script src="js/kartograf/layers.js?v=20260912"></script>
+<script src="js/kartograf/render.js?v=20260927"></script>
+<script src="js/kartograf/map.js?v=20260927"></script>
+<script src="js/kartograf/basemap.js?v=20260927"></script>
+<script src="js/kartograf/layers.js?v=20260927"></script>
 <script src="js/data.js"></script>
-<script src="js/utils.js?v=20260912-kartograf"></script>
-<script src="js/map.js?v=20260912-kartograf"></script>
-<script src="js/filters.js?v=20260714-filter-cleanup"></script>
-<script src="js/ui.js?v=20260714-scan-no-referrer"></script>
+<script src="js/utils.js?v=20260927-merged"></script>
+<script src="js/map.js?v=20260927-merged"></script>
+<script src="js/filters.js?v=20260927-merged"></script>
+<script src="js/ui.js?v=20260927-merged"></script>
 <script src="js/table.js"></script>
-<script src="js/glossary-map.js"></script>
-<script src="js/glossary.js"></script>
+<script src="js/glossary-map.js?v=20260927-merged"></script>
+<script src="js/glossary.js?v=20260927-merged"></script>
 <script src="js/infographics.js?v=20260714-mobile"></script>
-<script src="js/app.js?v=20260912-kartograf"></script>
-<script src="js/layers.js?v=20260912-kartograf"></script>
+<script src="js/app.js?v=20260927-merged"></script>
+<script src="js/layers.js?v=20260927-merged"></script>
 </body>
 </html>

@@ -67,6 +67,10 @@
 
   const PALETTES = { light: LIGHT, dark: DARK };
 
+  /* Что из современной подложки не рисовать: на исторической карте
+     железная дорога, трамвай, метро и аэродром только отвлекают. */
+  const HIDE = { rail: true, aeroway: true };
+
   /* ---------- Ширины линий по зуму (CSS-пиксели) --------------------- */
   // Экспоненциальная интерполяция между опорными точками, как в
   // картографических стилях: на крупных зумах ширина растёт быстрее.
@@ -212,8 +216,8 @@
       if (p) { ctx.fillStyle = pal.water; ctx.fill(p); }
     }
 
-    // 4. Аэродром
-    for (const c of ["taxiway", "runway"]) {
+    // 4. Аэродром (скрыт — см. HIDE)
+    for (const c of HIDE.aeroway ? [] : ["taxiway", "runway"]) {
       const fs = G.aeroway[c];
       if (!fs || !fs.length) continue;
       const p = pathOf(fs, false, cull);
@@ -295,6 +299,7 @@
     drawRoads(roadPaths("0"), 1, false);
 
     const drawRail = (R) => {
+      if (HIDE.rail) return;               // железная дорога, трамвай — скрыты (см. HIDE)
       if (R.minor && R.minor.length && z >= 13) {
         const p = pathOf(R.minor, false, cull);
         if (p) { ctx.strokeStyle = pal.railMinor; ctx.lineWidth = interp([[13, 0.5], [16, 1], [18, 1.6]], z) * px; ctx.stroke(p); }
