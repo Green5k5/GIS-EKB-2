@@ -54,7 +54,7 @@ var vectorLayersData = {"fortress":[{"name":"","lines":[[[56.8469722,60.5886976]
       }
     },
     look: {
-      street: "ribbon", cap: "butt", inner: false,
+      street: "ribbon", cap: "round", inner: false,
       edge: function () { return 0.9; },          // толщина края ленты, px
       ribbonFrom: 2.4, ribbonSpan: 1.6,           // с какой ширины линия становится лентой
       solidExtra: 0, waterlines: 0, band: true, wallHaloPx: 1.5,

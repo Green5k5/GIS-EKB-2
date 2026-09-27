@@ -47,22 +47,26 @@ function initBurger() {
   }
 }
 
-// Плашка атрибуции OSM + Источники: раскрытие по клику на тач-устройствах
+// Источники карт: открытие кнопкой и закрытие вне панели на любом устройстве.
 function initSourcesPanel() {
   const panel = document.getElementById("sourcesPanel");
-  if (!panel) return;
+  const trigger = document.getElementById("sourcesPanelTrigger");
+  if (!panel || !trigger) return;
 
-  const isTouch = window.matchMedia("(hover: none)").matches;
-  if (isTouch) {
-    panel.addEventListener("click", (e) => {
-      if (e.target.tagName === "A") return;
-      e.stopPropagation();
-      panel.classList.toggle("open");
-    });
-    document.addEventListener("click", (e) => {
-      if (!panel.contains(e.target)) panel.classList.remove("open");
-    });
-  }
+  const setOpen = open => {
+    panel.classList.toggle("open", open);
+    trigger.setAttribute("aria-expanded", String(open));
+  };
+  trigger.addEventListener("click", e => {
+    e.stopPropagation();
+    setOpen(!panel.classList.contains("open"));
+  });
+  document.addEventListener("click", e => {
+    if (!panel.contains(e.target)) setOpen(false);
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") setOpen(false);
+  });
 }
 
 // Поиск с выпадающим списком
@@ -417,7 +421,7 @@ function showSelected(item) {
               </svg>
             </div>
             <div class="scan-text">
-              <b>Скан ведомости</b>
+              <b>Ведомость</b>
               <a href="#" onclick="openScan('${esc(item.scanUrl)}'); return false;">Открыть скан</a>
             </div>
           </div>`;
@@ -450,6 +454,7 @@ function updateStats(filtered) {
 
   let dims = 0;
   FILTERS.forEach(f => { if (state[f.key].size) dims++; });
+  if (areaRangeActive()) dims++;
 
   const badge = document.getElementById("crossBadge");
   if (badge) {

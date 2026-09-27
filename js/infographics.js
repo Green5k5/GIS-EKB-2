@@ -49,7 +49,7 @@ function renderInfographics() {
     return [k, med];
   }).sort((a, b) => b[1] - a[1]);
   const medMax = medArr[0][1];
-  let h2m = `<div class="info-card"><h3>Медианный размер усадеб по сословиям</h3>`;
+  let h2m = `<div class="info-card info-card-wide"><h3>Медианный размер усадеб по сословиям</h3><div class="median-bars">`;
   medArr.forEach(r => {
     const pct = Math.round(r[1] / medMax * 100);
     h2m += `<div class="bar-row">
@@ -60,7 +60,7 @@ function renderInfographics() {
             </div>
            </div>`;
   });
-  h2m += `</div>`;
+  h2m += `</div></div>`;
   
   // 4. Тип строений
   const btCounts = {};
@@ -114,7 +114,7 @@ function renderInfographics() {
   });
   h7 += `</div></div>`;
   
-  grid.innerHTML = h1 + h2 + h2m + h3 + h6 + h7;
+  grid.innerHTML = h6 + h7 + h1 + h2 + h3 + h2m;
   
   const factBtn = document.getElementById("factBtn");
   if (factBtn) {

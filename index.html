@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ГИС-реконструкция поселений Екатеринбургской агломерации</title>
-<link rel="stylesheet" href="css/style.css?v=20260927-merged">
+<link rel="stylesheet" href="css/style.css?v=20260927-team-reference">
 </head>
 <body>
 
@@ -95,15 +95,14 @@
       </div>
     </div>
     <div class="sources-panel" id="sourcesPanel">
-      <div class="sources-panel-body">
+      <div class="sources-panel-body" id="sourcesPanelBody">
         <div class="sources-heading">Источники карт</div>
         <div class="sources-item">План Пермской губернии горного города Екатеринбурга. 1810. ГАСО. Ф. 59. Оп. 7. Д. 1122.</div>
         <div class="sources-item">План казенному и обывательскому строению Уктусского золотопромывального завода. 1810. ГАСО. Ф. 59. Оп. 7. Д. 1133.</div>
         <div class="sources-item">План Нижне-Исетского завода заводскому и обывательскому строению. 1809. ГАСО. Ф. 25. Оп. 2. Д. 7603.</div>
+        <div class="sources-item"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">Участники OpenStreetMap</a> — современная картографическая подложка.</div>
       </div>
-      <div class="sources-panel-trigger" id="sourcesPanelTrigger">
-        <span>© участники <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></span>
-      </div>
+      <button class="sources-panel-trigger" id="sourcesPanelTrigger" type="button" aria-controls="sourcesPanelBody" aria-expanded="false">© участники OpenStreetMap · Источники</button>
     </div>
   </div>
 </div>
@@ -239,8 +238,8 @@
   <div class="page-scroll">
     <div class="page-title">Инфографика</div>
     <div class="page-sub">Екатеринбургская агломерация в цифрах. По данным ведомостей 1809–1810 гг.</div>
-    <div class="info-grid" id="infoGrid"></div>
     <div class="stat-row" id="statRow"></div>
+    <div class="info-grid" id="infoGrid"></div>
   </div>
 </div>
 
@@ -279,29 +278,81 @@
 <!-- СТРАНИЦА: КОМАНДА -->
 <div class="page" id="page-team">
   <div class="page-scroll">
-    <div class="page-title">О проекте и команде</div>
-    <div class="page-sub">ГИС-реконструкция поселений Екатеринбургской агломерации, 1809–1810 гг.</div>
-    <div class="content-card" style="display:flex;gap:16px;align-items:center;margin-bottom:24px">
-      <div style="width:56px;height:56px;background:var(--card);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted);flex-shrink:0">Лого</div>
-      <div><div style="font-family:Georgia,serif;font-size:16px;font-weight:700">Уральский федеральный университет</div><div style="font-size:12px;color:var(--accent);margin-top:4px">Лаборатория цифровых технологий в историко-культурных исследованиях</div></div>
+    <header class="team-header">
+      <div class="page-title">Над проектом работали</div>
+      <p class="page-sub">ГИС-реконструкция поселений Екатеринбургской агломерации по ведомостям и планам 1809–1810 годов.</p>
+    </header>
+
+    <div class="team-organization">
+      <div class="team-organization-brand">
+        <img class="team-logo-light" src="assets/team/urfu.png?v=20260927-team-logos" alt="Уральский федеральный университет" loading="lazy">
+        <img class="team-logo-dark" src="assets/team/urfu_white.png?v=20260927-team-logos" alt="Уральский федеральный университет" loading="lazy">
+        <a class="team-lab-link" href="https://dlab-urgi.urfu.ru/ru/" target="_blank" rel="noopener">dlab-urgi.urfu.ru/ru/</a>
+      </div>
+      <div class="team-organization-copy">
+        <h2><a href="https://urfu.ru/ru/" target="_blank" rel="noopener">Уральский федеральный университет</a></h2>
+        <p>Лаборатория цифровых технологий в историко-культурных исследованиях</p>
+      </div>
     </div>
-    <div class="section-title">Команда проекта</div>
-    <div class="team-grid">
-      <div class="team-card"><div class="team-avatar"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="20" cy="14" r="6"/><path d="M8 36C8 26 13 22 20 22S32 26 32 36"/></svg></div><div class="team-name">Имя Фамилия</div><div class="team-role">Руководитель проекта</div><div class="team-info">к.и.н., доцент</div></div>
-      <div class="team-card"><div class="team-avatar"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="20" cy="14" r="6"/><path d="M8 36C8 26 13 22 20 22S32 26 32 36"/></svg></div><div class="team-name">Имя Фамилия</div><div class="team-role">ГИС-специалист</div><div class="team-info">магистрант</div></div>
-      <div class="team-card"><div class="team-avatar"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="20" cy="14" r="6"/><path d="M8 36C8 26 13 22 20 22S32 26 32 36"/></svg></div><div class="team-name">Имя Фамилия</div><div class="team-role">Исследователь</div><div class="team-info">студент</div></div>
-      <div class="team-card"><div class="team-avatar"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="20" cy="14" r="6"/><path d="M8 36C8 26 13 22 20 22S32 26 32 36"/></svg></div><div class="team-name">Имя Фамилия</div><div class="team-role">Исследователь</div><div class="team-info">студент</div></div>
-    </div>
-    <div class="section-title">Партнёры проекта</div>
-    <div class="partner-grid">
-      <div class="partner-card"><div class="partner-logo">Лого</div><div><div class="partner-name">Музей истории Екатеринбурга</div></div></div>
-      <div class="partner-card"><div class="partner-logo">Лого</div><div><div class="partner-name">Управление архивами Свердловской области</div></div></div>
-      <div class="partner-card"><div class="partner-logo">Лого</div><div><div class="partner-name">Государственный архив Свердловской области</div></div></div>
-    </div>
-    <div class="section-title">Благодарности</div>
-    <div class="content-card" style="margin-bottom:24px">
-      <div style="font-size:13px;color:var(--body);line-height:1.7">Выражаем благодарность за помощь в реализации проекта сотрудникам Государственного архива Свердловской области, Музея истории Екатеринбурга, а также всем студентам и коллегам, принимавшим участие в сборе и обработке данных.</div>
-    </div>
+
+    <section class="team-section">
+      <h2>Команда проекта</h2>
+      <div class="team-people">
+        <div class="team-person"><h3>Ксения Пименова</h3><p>Руководитель проекта</p><a href="mailto:pimenovaksenia3@gmail.com">pimenovaksenia3@gmail.com</a></div>
+        <div class="team-person"><h3>Евгений Бурденков</h3><p>Автор идеи, научный консультант</p></div>
+        <div class="team-person"><h3>Вячеслав Коротин</h3><p>Координатор проекта, тексты</p></div>
+        <div class="team-person"><h3>Анна Феденева</h3><p>Координатор проекта, тексты</p></div>
+        <div class="team-person"><h3>Елена Бородина</h3><p>Научный консультант</p></div>
+        <div class="team-person"><h3>Светлана Цеменкова</h3><p>Научный консультант</p></div>
+        <div class="team-person"><h3>Виктор Байдин</h3><p>Научный консультант</p></div>
+        <div class="team-person"><h3>Кирилл Уланов</h3><p>Научный консультант</p></div>
+      </div>
+    </section>
+
+    <section class="team-section">
+      <h2>ГИС-модель</h2>
+      <div class="team-settlements">
+        <article class="team-settlement"><h3>Екатеринбург</h3>
+          <div><h4>База данных и векторизация</h4><p>Вячеслав Коротин, Никита Грачев, Мария Скочилова, Анна Патрушева, Владислав Свердлов, Никита Ковшиков</p></div>
+          <div><h4>Геопривязка</h4><p>Ксения Пименова</p></div>
+        </article>
+        <article class="team-settlement"><h3>Нижне-Исетск</h3>
+          <div><h4>База данных</h4><p>Инга Горюнова, Зарина Косназарова, Ольга Мазунина, Дмитрий Пономарев, Вероника Савищева, Максим Сивков, Полина Трифонова</p></div>
+          <div><h4>Векторизация</h4><p>Илья Багрин, Ксения Бородунина, Алексей Звездин, Никита Ковшиков, Илья Кушков, Александр Семенов, Мария Скочилова, Артем Степанов, Александра Чистякова</p></div>
+          <div><h4>Геопривязка</h4><p>Ксения Пименова</p></div>
+        </article>
+        <article class="team-settlement"><h3>Уктус</h3>
+          <div><h4>База данных</h4><p>Светлана Ермолаева, Полина Федотова, Михаил Шашкин, Максим Щур, Вячеслав Воронков, Кристина Валиева, Марк Шанаурин, Михаил Огородников, Абакар Хасаев, Марина Горбунова</p></div>
+          <div><h4>Геопривязка</h4><p>Ксения Пименова</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="team-section">
+      <h2>Веб-разработка</h2>
+      <div class="team-people team-people-compact">
+        <div class="team-person"><h3>Тимофей Хохлов</h3><p>Тимлид</p></div>
+        <div class="team-person"><h3>Владимир Казыханов</h3><p>Front-end / аналитик</p></div>
+        <div class="team-person"><h3>Дмитрий Татаркин</h3><p>Backend</p></div>
+        <div class="team-person"><h3>Волемир Яковлев</h3><p>Front-end</p></div>
+        <div class="team-person"><h3>Алина Дусанова</h3><p>Дизайн</p></div>
+      </div>
+    </section>
+
+    <section class="team-section">
+      <h2>Партнёры проекта</h2>
+      <div class="team-partners">
+        <div class="team-partner"><img class="team-logo-light" src="assets/team/museum-ekb.png?v=20260927-team-logos" alt="" loading="lazy"><img class="team-logo-dark" src="assets/team/museum-ekb_white.png?v=20260927-team-logos" alt="" loading="lazy"><span>Музей истории Екатеринбурга</span></div>
+        <div class="team-partner"><img src="assets/team/archives-office.png?v=20260927-team-logos" alt="" loading="lazy"><span>Управление архивами Свердловской области</span></div>
+        <div class="team-partner"><img src="assets/team/gaso.png?v=20260927-team-logos" alt="" loading="lazy"><span>Государственный архив Свердловской области</span></div>
+        <div class="team-partner"><img class="team-logo-light" src="assets/team/irit.png?v=20260927-team-logos" alt="" loading="lazy"><img class="team-logo-dark" src="assets/team/irit_white.png?v=20260927-team-logos" alt="" loading="lazy"><span>Институт радиоэлектроники и информационных технологий — РТФ УрФУ</span></div>
+      </div>
+    </section>
+
+    <section class="team-section team-support">
+      <h2>Поддержка реализации проекта</h2>
+      <p>Сергей Соколов · Игорь Пушкарев · Владислав Ившин</p>
+    </section>
     <div class="footer">
       <div>&copy; 2023–2026 Уральский федеральный университет<br>Лаборатория цифровых технологий в историко-культурных исследованиях</div>
       <div style="text-align:right"><a href="https://dlab-urgi.urfu.ru/ru/">dlab-urgi.urfu.ru</a><br>Лицензия CC BY 4.0</div>
@@ -310,20 +361,20 @@
 </div>
 
 <script src="js/kartograf/mvt.js?v=20260912"></script>
-<script src="js/kartograf/render.js?v=20260927"></script>
+<script src="js/kartograf/render.js?v=20260927-team-area"></script>
 <script src="js/kartograf/map.js?v=20260927"></script>
 <script src="js/kartograf/basemap.js?v=20260927"></script>
 <script src="js/kartograf/layers.js?v=20260927"></script>
-<script src="js/data.js"></script>
+<script src="js/data.js?v=20260927-team-area"></script>
 <script src="js/utils.js?v=20260927-merged"></script>
-<script src="js/map.js?v=20260927-merged"></script>
-<script src="js/filters.js?v=20260927-merged"></script>
-<script src="js/ui.js?v=20260927-merged"></script>
+<script src="js/map.js?v=20260927-team-area"></script>
+<script src="js/filters.js?v=20260927-team-area"></script>
+<script src="js/ui.js?v=20260927-team-area"></script>
 <script src="js/table.js"></script>
-<script src="js/glossary-map.js?v=20260927-merged"></script>
-<script src="js/glossary.js?v=20260927-merged"></script>
-<script src="js/infographics.js?v=20260714-mobile"></script>
-<script src="js/app.js?v=20260927-merged"></script>
-<script src="js/layers.js?v=20260927-merged"></script>
+<script src="js/glossary-map.js?v=20260927-glossary2"></script>
+<script src="js/glossary.js?v=20260927-glossary2"></script>
+<script src="js/infographics.js?v=20260927-stats-order"></script>
+<script src="js/app.js?v=20260927-team-area"></script>
+<script src="js/layers.js?v=20260927-team-area"></script>
 </body>
 </html>

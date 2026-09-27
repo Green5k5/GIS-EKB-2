@@ -284,7 +284,7 @@
         ctx.lineWidth = w * px;
         if (c === "path" || c === "track") {
           if (z >= 16) ctx.setLineDash([(c === "track" ? 4 : 2.5) * px, 2 * px]);
-          ctx.lineCap = z >= 16 ? "butt" : "round";
+          ctx.lineCap = "round";
         } else if (c === "steps") {
           ctx.setLineDash([0.8 * px, 1.2 * px]);
           ctx.lineCap = "butt";
@@ -338,7 +338,7 @@
         const w = interp(ROAD_W[c], z);
         const col = pal.road[c];
         ctx.strokeStyle = col[1] || pal.buildingLine;
-        ctx.lineCap = "butt";
+        ctx.lineCap = "round";
         ctx.lineWidth = (w + (z >= 14 ? 2.6 : 1.4)) * px;
         ctx.stroke(p);
         ctx.strokeStyle = col[0];

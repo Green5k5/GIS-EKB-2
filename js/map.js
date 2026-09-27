@@ -16,10 +16,15 @@ const SOSLOVIE_COLORS = [
 ];
 
 const DEFAULT_COLOR = "#C49A5C";
+const SEX_COLORS = {
+  "Мужчины": "#497A9B",
+  "Женщины": "#B65F68",
+  "Не определено": "#817B75"
+};
 
 // Пределы перемещения карты — чуть шире покрытия подложки
 const MAP_MAX_BOUNDS = [[56.655, 60.24], [56.98, 60.92]];
-const BASEMAP_VERSION = "20260927";
+const BASEMAP_VERSION = "20260927-team-area";
 
 const SETTLEMENT_BOUNDS = {
   "Екатеринбург": [[56.7927911754743, 60.5750235922242], [56.8551170611752, 60.6562421757520]],
@@ -59,17 +64,23 @@ const HISTORICAL_OVERLAYS = [
 let soslovieColorMap = null;
 
 function getSoslovieColor(item) {
-  if (shouldUseColorCoding()) {
-    if (!soslovieColorMap) {
-      const values = [...new Set(allData.map(d => d.soslovie).filter(Boolean))].sort();
-      soslovieColorMap = new Map(values.map((value, index) => [
-        value,
-        SOSLOVIE_COLORS[index % SOSLOVIE_COLORS.length]
-      ]));
-    }
-    return (item.soslovie && soslovieColorMap.get(item.soslovie)) || DEFAULT_COLOR;
+  if (!soslovieColorMap) {
+    const values = [...new Set(allData.map(d => d.soslovie).filter(Boolean))].sort();
+    soslovieColorMap = new Map(values.map((value, index) => [
+      value,
+      SOSLOVIE_COLORS[index % SOSLOVIE_COLORS.length]
+    ]));
   }
+  return (item.soslovie && soslovieColorMap.get(item.soslovie)) || DEFAULT_COLOR;
+}
 
+function getSexColor(item) {
+  return SEX_COLORS[item.sex] || DEFAULT_COLOR;
+}
+
+function getEstateColor(item) {
+  if (state.sex && state.sex.size) return getSexColor(item);
+  if (shouldUseColorCoding()) return getSoslovieColor(item);
   return DEFAULT_COLOR;
 }
 
@@ -142,13 +153,12 @@ function polygonFor(item) {
 
 function renderMap(filtered) {
   if (!estateLayer) return;
-  if (shouldUseColorCoding()) soslovieColorMap = null;
   const mobile = isMobileViewport();
 
   const features = [];
   filtered.forEach(item => {
     if (!item.lat || !item.lng) return;
-    const color = getSoslovieColor(item);
+    const color = getEstateColor(item);
     const poly = polygonFor(item);
     if (poly) {
       features.push({

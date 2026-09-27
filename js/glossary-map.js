@@ -34,7 +34,6 @@ const GLOSSARY_FILTER_MAP = {
     "Огород": { filterKey: "buildingType", filterValue: "Огород" },
     "Дом каменный": { filterKey: "buildingType", filterValue: "Дом каменный" },
     "Казённый дом": { filterKey: "buildingType", filterValue: "Казённый дом" },
-    "Усадьба": { filterKey: "buildingType", filterValue: "Дом деревянный" },
 
     // ===== СЕМЕЙНОЕ ПОЛОЖЕНИЕ =====
     "Вдова": { filterKey: "familyStatus", filterValue: "Вдова" },
@@ -52,6 +51,26 @@ const GLOSSARY_FILTER_MAP = {
     "Березовский": { filterKey: "registrationPlace", filterValue: "Березовский" },
     "Березовский завод": { filterKey: "registrationPlace", filterValue: "Березовский завод" },
     "Вольск": { filterKey: "registrationPlace", filterValue: "Вольск" },
+    "Макарова": { filterKey: "registrationPlace", filterValue: "Екатеринбургская волость деревня Макарова" },
+    "Шарташская деревня": { filterKey: "registrationPlace", filterValue: "Екатеринбургская волость, Шарташская деревня" },
+    "Белоярская волость": { filterKey: "registrationPlace", filterValue: "Екатеринбургская округа, Белоярская волость" },
+    "Щелкунская волость": { filterKey: "registrationPlace", filterValue: "Екатеринбургская округа, Щелкунская волость" },
+    "Екатеринбургский участок": { filterKey: "registrationPlace", filterValue: "Екатеринбургский участок" },
+    "Казань": { filterKey: "registrationPlace", filterValue: "Казань" },
+    "Калиновская волость": { filterKey: "registrationPlace", filterValue: "Камышловская округа,  Калиновская волость" },
+    "Катайская волость": { filterKey: "registrationPlace", filterValue: "Камышловская округа, Катайская волость" },
+    "Камышловская округа": { filterKey: "registrationPlace", filterValue: ["Камышловская округа,  Калиновская волость", "Камышловская округа, Катайская волость", "Камышловская округа, Красноярская волость", "Камышловская округа, Щербаковская волость", "Камышловский уезд, Некрасовская волость", "Камышловский уезд, Тамакульская волость"] },
+    "Красноярская волость": { filterKey: "registrationPlace", filterValue: "Камышловская округа, Красноярская волость" },
+    "Щербаковская волость": { filterKey: "registrationPlace", filterValue: "Камышловская округа, Щербаковская волость" },
+    "Некрасовская волость": { filterKey: "registrationPlace", filterValue: "Камышловский уезд, Некрасовская волость" },
+    "Тамакульская волость": { filterKey: "registrationPlace", filterValue: "Камышловский уезд, Тамакульская волость" },
+    "Воздвиженская волость": { filterKey: "registrationPlace", filterValue: "Красноуфимсая округа, Воздвиженская волость" },
+    "Красноуфимская округа": { filterKey: "registrationPlace", filterValue: "Красноуфимсая округа, Воздвиженская волость" },
+    "Монастырская волость": { filterKey: "registrationPlace", filterValue: "Монастырская волость" },
+    "Петропавловская волость": { filterKey: "registrationPlace", filterValue: ["Петропавловская волость", "Шадринск, Петропавловская волость"] },
+    "Тюмень": { filterKey: "registrationPlace", filterValue: "Тюмень" },
+    "Уткинская волость": { filterKey: "registrationPlace", filterValue: "Уткинская волость" },
+    "Шадринск": { filterKey: "registrationPlace", filterValue: ["Шадринск", "Шадринск, Петропавловская волость"] },
 
     // ===== МЕСТО СЛУЖБЫ =====
     "Екатеринбургский монетный двор": { filterKey: "servicePlace", filterValue: "Екатеринбургский монетный двор" },
@@ -105,7 +124,7 @@ function applyGlossaryFilter(term) {
     resetAllFilters();
     const { filterKey, filterValue } = mapping;
     if (state[filterKey]) {
-        state[filterKey].add(filterValue);
+        (Array.isArray(filterValue) ? filterValue : [filterValue]).forEach(value => state[filterKey].add(value));
     }
 
     // 3. Обновляем интерфейс и карту

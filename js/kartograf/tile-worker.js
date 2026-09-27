@@ -6,7 +6,7 @@
 /* global importScripts, KartografMVT, KartografRender */
 "use strict";
 
-importScripts("mvt.js?v=20260912", "render.js?v=20260925");
+importScripts("mvt.js?v=20260912", "render.js?v=20260927-team-area");
 
 const DATA_CACHE_MAX = 96;
 const dataCache = new Map();      // url -> Promise<prepared|null>
