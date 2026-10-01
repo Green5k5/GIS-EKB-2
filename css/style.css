@@ -447,10 +447,41 @@ body {
 }
 
 .selected-card {
+  position: relative;
   background: var(--white);
   border: 1px solid var(--accent);
   border-radius: 8px;
   padding: 12px;
+}
+
+.selected-card-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.selected-card-close:hover {
+  background: var(--card);
+  color: var(--text);
+}
+
+.selected-card-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.selected-card .selected-title {
+  padding-right: 28px;
 }
 
 .selected-title {

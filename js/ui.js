@@ -385,13 +385,23 @@ document.addEventListener("keydown", e => {
 });
 
 /* ===== Показ выбранного участка ===== */
+function closeSelected() {
+  const sec = document.getElementById("selectedSection");
+  const card = document.getElementById("selectedCard");
+  if (sec) sec.style.display = "none";
+  if (card) card.innerHTML = "";
+  if (typeof estateLayer !== "undefined" && estateLayer) estateLayer.setSelected(null);
+  if (window.map) window.map.closePopup();
+}
+
 function showSelected(item) {
   const sec = document.getElementById("selectedSection");
   if (!sec) return;
   sec.style.display = "block";
 
   const fn = [item.surname, item.name, item.patronymic].filter(Boolean).join(" ");
-  let h = `<div class="selected-title">Усадьба №${esc(formatNum(item.num))}</div>
+  let h = `<button type="button" class="selected-card-close" onclick="closeSelected()" aria-label="Закрыть карточку">×</button>
+           <div class="selected-title">Усадьба №${esc(formatNum(item.num))}</div>
            <div class="selected-owner">${esc(fn)}</div>`;
 
   [
@@ -421,8 +431,8 @@ function showSelected(item) {
               </svg>
             </div>
             <div class="scan-text">
-              <b>Ведомость</b>
-              <a href="#" onclick="openScan('${esc(item.scanUrl)}'); return false;">Открыть скан</a>
+              <b>Источник</b>
+              <a href="#" onclick="openScan('${esc(item.scanUrl)}'); return false;">Открыть цифровой образ</a>
             </div>
           </div>`;
   }

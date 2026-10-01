@@ -211,7 +211,7 @@ function estatePopupHtml(item) {
     html += `<div class="popup-note">Контур участка не оцифрован; точка показывает приблизительное место.</div>`;
   }
   if (item.scanUrl) {
-    html += `<div class="popup-row"><span class="popup-lbl">Скан</span><span><a href="#" onclick="openScan('${esc(item.scanUrl)}'); return false;">Открыть скан</a></span></div>`;
+    html += `<div class="popup-row"><span class="popup-lbl"></span><span><a href="#" onclick="openScan('${esc(item.scanUrl)}'); return false;">Открыть цифровой образ</a></span></div>`;
   }
   return html + "</div>";
 }
