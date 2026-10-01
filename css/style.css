@@ -3965,3 +3965,55 @@ body.dark-theme .team-logo-dark { display: block; }
   .team-partner img { height: 64px; }
   .team-partner span { font-size: 12px; }
 }
+
+/* Инфографика: общая с картой выборка и фильтр щелчком по диаграмме */
+.info-controls {
+  background: var(--white);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  display: grid;
+  gap: 10px;
+}
+.info-controls-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.info-controls-lbl { font-size: 11px; color: var(--muted); min-width: 92px; }
+.info-chip {
+  font: inherit; font-size: 12px;
+  padding: 5px 12px; border-radius: 14px;
+  border: 1px solid var(--border); background: var(--white); color: var(--body);
+  cursor: pointer;
+}
+.info-chip.active { background: var(--accent); border-color: var(--accent); color: var(--dark); font-weight: 600; }
+.info-controls .tag { font-size: 11px; padding: 5px 10px; }
+.info-controls-foot {
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border); padding-top: 10px; font-size: 12px; color: var(--body);
+}
+.info-controls-hint { color: var(--muted); margin-left: 4px; }
+.info-controls-actions { display: inline-flex; gap: 12px; align-items: center; }
+.info-link { font: inherit; font-size: 12px; background: none; border: 0; color: var(--accent); cursor: pointer; text-decoration: underline; }
+.info-go {
+  font: inherit; font-size: 12px; font-weight: 600;
+  padding: 7px 14px; border-radius: 8px; border: 0;
+  background: var(--accent); color: var(--dark); cursor: pointer;
+}
+.info-sub { font-size: 11px; color: var(--muted); margin: -10px 0 14px; }
+.info-empty { font-size: 12px; color: var(--muted); }
+.bar-hint { color: var(--muted); }
+.bar-row.is-clickable { cursor: pointer; border-radius: 4px; transition: opacity .15s; }
+.bar-row.is-clickable:hover .bar-label,
+.bar-row.is-clickable:focus-visible .bar-label { color: var(--text); text-decoration: underline; }
+.bar-row.is-clickable:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.bar-row.is-active .bar-label { color: var(--text); font-weight: 700; }
+.bar-row.is-dim { opacity: .5; }
+.info-more {
+  font: inherit; font-size: 11px; margin-top: 2px;
+  background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0;
+}
+.settlement-bubble.bar-row { margin-bottom: 0; padding: 4px; }
+@media (max-width: 768px) {
+  .info-controls { padding: 14px; }
+  .info-controls-lbl { min-width: 100%; }
+  .info-chip { min-height: 36px; }
+  .info-controls-hint { display: block; margin: 2px 0 0; }
+}

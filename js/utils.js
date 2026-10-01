@@ -61,6 +61,7 @@ function closeMobile() {
 // Очистка поиска
 function clearSearch() {
   const searchInput = document.getElementById("searchInput");
+  searchQuery = "";
   if (searchInput) {
     searchInput.value = "";
     // Закрываем выпадающий список результатов поиска

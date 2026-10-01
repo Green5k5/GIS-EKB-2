@@ -121,6 +121,8 @@ const scanPreviewById = new Map();       // id -> url (уже полученны
 function fetchScanPreviewUrl(scanUrl) {
   if (!scanUrl) return Promise.resolve(null);
   if (scanPreviewUrlCache.has(scanUrl)) return scanPreviewUrlCache.get(scanUrl);
+  // Скан лежит на сайте или по прямой ссылке - превью и есть сама картинка
+  if (!isYandexDiskUrl(scanUrl)) return Promise.resolve(scanUrl);
 
   const promise = (async () => {
     try {
@@ -324,20 +326,9 @@ async function openScan(url) {
   resetScanZoom();
 
   try {
-    const endpoint = "https://cloud-api.yandex.net/v1/disk/public/resources?fields=preview&preview_size=XXXL&public_key=" + encodeURIComponent(url);
-    const response = await fetch(endpoint);
-    if (!response.ok) throw new Error("Yandex Disk API: " + response.status);
-    const data = await response.json();
-    let imageUrl = data.preview;
-
-    if (!imageUrl) {
-      const downloadEndpoint = "https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=" + encodeURIComponent(url);
-      const downloadResponse = await fetch(downloadEndpoint);
-      if (!downloadResponse.ok) throw new Error("Yandex Disk download API: " + downloadResponse.status);
-      const downloadData = await downloadResponse.json();
-      imageUrl = downloadData.href;
-    }
-
+    // Скан может лежать на Яндекс Диске (публичная ссылка) или прямо на сайте
+    // (assets/scans/…) / по прямой ссылке на картинку.
+    const imageUrl = isYandexDiskUrl(url) ? await yandexDiskImageUrl(url) : url;
     if (!imageUrl) throw new Error("Ссылка на изображение не получена");
     image.onload = () => {
       status.style.display = "none";
@@ -352,10 +343,26 @@ async function openScan(url) {
   }
 }
 
+function isYandexDiskUrl(url) {
+  return /^https?:\/\/(disk\.yandex\.[a-z]+|yadi\.sk)\//i.test(String(url));
+}
+
+async function yandexDiskImageUrl(url) {
+  const api = "https://cloud-api.yandex.net/v1/disk/public/resources";
+  const response = await fetch(api + "?fields=preview&preview_size=XXXL&public_key=" + encodeURIComponent(url));
+  if (!response.ok) throw new Error("Yandex Disk API: " + response.status);
+  const data = await response.json();
+  if (data.preview) return data.preview;
+  const downloadResponse = await fetch(api + "/download?public_key=" + encodeURIComponent(url));
+  if (!downloadResponse.ok) throw new Error("Yandex Disk download API: " + downloadResponse.status);
+  return (await downloadResponse.json()).href;
+}
+
 function showScanError(status, image, url) {
   image.style.display = "none";
   status.style.display = "block";
-  status.innerHTML = `Не удалось показать скан.<br><a href="${esc(url)}" target="_blank" rel="noopener">Открыть его на Яндекс Диске</a>`;
+  const where = isYandexDiskUrl(url) ? "на Яндекс Диске" : "в отдельной вкладке";
+  status.innerHTML = `Не удалось показать скан.<br><a href="${esc(url)}" target="_blank" rel="noopener">Открыть его ${where}</a>`;
 }
 
 function closeScan() {

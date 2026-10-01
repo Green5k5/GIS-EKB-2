@@ -5,6 +5,7 @@ function update() {
   renderActiveTags();
   renderMap(filtered);
   updateStats(filtered);
+  if (typeof renderInfographics === "function") renderInfographics();
 
   // Подгонка карты под найденные усадьбы
   fitToEstates(16, true);
@@ -40,7 +41,6 @@ function initApp() {
   initOrientationWarning();
   initSidebarDrag();
   initSourcesPanel();
-  renderInfographics();
   update();
   initThemeToggle();
 

@@ -53953,7 +53953,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 180,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/OH7nNcxO0D_lSA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -53976,7 +53976,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 192,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/brR7q-07W9vnQQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -53999,7 +53999,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 285,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/aZVtbgdKep79Jg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54022,7 +54022,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 264,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/p1WUgGIh5JIzYA",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54045,7 +54045,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 153,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ZUMrIuqeqKmLtA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54068,7 +54068,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 240,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/a3F2tjkfyqVrpg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54091,7 +54091,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 288,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/lBntB_VQ6otbsw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54114,7 +54114,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 815,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/3kdaFEOoGbW9Sw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54137,7 +54137,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 300,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/XrwJIRaoAOhACw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54160,7 +54160,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 475,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/BJbt_0HnxO92Dg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54183,7 +54183,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 264,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/WemC9FmzvlpG1w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54206,7 +54206,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 261,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/3OaVxBF4xnVz2w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54229,7 +54229,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 198,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/HsXkiM2jcyiNFQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54252,7 +54252,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 238,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/hte14gcyqbYGRA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54275,7 +54275,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 238,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/hQEFbCJkbPMVOQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54298,7 +54298,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 275,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/wCIN1gjk-bGx3w",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54321,7 +54321,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 110,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/chEHPpE_fl-e4A",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54344,7 +54344,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 510,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/7Lyso-rUHY5U8w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54367,7 +54367,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 200,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/lhfE5NfWg9x23w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54390,7 +54390,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 385,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/2WIaqXjbno_zAw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54413,7 +54413,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 240,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/3exvqMpDzQU6Sg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54436,7 +54436,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 280,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/wWvNiRH2MF4biA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54459,7 +54459,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 285,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/IGkJfmm1Ol422A",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54482,7 +54482,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 304,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/OF7sBi6gi3giWw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54505,7 +54505,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 264,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/EFnmWcWsIjjzOA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54528,7 +54528,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 360,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/dXdXjLxUn1vNaw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54551,7 +54551,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 330,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/6lsbVrq8VR5DYQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54574,7 +54574,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 476,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/rELCbRiMdwABcA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54597,7 +54597,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": null,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/K3UZx2_2PmeF-g",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54620,7 +54620,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 407,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/SQ3trsJtGmHfQQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54643,7 +54643,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 456,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/lU2nSkPf9MJdlA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54666,7 +54666,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 456,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/PaVs-MXCnD8zZQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54689,7 +54689,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 190,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/dqk-swG9tDmG3g",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54712,7 +54712,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 392,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/KqvNOFTmtqHSYw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54735,7 +54735,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 260,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ITr0RQFa0Ua22w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54758,7 +54758,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 260,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ZXT_p0Ozb5PNxg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54781,7 +54781,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 225,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/xTmBnPTBHakxPQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54804,7 +54804,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 270,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/iQdYDO2JUAbqjg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54827,7 +54827,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 270,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/EF8ikr0a9XLXFA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54850,7 +54850,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 200,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/FkHpDsAuVzMwnQ",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54873,7 +54873,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 285,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/X2kizf3syDcjlA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54896,7 +54896,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 364,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/0nioA0UsltnPxQ",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54919,7 +54919,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 84,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/HgrZAXJZsXCIIw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54942,7 +54942,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 377,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/z-gidXqB3AghAA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54965,7 +54965,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 144,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/PXStSyh0qj-bdQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -54988,7 +54988,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 256,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Br5KCxKudvTyug",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55011,7 +55011,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 112,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/nl1jCgKuazq0Zg",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55034,7 +55034,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 231,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/M-W3mw6LBDRuBw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55057,7 +55057,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 312,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/QQHVdHbWfiggOQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55080,7 +55080,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 126,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/6naTceVfno0IIQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55103,7 +55103,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 126,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/5ed8Wy94ZhQWdQ",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55126,7 +55126,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 225,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/nweuWInJLqB3rA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55149,7 +55149,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 150,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/wM9kVq5HbOUfUw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55172,7 +55172,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 391,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/FvivdECLsVYU8g",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55195,7 +55195,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 276,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/r6hI-4-QB0jt0Q",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55218,7 +55218,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 276,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/1HSuHgQubuQLlQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55241,7 +55241,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 276,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/y52l6braZXd-oA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55264,7 +55264,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 481,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/LbOS0zcg9fOesw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55287,7 +55287,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 154,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/UrzZSKcgi8uiVg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55310,7 +55310,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 444,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/JStQNntXFYNP4w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55333,7 +55333,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 253,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/umcrJgtkBI1xRA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55356,7 +55356,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 396,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ddwuWNGCs7gWWg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55379,7 +55379,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 176,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Xym-3DO1rg7i4Q",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55402,7 +55402,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 290,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/v1p7Rpjo-I8R5A",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55425,7 +55425,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 432,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/gJBu1WcZCJ7GFA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55448,7 +55448,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 535,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/50NB3CL90XnyHQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55471,7 +55471,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 338,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/STpxe7avnkg4Eg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55494,7 +55494,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 290,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/NZDF6S09smYKiQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55517,7 +55517,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 325,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/2UpjNAHj2LSgMg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55540,7 +55540,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 378,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/24W_Ql_AktYwtg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55563,7 +55563,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 374,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/_jh3dvq31-aXSQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55586,7 +55586,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 340,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/2fGyX944Oqk_FA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55609,7 +55609,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 665,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/OW5v_T7e5is-gw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55632,7 +55632,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 196,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/oolZJXGMX5iIOA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55655,7 +55655,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 400,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/9_CxkZB-mrLz8w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55678,7 +55678,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 398,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ZH0F3e3kGYnFgQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55701,7 +55701,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 606,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/SWPQb2Mgbba0_g",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55724,7 +55724,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 281,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Eezlw8svnhLo9g",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55747,7 +55747,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 243,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/6wYGcWk6Wm3YaQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55770,7 +55770,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 231,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/FkogXfNKBaSFiQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55793,7 +55793,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 211,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/NzEOUtvdgFHaqQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55816,7 +55816,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 200,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/4m8B9porKlh-hw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55839,7 +55839,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 590,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/tA-ZN1MNgByzDQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55862,7 +55862,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 448,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/5TZ2CnZuJnjRpA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55885,7 +55885,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 350,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/y9_t485fpa-7_w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55908,7 +55908,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 300,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/JAU4WdiHsQvnTg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55931,7 +55931,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 465,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/OVM8doJ2GO779w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55954,7 +55954,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 528,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/sASqPvMCyCER0A",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -55977,7 +55977,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 612,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/VxT_8U2A0AXmhQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56000,7 +56000,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 275,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/FMFfj43VTpmW_A",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56023,7 +56023,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 72,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/yr8hEQ-icsg9wA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56046,7 +56046,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 136,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ucBKcx7M6UTjzA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56069,7 +56069,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 288,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/vLL1w93_hASfeg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56092,7 +56092,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 350,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Gz2sb1ZrnCkkyQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56115,7 +56115,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 705,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/4fO8_YD-AXoWXQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56138,7 +56138,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 340,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/4sDArMQlZanh5w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56161,7 +56161,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 408,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Pvc6ZqUXYMYA2Q",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56184,7 +56184,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 253,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/QMF6izYA_IQilg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56207,7 +56207,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 200,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/-hLKJNsgB8N9ww",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56230,7 +56230,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 156,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/oDV7v3EOCAfF7Q",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56253,7 +56253,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 88,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 112а об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Cd2Cxh-CnBZc7Q",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56276,7 +56276,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 275,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/TGifO1D0v4IUDw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56299,7 +56299,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 182,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/mSB650V7yu_k_A",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56322,7 +56322,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 375,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/uUZAm2jnuMhFRA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56345,7 +56345,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 260,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/RoaBcrFQUEGmoQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56368,7 +56368,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 190,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/TSEUSyF9rq-dbA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56391,7 +56391,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 273,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/8yPb5tZxpCJN6Q",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56414,7 +56414,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 663,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/7pFMcUmjgAgbzA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56437,7 +56437,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 243,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/On7-_RT_fkMlbA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56460,7 +56460,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 153,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/gocHZkHNEYy8ww",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56483,7 +56483,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 216,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/sNz9vvIm41IGmw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56506,7 +56506,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 165,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/n0tDU-qi2VaDhQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56529,7 +56529,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 324,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/O1Ts7eBAZtoMnw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56552,7 +56552,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 330,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/1iIMfXY1fkPavA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56575,7 +56575,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 168,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/b4NT6snySYELeQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56598,7 +56598,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 70,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/tIZiXh78k5k4ow",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56621,7 +56621,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 353,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/GVzmaEKHg7_UTw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56644,7 +56644,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 480,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/70hO-ep3q-5e1w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56667,7 +56667,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 198,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/lxvTxkcN7k-PPw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56690,7 +56690,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 182,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/UngQ7IZqYt-OLQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56713,7 +56713,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 464,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/uJgdNAxtFdIw5Q",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56736,7 +56736,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 555,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/-zGY5Ia1pMJQog",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56759,7 +56759,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 146,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/i4XaC1biaq5TvA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56782,7 +56782,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 300,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/6-wlqTVpz__pkQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56805,7 +56805,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 209,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/n3-PQd7td4y0xA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56828,7 +56828,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 388,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/yVuZs_T6WHBvuA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56851,7 +56851,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 250,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/nGYu-g0kp1O3cg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56874,7 +56874,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 252,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/YwPOuPXs5J_7Yw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56897,7 +56897,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 312,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/vq2c7Jm26Y_2zA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56920,7 +56920,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 225,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/7VqIozB9KHjpZg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56943,7 +56943,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 200,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Th77KGzNtyNG4g",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56966,7 +56966,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 208,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/PkFMRtgmf3nZdQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -56989,7 +56989,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 189,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/3UA_B1yLQ3NCug",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57012,7 +57012,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 160,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/hxTTpA0YI0ZOZQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57035,7 +57035,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 225,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/feOPTbCZUVE_hg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57058,7 +57058,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 297,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/tcD8u4j6CNiZGA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57081,7 +57081,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 182,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/5yIHSLcnGdC4YA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57104,7 +57104,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 156,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Jv4qRv3FDEp5zQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57127,7 +57127,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 130,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/e8YVyAPN_86UfA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57150,7 +57150,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 356,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/IjqqEurFjsnOjw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57173,7 +57173,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 566,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/xDJ2L3sefR-0sw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57196,7 +57196,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 570,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/fuUCgLEt0aDzHw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57219,7 +57219,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 408,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Zluac_i0YHiGGw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57242,7 +57242,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 348,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/cIVFmOlAg8C68A",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57265,7 +57265,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 288,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/jUfPRQpeuwe0Vw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57288,7 +57288,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 468,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ihWi8fgKCpItJg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57311,7 +57311,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 306,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/zF_-yZP2BUJSjQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57334,7 +57334,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 210,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/8ijl9azo10ziGw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57357,7 +57357,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": null,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/gnd9Pb-lgCsu8w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57380,7 +57380,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 196,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/-WLP12dhRa6iGQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57403,7 +57403,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 390,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ylxBxBaRsg1Y3A",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57426,7 +57426,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 208,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/QTC6u-Q-93X-ow",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57449,7 +57449,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 234,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Cn3k-2Tdgwk-4w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57472,7 +57472,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 462,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 113 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/xf0ZX4pYrQ01pw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57495,7 +57495,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 441,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/LYGa2ZSzZTAYxw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57518,7 +57518,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 240,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/0unvoxL1nPFv9Q",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57541,7 +57541,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 340,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/yaqL17nf0iogrw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57564,7 +57564,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 330,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/OJwnCyKMIJA4gw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57587,7 +57587,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 242,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/SLaehtGgQrIeGA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57610,7 +57610,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 105,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/6jZ78SWJ0YX9kA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57633,7 +57633,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 126,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/DAOKTYET_MhYzg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57656,7 +57656,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 171,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/0onVAtZ_qN2gYw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57679,7 +57679,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 216,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/NunPf8_WBheNew",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57702,7 +57702,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 350,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/YfKKzzeTeZUjUQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57725,7 +57725,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 465,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ib-5rgZa3K-tXg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57748,7 +57748,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 361,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/zpp-LrJJrFJ0Vg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57771,7 +57771,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 308,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/XuDzHCTJkbUJZw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57794,7 +57794,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 165,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/BS5BeQvEm3hgIA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57817,7 +57817,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 275,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/8hl06xo9Icb7ZA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57840,7 +57840,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": null,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/nnlatQe1FdOyEQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57863,7 +57863,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 300,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/0VVhs11VPzSRPw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57886,7 +57886,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 330,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/grDRAj-DX1HT-A",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57909,7 +57909,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": null,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/8EaWWWRQTP5kmg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57932,7 +57932,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 300,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/cZ3vbPq20BuSiA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57955,7 +57955,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 240,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/gfUXRi3gsd5OUA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -57978,7 +57978,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 240,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ZvcL0iYHmwSCuA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58001,7 +58001,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 243,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/N3E-WB07eoe1BQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58024,7 +58024,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 294,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/ImVdur7XL85VYg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58047,7 +58047,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 264,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/MrrVneohErmGIg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58070,7 +58070,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 304,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/p3tPPW62AoUpZQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58093,7 +58093,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 198,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/o1TRGa89ehx5fw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58116,7 +58116,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 120,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/bLj_UgNgVMEKzw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58139,7 +58139,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 176,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/5gL5NBoUgY2gsw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58162,7 +58162,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 135,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/6o4mQzWCRUmsrA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58185,7 +58185,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 336,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/TjldToKTMub1rg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58208,7 +58208,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 336,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/y7LHYxpn2ZtnKQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58231,7 +58231,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 352,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Zaz0bDMEbeM10g",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58254,7 +58254,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 351,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/_v0oE8tCxxKSvg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58277,7 +58277,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 308,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/3qC3piQYljMZ6Q",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58300,7 +58300,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 304,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/9YVsdSbSuaz8jA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58323,7 +58323,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 320,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/_-VtG4InWXA-HA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58346,7 +58346,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 560,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/WFQlJ6bib_8VnQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58369,7 +58369,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 783,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/lxILJzMw_a_xng",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58392,7 +58392,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 288,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Sg2yeTedBY9FkA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58415,7 +58415,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 288,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/UQ5jvA4XpRpWUg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58438,7 +58438,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 448,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Y9JRAdUsCQzOZg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58461,7 +58461,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 448,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/qyA5nfUq12oiZQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58484,7 +58484,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 350,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/quwImtRFHo7bbQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58507,7 +58507,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 378,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/LZm7a3GnNRZbdQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58530,7 +58530,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 261,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/gs-_CrQvAyWdMA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58553,7 +58553,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 270,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/aQ01FoDY5dFXDw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58576,7 +58576,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 186,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Z1DccwW_HI64Uw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58599,7 +58599,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 340,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/s9IY3tWCl3t1tg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58622,7 +58622,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 319,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/myEOS4wyrXKivA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58645,7 +58645,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 430,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Y0Ohc9io9EjeTg",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58668,7 +58668,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 300,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/bL-KmyrnqECV6g",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58691,7 +58691,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 330,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/uDLvsIGZhcpN_g",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58714,7 +58714,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 430,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/KkphkwoGnElR8w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58737,7 +58737,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 264,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/g2qovF0bVVhZ_A",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58760,7 +58760,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 310,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/cTJwxquVgeIRJw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58783,7 +58783,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 315,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/HMi8eAGqFyQcEw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58806,7 +58806,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 255,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/U3Q9MjvdfpCY6Q",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58829,7 +58829,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 300,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/qZKzY4TQkFjXQw",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58852,7 +58852,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 448,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/fV5Lb3nUfL5x4A",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58875,7 +58875,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 340,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/pZFccDRJL-dIBQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58898,7 +58898,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 250,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/Mr_xf0un_DCPRQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58921,7 +58921,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 204,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/VM_yHtodALVgvQ",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58944,7 +58944,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 144,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/fXyDJE3UwfTFrg",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58967,7 +58967,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 126,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 114 об.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/QcFvRRO8QKDF1w",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -58990,7 +58990,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 170,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 115.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/L8PL82BDBIfBmQ",
     "sex": "Женщины",
     "lat": 56.7595,
     "lng": 60.631
@@ -59013,7 +59013,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 199,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 115.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/qoQsOvtbFFvJfA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
@@ -59036,7 +59036,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 567,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 115.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/aBNVgPVKHu_Xpg",
     "sex": "Не определено",
     "lat": 56.7595,
     "lng": 60.631
@@ -59059,7 +59059,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 340,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 115.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/RtZ1ifsk1DoQ9w",
     "sex": "Не определено",
     "lat": 56.7595,
     "lng": 60.631
@@ -59082,7 +59082,7 @@ var allData = [
     "registrationPlace": "",
     "area_sazh": 180,
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 115.",
-    "scanUrl": "",
+    "scanUrl": "https://disk.yandex.ru/i/3FmrLfSrpwoOPA",
     "sex": "Мужчины",
     "lat": 56.7595,
     "lng": 60.631
