@@ -4017,3 +4017,15 @@ body.dark-theme .team-logo-dark { display: block; }
   .info-chip { min-height: 36px; }
   .info-controls-hint { display: block; margin: 2px 0 0; }
 }
+
+.info-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  background: url("../assets/icons/info-gray.png") center / contain no-repeat;
+}
+
+body.dark-theme .info-icon {
+  background-image: url("../assets/icons/info-dark.png");
+}
