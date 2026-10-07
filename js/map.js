@@ -144,10 +144,17 @@ function initMap() {
 }
 
 function polygonFor(item) {
-  const numKey = String(Math.round(parseFloat(item.num)));
-  if (item.settlement === "Нижне-Исетск") return niPolygons[numKey];
-  if (item.settlement === "Екатеринбург") return ekbPolygons[numKey];
-  if (item.settlement === "Уктус" && typeof uktPolygons !== "undefined") return uktPolygons[numKey];
+  if (item.plotId != null && typeof publicPlotsById !== "undefined") {
+    const plot = publicPlotsById.get(Number(item.plotId));
+    if (plot?.geometry?.type === "Polygon" && plot.geometry.coordinates?.[0]) {
+      return {
+        coords: plot.geometry.coordinates[0],
+        clat: plot.focusLat,
+        clng: plot.focusLng,
+        plotId: plot.id
+      };
+    }
+  }
   return null;
 }
 

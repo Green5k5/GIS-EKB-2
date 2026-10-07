@@ -1,0 +1,10 @@
+{
+  "name": "gis-ekb-admin",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "migrate": "node server/migrate.js",
+    "start": "node server/server.js"
+  }
+}

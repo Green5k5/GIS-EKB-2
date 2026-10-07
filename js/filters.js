@@ -2,10 +2,17 @@
 let state = {};
 let searchQuery = "";
 let expanded = {};
-const AREA_VALUES = allData.map(item => Number(item.area_sazh)).filter(value => Number.isFinite(value) && value > 0);
-const AREA_MIN = Math.floor(Math.min(...AREA_VALUES));
-const AREA_MAX = Math.ceil(Math.max(...AREA_VALUES));
+let AREA_VALUES = [];
+let AREA_MIN = 1;
+let AREA_MAX = 1;
 let areaRange = { min: AREA_MIN, max: AREA_MAX };
+
+function refreshAreaBounds() {
+  AREA_VALUES = allData.map(item => Number(item.area_sazh)).filter(value => Number.isFinite(value) && value > 0);
+  AREA_MIN = AREA_VALUES.length ? Math.floor(Math.min(...AREA_VALUES)) : 1;
+  AREA_MAX = AREA_VALUES.length ? Math.ceil(Math.max(...AREA_VALUES)) : 1;
+  areaRange = { min: AREA_MIN, max: AREA_MAX };
+}
 
 function areaRangeActive() {
   return areaRange.min > AREA_MIN || areaRange.max < AREA_MAX;

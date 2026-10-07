@@ -80,4 +80,7 @@ function initThemeToggle() {
 }
 
 // Запуск приложения после загрузки DOM
-document.addEventListener("DOMContentLoaded", initApp);
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadPublicData();
+  initApp();
+});
