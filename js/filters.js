@@ -43,7 +43,8 @@ function renderDatabaseMapFilter(filtered) {
   if (!databaseMapFilter) return;
   const isStreet = databaseMapFilter.kind === 'street';
   document.getElementById("databaseMapOrigin").textContent = isStreet ? 'Улица на карте' : 'Поиск в базе';
-  document.getElementById("databaseMapBack").hidden = isStreet;
+  const back = document.getElementById("databaseMapBack");
+  if (back) back.hidden = isStreet;
   document.getElementById("databaseMapAll").textContent = isStreet ? 'Все усадьбы улицы' : 'Вся выборка';
   document.getElementById("databaseMapClear").setAttribute('aria-label', isStreet ? 'Убрать фильтр улицы' : 'Убрать фильтр поиска в базе');
   document.getElementById("databaseMapDescription").textContent = databaseMapFilter.description;
@@ -51,6 +52,17 @@ function renderDatabaseMapFilter(filtered) {
   const mapped = filtered.filter(item => item.lat && item.lng).length;
   document.getElementById("databaseMapCount").textContent = `На карте ${mapped.toLocaleString("ru-RU")} из ${databaseMapFilter.ids.size.toLocaleString("ru-RU")} усадеб`;
 }
+
+// Map controls work independently of the optional question assistant.
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('databaseMapClear')?.addEventListener('click', clearDatabaseMapFilter);
+  document.getElementById('databaseMapAll')?.addEventListener('click', () => {
+    if (databaseMapFilter?.kind !== 'street') return;
+    const selection = databaseMapFilter;
+    applyDatabaseMapFilter([...selection.ids], selection.description, selection.question, {kind: 'street', streetId: selection.streetId});
+    fitToEstates(16, true);
+  });
+});
 const AREA_VALUES = allData.map(item => Number(item.area_sazh)).filter(value => Number.isFinite(value) && value > 0);
 const AREA_MIN = Math.floor(Math.min(...AREA_VALUES));
 const AREA_MAX = Math.ceil(Math.max(...AREA_VALUES));

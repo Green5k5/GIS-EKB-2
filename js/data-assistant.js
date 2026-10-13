@@ -115,19 +115,13 @@
     else if (button.hasAttribute('data-group-index')) { const item = lastAnswer.items[Number(button.dataset.groupIndex)]; openAnswerMap(item.map_ids, lastAnswer.map.description + ' · ' + item.value); }
     else if (button.hasAttribute('data-record-more')) { previewLimit += 20; renderRecordPreview(); }
   });
-  document.getElementById('databaseMapClear')?.addEventListener('click', clearDatabaseMapFilter);
   document.getElementById('databaseMapBack')?.addEventListener('click', () => {
     if (mapContext) { input.value = mapContext.data.map.question; updateClear(); render(mapContext.data); }
     document.querySelector('.nav-item[data-page="info"]').click();
     result.scrollIntoView({block: 'center', behavior: 'smooth'});
   });
   document.getElementById('databaseMapAll')?.addEventListener('click', () => {
-    if (databaseMapFilter?.kind === 'street') {
-      const selection = databaseMapFilter;
-      applyDatabaseMapFilter([...selection.ids], selection.description, selection.question, {kind: 'street', streetId: selection.streetId});
-      fitToEstates(16, true);
-      return;
-    }
+    if (databaseMapFilter?.kind === 'street') return;
     if (mapContext) { lastAnswer = mapContext.data; openAnswerMap(lastAnswer.map.record_ids, lastAnswer.map.description); }
   });
 
