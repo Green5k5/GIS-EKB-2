@@ -186,7 +186,11 @@ const scanView = {
   y: 0,
   pointers: new Map(),
   dragStart: null,
-  pinchDistance: 0
+  pinchDistance: 0,
+  pinchCenter: null,
+  fitZoom: 1,
+  fitted: false,
+  generation: 0
 };
 
 function applyScanTransform() {
@@ -194,15 +198,27 @@ function applyScanTransform() {
   const image = modal?.querySelector(".scan-modal-image");
   const zoomLabel = modal?.querySelector(".scan-zoom-label");
   if (!image) return;
-  image.style.transform = `translate(${scanView.x}px, ${scanView.y}px) scale(${scanView.zoom})`;
+  image.style.transform = `translate(-50%, -50%) translate(${scanView.x}px, ${scanView.y}px) scale(${scanView.zoom})`;
   if (zoomLabel) zoomLabel.textContent = `${Math.round(scanView.zoom * 100)}%`;
-  modal.classList.toggle("is-zoomed", scanView.zoom > 1.01);
+  const body = modal.querySelector('.scan-modal-body');
+  body.style.backgroundPosition = `calc(50% + ${scanView.x}px) calc(50% + ${scanView.y}px)`;
+}
+
+function fitScanToView() {
+  const body = document.querySelector('#scanModal .scan-modal-body');
+  const image = body?.querySelector('.scan-modal-image');
+  if (!image?.naturalWidth || !image.naturalHeight) return;
+  scanView.fitZoom = Math.min(1, Math.max(1, body.clientWidth - 64) / image.naturalWidth, Math.max(1, body.clientHeight - 96) / image.naturalHeight);
+  scanView.zoom = scanView.fitZoom;
+  scanView.x = scanView.y = 0;
+  scanView.fitted = true;
+  applyScanTransform();
 }
 
 function zoomScanAt(nextZoom, clientX, clientY) {
   const body = document.querySelector("#scanModal .scan-modal-body");
   if (!body) return;
-  nextZoom = Math.min(5, Math.max(1, nextZoom));
+  nextZoom = Math.min(8, Math.max(Math.min(.05, scanView.fitZoom), nextZoom));
   const rect = body.getBoundingClientRect();
   const pointX = (clientX ?? rect.left + rect.width / 2) - (rect.left + rect.width / 2);
   const pointY = (clientY ?? rect.top + rect.height / 2) - (rect.top + rect.height / 2);
@@ -210,7 +226,7 @@ function zoomScanAt(nextZoom, clientX, clientY) {
   scanView.x = pointX + (scanView.x - pointX) * ratio;
   scanView.y = pointY + (scanView.y - pointY) * ratio;
   scanView.zoom = nextZoom;
-  if (nextZoom === 1) scanView.x = scanView.y = 0;
+  scanView.fitted = false;
   applyScanTransform();
 }
 
@@ -219,29 +235,34 @@ function initScanGestures(modal) {
 
   body.addEventListener("wheel", e => {
     e.preventDefault();
-    if (e.ctrlKey) {
-      zoomScanAt(scanView.zoom * Math.exp(-e.deltaY * 0.012), e.clientX, e.clientY);
-    } else if (scanView.zoom > 1) {
-      scanView.x -= e.deltaX;
-      scanView.y -= e.deltaY;
+    const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? body.clientHeight : 1;
+    if (e.shiftKey || (!e.ctrlKey && Math.abs(e.deltaX) > Math.abs(e.deltaY))) {
+      scanView.x -= (e.deltaX || e.deltaY) * unit;
+      if (!e.shiftKey) scanView.y -= e.deltaY * unit;
+      scanView.fitted = false;
       applyScanTransform();
     } else {
-      zoomScanAt(scanView.zoom * Math.exp(-e.deltaY * 0.0025), e.clientX, e.clientY);
+      const delta = Math.max(-300, Math.min(300, e.deltaY * unit));
+      zoomScanAt(scanView.zoom * Math.exp(-delta * (e.ctrlKey ? .01 : .0025)), e.clientX, e.clientY);
     }
   }, { passive: false });
 
   body.addEventListener("dblclick", e => {
-    zoomScanAt(scanView.zoom > 1 ? 1 : 2, e.clientX, e.clientY);
+    if (scanView.zoom > scanView.fitZoom * 1.8) fitScanToView();
+    else zoomScanAt(scanView.zoom * 2, e.clientX, e.clientY);
   });
 
   body.addEventListener("pointerdown", e => {
-    if (!e.isPrimary && e.pointerType === "mouse") return;
+    if (e.pointerType === "mouse" && e.button !== 0 && e.button !== 1) return;
+    if (e.target.closest('.scan-modal-status')) return;
+    e.preventDefault();
     body.setPointerCapture(e.pointerId);
     scanView.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     scanView.dragStart = { x: e.clientX, y: e.clientY, viewX: scanView.x, viewY: scanView.y };
     if (scanView.pointers.size === 2) {
       const points = [...scanView.pointers.values()];
       scanView.pinchDistance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+      scanView.pinchCenter = { x: (points[0].x + points[1].x) / 2, y: (points[0].y + points[1].y) / 2 };
     }
     body.classList.add("is-dragging");
   });
@@ -254,11 +275,18 @@ function initScanGestures(modal) {
       const distance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
       const centerX = (points[0].x + points[1].x) / 2;
       const centerY = (points[0].y + points[1].y) / 2;
-      if (scanView.pinchDistance) zoomScanAt(scanView.zoom * distance / scanView.pinchDistance, centerX, centerY);
+      if (scanView.pinchDistance && scanView.pinchCenter) {
+        zoomScanAt(scanView.zoom * distance / scanView.pinchDistance, scanView.pinchCenter.x, scanView.pinchCenter.y);
+        scanView.x += centerX - scanView.pinchCenter.x;
+        scanView.y += centerY - scanView.pinchCenter.y;
+        applyScanTransform();
+      }
       scanView.pinchDistance = distance;
-    } else if (scanView.zoom > 1 && scanView.dragStart) {
+      scanView.pinchCenter = { x: centerX, y: centerY };
+    } else if (scanView.dragStart) {
       scanView.x = scanView.dragStart.viewX + e.clientX - scanView.dragStart.x;
       scanView.y = scanView.dragStart.viewY + e.clientY - scanView.dragStart.y;
+      scanView.fitted = false;
       applyScanTransform();
     }
   });
@@ -266,6 +294,7 @@ function initScanGestures(modal) {
   const endPointer = e => {
     scanView.pointers.delete(e.pointerId);
     scanView.pinchDistance = 0;
+    scanView.pinchCenter = null;
     if (scanView.pointers.size === 1) {
       const point = [...scanView.pointers.values()][0];
       scanView.dragStart = { x: point.x, y: point.y, viewX: scanView.x, viewY: scanView.y };
@@ -276,6 +305,10 @@ function initScanGestures(modal) {
   };
   body.addEventListener("pointerup", endPointer);
   body.addEventListener("pointercancel", endPointer);
+  body.addEventListener("lostpointercapture", endPointer);
+  new ResizeObserver(() => {
+    if (modal.classList.contains('open') && scanView.fitted) fitScanToView();
+  }).observe(body);
 }
 
 function ensureScanModal() {
@@ -287,22 +320,23 @@ function ensureScanModal() {
   modal.className = "scan-modal";
   modal.setAttribute("role", "dialog");
   modal.setAttribute("aria-modal", "true");
-  modal.setAttribute("aria-label", "Просмотр скана ведомости");
+  modal.setAttribute("aria-label", "Просмотр цифрового образа");
   modal.innerHTML = `
     <div class="scan-modal-dialog">
       <div class="scan-modal-toolbar">
-        <div class="scan-modal-title">Скан ведомости</div>
+        <div class="scan-modal-title">Цифровой образ</div>
         <div class="scan-modal-actions">
           <button type="button" onclick="changeScanZoom(-0.25)" aria-label="Уменьшить">−</button>
-          <button type="button" class="scan-zoom-label" onclick="resetScanZoom()" aria-label="Исходный масштаб">100%</button>
+          <button type="button" class="scan-zoom-label" onclick="resetScanZoom()" aria-label="Масштаб 100 процентов" title="Показать в масштабе 100%">100%</button>
           <button type="button" onclick="changeScanZoom(0.25)" aria-label="Увеличить">+</button>
+          <button type="button" class="scan-fit" onclick="fitScanToView()" aria-label="Вписать в окно" title="Вписать в окно"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/></svg></button>
           <button type="button" class="scan-modal-close" onclick="closeScan()" aria-label="Закрыть">×</button>
         </div>
       </div>
       <div class="scan-modal-body">
-        <div class="scan-modal-status">Загрузка скана…</div>
-        <img class="scan-modal-image" alt="Скан ведомости" referrerpolicy="no-referrer" />
-        <div class="scan-modal-hint">Колесо или щипок — масштаб · перетаскивание — перемещение · двойной клик — увеличить</div>
+        <div class="scan-modal-status">Загрузка цифрового образа…</div>
+        <img class="scan-modal-image" alt="Цифровой образ ведомости" referrerpolicy="no-referrer" />
+        <div class="scan-modal-hint">Колесо или щипок — масштаб · перетаскивание — перемещение · Shift + колесо — сдвиг</div>
       </div>
     </div>`;
   modal.addEventListener("click", e => { if (e.target === modal) closeScan(); });
@@ -316,10 +350,12 @@ async function openScan(url) {
   const modal = ensureScanModal();
   const image = modal.querySelector(".scan-modal-image");
   const status = modal.querySelector(".scan-modal-status");
+  const generation = ++scanView.generation;
+  image.onload = image.onerror = null;
   image.removeAttribute("src");
   image.style.display = "none";
   status.style.display = "block";
-  status.textContent = "Загрузка скана…";
+  status.textContent = "Загрузка цифрового образа…";
   modal.classList.remove("image-ready");
   modal.classList.add("open");
   document.body.classList.add("scan-modal-open");
@@ -329,16 +365,19 @@ async function openScan(url) {
     // Скан может лежать на Яндекс Диске (публичная ссылка) или прямо на сайте
     // (assets/scans/…) / по прямой ссылке на картинку.
     const imageUrl = isYandexDiskUrl(url) ? await yandexDiskImageUrl(url) : url;
+    if (generation !== scanView.generation) return;
     if (!imageUrl) throw new Error("Ссылка на изображение не получена");
     image.onload = () => {
       status.style.display = "none";
       image.style.display = "block";
       modal.classList.add("image-ready");
+      fitScanToView();
     };
     image.onerror = () => showScanError(status, image, url);
     image.src = imageUrl;
   } catch (error) {
-    console.error("Не удалось загрузить скан", error);
+    if (generation !== scanView.generation) return;
+    console.error("Не удалось загрузить цифровой образ", error);
     showScanError(status, image, url);
   }
 }
@@ -362,20 +401,23 @@ function showScanError(status, image, url) {
   image.style.display = "none";
   status.style.display = "block";
   const where = isYandexDiskUrl(url) ? "на Яндекс Диске" : "в отдельной вкладке";
-  status.innerHTML = `Не удалось показать скан.<br><a href="${esc(url)}" target="_blank" rel="noopener">Открыть его ${where}</a>`;
+  status.innerHTML = `Не удалось показать цифровой образ.<br><a href="${esc(url)}" target="_blank" rel="noopener">Открыть его ${where}</a>`;
 }
 
 function closeScan() {
   const modal = document.getElementById("scanModal");
   if (!modal) return;
+  scanView.generation++;
   modal.classList.remove("open");
   modal.classList.remove("image-ready", "is-zoomed");
   document.body.classList.remove("scan-modal-open");
   const image = modal.querySelector(".scan-modal-image");
-  if (image) image.removeAttribute("src");
+  if (image) { image.onload = image.onerror = null; image.removeAttribute("src"); }
+  resetScanZoom();
+  modal.querySelector('.scan-modal-body').classList.remove('is-dragging');
 }
 
-function changeScanZoom(delta) { zoomScanAt(scanView.zoom + delta); }
+function changeScanZoom(delta) { zoomScanAt(scanView.zoom * (delta > 0 ? 1.25 : 1 / 1.25)); }
 
 function resetScanZoom() {
   scanView.zoom = 1;
@@ -384,6 +426,8 @@ function resetScanZoom() {
   scanView.pointers.clear();
   scanView.dragStart = null;
   scanView.pinchDistance = 0;
+  scanView.pinchCenter = null;
+  scanView.fitted = false;
   applyScanTransform();
 }
 

@@ -1,0 +1,48 @@
+const fs = require('node:fs');
+const vm = require('node:vm');
+const assert = require('node:assert/strict');
+const listeners = {}, observers = [];
+const classes = new Set(['open']);
+const classList = {add(value) {classes.add(value);}, remove(value) {classes.delete(value);}, contains(value) {return classes.has(value);}};
+const image = {naturalWidth:2000, naturalHeight:280, style:{}};
+const label = {};
+const body = {clientWidth:800, clientHeight:600, style:{}, classList, setPointerCapture() {},
+  getBoundingClientRect() {return {left:20, top:40, width:this.clientWidth, height:this.clientHeight};},
+  querySelector() {return image;}, addEventListener(name, handler) {listeners[name] = handler;}};
+const modal = {classList, querySelector(selector) {return selector === '.scan-modal-body' ? body : selector === '.scan-modal-image' ? image : label;}};
+const context = {window:{}, document:{getElementById() {return modal;}, querySelector() {return body;}, addEventListener() {}},
+  ResizeObserver:class {constructor(callback) {observers.push(callback);} observe() {}}};
+vm.createContext(context);
+vm.runInContext(fs.readFileSync('js/ui.js', 'utf8'), context);
+const view = vm.runInContext('scanView', context);
+const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-8, `${a} != ${b}`);
+const worldAt = (x, y) => [(x - 420 - view.x) / view.zoom, (y - 340 - view.y) / view.zoom];
+context.fitScanToView(); near(view.zoom, .368); assert.equal(label.textContent, '37%');
+const anchor = worldAt(620, 420);
+context.zoomScanAt(2, 620, 420);
+worldAt(620,420).forEach((value,i) => near(value, anchor[i]));
+context.zoomScanAt(.7, 620, 420);
+worldAt(620,420).forEach((value,i) => near(value, anchor[i]));
+assert.notEqual(view.x, 0, 'Crossing 100% must not snap back to center');
+context.initScanGestures(modal);
+const wheel = deltaY => listeners.wheel({deltaY,deltaX:0,deltaMode:0,clientX:620,clientY:420,preventDefault() {}});
+const initial = {zoom:view.zoom,x:view.x,y:view.y};
+wheel(-100); const first = view.zoom; wheel(-100); assert.ok(view.zoom > first, 'Second wheel movement must still zoom');
+wheel(100); wheel(100); near(view.zoom,initial.zoom); near(view.x,initial.x); near(view.y,initial.y);
+const pointer = (id,x,y) => ({pointerId:id,clientX:x,clientY:y,pointerType:'touch',target:{closest() {return null;}},preventDefault() {}});
+context.fitScanToView();
+listeners.pointerdown(pointer(1,200,300)); listeners.pointermove(pointer(1,240,325));
+near(view.x,40); near(view.y,25); assert.equal(view.fitted,false);
+listeners.pointerup(pointer(1,240,325));
+listeners.pointerdown(pointer(1,200,300)); listeners.pointerdown(pointer(2,400,300));
+const pinchAnchor = worldAt(300,300);
+listeners.pointermove(pointer(1,150,300));
+worldAt(275,300).forEach((value,i) => near(value,pinchAnchor[i]));
+listeners.pointerup(pointer(2,400,300)); const panX=view.x;
+listeners.pointermove(pointer(1,160,300)); near(view.x,panX+10);
+listeners.pointerup(pointer(1,160,300));
+context.resetScanZoom(); near(view.zoom,1); near(view.x,0); assert.equal(label.textContent,'100%');
+context.changeScanZoom(-.25); near(view.zoom,.8); context.changeScanZoom(.25); near(view.zoom,1);
+context.fitScanToView(); body.clientWidth=600; observers[0](); near(view.zoom,.268);
+context.zoomScanAt(1); body.clientWidth=900; observers[0](); near(view.zoom,1);
+console.log('PASS native scale, fit, cursor anchor across 100%, repeated wheel zoom, pan at fit, pinch with translation, one-finger continuation and resize behavior.');
