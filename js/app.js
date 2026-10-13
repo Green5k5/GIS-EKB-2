@@ -5,10 +5,10 @@ function update() {
   renderActiveTags();
   renderMap(filtered);
   updateStats(filtered);
+  renderDatabaseMapFilter(filtered);
   if (typeof renderInfographics === "function") renderInfographics();
 
-  // Подгонка карты под найденные усадьбы
-  fitToEstates(16, true);
+  // Filtering redraws the data and preserves the user's current map view.
 }
 
 function fitToEstates(maxZoom, animate) {

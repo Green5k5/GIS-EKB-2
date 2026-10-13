@@ -2,6 +2,67 @@
 let state = {};
 let searchQuery = "";
 let expanded = {};
+let databaseMapFilter = null;
+function matchesDatabaseMapFilter(item) {
+  return !databaseMapFilter || databaseMapFilter.ids.has(Number(item.id));
+}
+
+function clearDatabaseMapFilter() {
+  databaseMapFilter = null;
+  window.historicVectorLayer?.setSelectedStreet(null);
+  if (typeof closeSelected === "function") closeSelected();
+  update();
+}
+
+function applyDatabaseMapFilter(ids, description, question, options = {}) {
+  const known = new Set(allData.map(item => Number(item.id)));
+  const selected = new Set(ids.map(Number).filter(id => known.has(id)));
+  if (!selected.size) return false;
+  // Open the exact answer set; previous sidebar filters must not hide its records.
+  FILTERS.forEach(f => state[f.key].clear());
+  searchQuery = "";
+  areaRange = { min: AREA_MIN, max: AREA_MAX };
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) searchInput.value = "";
+  const searchClear = document.getElementById("searchClear");
+  if (searchClear) searchClear.classList.remove("show");
+  const searchResults = document.getElementById("searchResults");
+  if (searchResults) searchResults.classList.remove("show");
+  databaseMapFilter = { ids: selected, description, question, kind: options.kind || 'database', streetId: options.streetId ?? null };
+  window.historicVectorLayer?.setSelectedStreet(databaseMapFilter.streetId);
+  if (typeof closeSelected === "function") closeSelected();
+  update();
+  return true;
+}
+
+function renderDatabaseMapFilter(filtered) {
+  const banner = document.getElementById("databaseMapBanner");
+  if (!banner) return;
+  banner.hidden = !databaseMapFilter;
+  document.getElementById("page-map").classList.toggle("has-database-filter", Boolean(databaseMapFilter));
+  if (!databaseMapFilter) return;
+  const isStreet = databaseMapFilter.kind === 'street';
+  document.getElementById("databaseMapOrigin").textContent = isStreet ? 'Улица на карте' : 'Поиск в базе';
+  const back = document.getElementById("databaseMapBack");
+  if (back) back.hidden = isStreet;
+  document.getElementById("databaseMapAll").textContent = isStreet ? 'Все усадьбы улицы' : 'Вся выборка';
+  document.getElementById("databaseMapClear").setAttribute('aria-label', isStreet ? 'Убрать фильтр улицы' : 'Убрать фильтр поиска в базе');
+  document.getElementById("databaseMapDescription").textContent = databaseMapFilter.description;
+  document.getElementById("databaseMapQuestion").textContent = databaseMapFilter.question;
+  const mapped = filtered.filter(item => item.lat && item.lng).length;
+  document.getElementById("databaseMapCount").textContent = `На карте ${mapped.toLocaleString("ru-RU")} из ${databaseMapFilter.ids.size.toLocaleString("ru-RU")} усадеб`;
+}
+
+// Map controls work independently of the optional question assistant.
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('databaseMapClear')?.addEventListener('click', clearDatabaseMapFilter);
+  document.getElementById('databaseMapAll')?.addEventListener('click', () => {
+    if (databaseMapFilter?.kind !== 'street') return;
+    const selection = databaseMapFilter;
+    applyDatabaseMapFilter([...selection.ids], selection.description, selection.question, {kind: 'street', streetId: selection.streetId});
+    fitToEstates(16, true);
+  });
+});
 const AREA_VALUES = allData.map(item => Number(item.area_sazh)).filter(value => Number.isFinite(value) && value > 0);
 const AREA_MIN = Math.floor(Math.min(...AREA_VALUES));
 const AREA_MAX = Math.ceil(Math.max(...AREA_VALUES));
@@ -40,6 +101,7 @@ function initFiltersState() {
 // Получение отфильтрованных данных
 function getFiltered() {
   return allData.filter(item => {
+    if (!matchesDatabaseMapFilter(item)) return false;
     if (searchQuery && !matchesSearch(item, searchQuery)) return false;
     if (!matchesArea(item)) return false;
     for (let i = 0; i < FILTERS.length; i++) {
@@ -54,6 +116,7 @@ function getFiltered() {
 function getCrossCounts(dimKey) {
   const counts = {};
   allData.forEach(item => {
+    if (!matchesDatabaseMapFilter(item)) return;
     if (searchQuery && !matchesSearch(item, searchQuery)) return;
     if (!matchesArea(item)) return;
     for (let i = 0; i < FILTERS.length; i++) {
@@ -67,23 +130,23 @@ function getCrossCounts(dimKey) {
 
 // Переключение фильтра
 function toggle(key, value) {
-  if (state[key].has(value)) {
+  const selecting = !state[key].has(value);
+  if (!selecting) {
     state[key].delete(value);
   } else {
     state[key].add(value);
   }
-  if (key === "settlement" && typeof flyToSettlement === "function") {
-    setTimeout(() => {
-      if (state.settlement.size === 1) {
-        flyToSettlement(Array.from(state.settlement)[0]);
-      }
-    }, 100);
-  }
   if (typeof update === 'function') update();
+  if (selecting && key === "settlement" && state.settlement.size === 1 && typeof flyToSettlement === "function") {
+    flyToSettlement(value);
+  }
 }
 
 // Сброс всех фильтров
 function resetAllFilters() {
+  databaseMapFilter = null;
+  window.historicVectorLayer?.setSelectedStreet(null);
+  if (typeof closeSelected === "function") closeSelected();
   FILTERS.forEach(f => {
     state[f.key].clear();
   });
@@ -218,6 +281,7 @@ function renderActiveTags() {
   });
   if (searchQuery) tags.push({ key: "search", val: searchQuery });
   if (areaRangeActive()) tags.push({ key: "area", val: `${areaRange.min}–${areaRange.max} саж²` });
+  if (databaseMapFilter) tags.push({ key: "database", val: databaseMapFilter.kind === 'street' ? databaseMapFilter.description : "Поиск в базе" });
 
   const activeBar = document.getElementById("activeBar");
   if (activeBar) {
@@ -236,7 +300,9 @@ function renderActiveTags() {
     button.textContent = label + " ×";
     button.setAttribute("aria-label", `Убрать фильтр ${label}`);
     button.onclick = () => {
-      if (t.key === "search") {
+      if (t.key === "database") {
+        clearDatabaseMapFilter();
+      } else if (t.key === "search") {
         clearSearch();
       } else if (t.key === "area") {
         areaRange = { min: AREA_MIN, max: AREA_MAX };

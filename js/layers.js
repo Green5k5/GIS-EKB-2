@@ -96,7 +96,7 @@ var vectorLayersData = {"fortress":[{"name":"","lines":[[[56.8469722,60.5886976]
       if (open.length) features.push({ kind: "river", name: f.name, lines: open, label: label });
     });
     vectorLayersData.streets.forEach(function (f) {
-      features.push({ kind: "street", lines: f.lines, label: f.name ? "ул. " + f.name : "" });
+      features.push({ kind: "street", streetName: f.name, lines: f.lines, label: f.name ? "ул. " + f.name : "" });
     });
     vectorLayersData.fortress.forEach(function (f) {
       features.push({ kind: "fortress", lines: f.lines, label: "Екатеринбургская крепость" });
@@ -104,7 +104,8 @@ var vectorLayersData = {"fortress":[{"name":"","lines":[[[56.8469722,60.5886976]
 
     // Выше исторических планов (100), ниже усадеб (300)
     var layer = new Kartograf.HistoricLayer(features, {
-      zIndex: 200, spec: STYLE.spec, palettes: STYLE.palettes, look: STYLE.look, smooth: SMOOTH_M
+      zIndex: 200, spec: STYLE.spec, palettes: STYLE.palettes, look: STYLE.look, smooth: SMOOTH_M,
+      onFeatureClick: selectHistoricStreet
     });
     var applyTheme = function () {
       layer.setTheme(document.body.classList.contains("dark-theme"));

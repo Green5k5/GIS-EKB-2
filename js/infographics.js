@@ -13,6 +13,7 @@ let infoExpanded = {};
 
 function infoSubset(exceptKey) {
   return allData.filter(item => {
+    if (!matchesDatabaseMapFilter(item)) return false;
     if (searchQuery && !matchesSearch(item, searchQuery)) return false;
     if (typeof matchesArea === "function" && !matchesArea(item)) return false;
     for (let i = 0; i < FILTERS.length; i++) {
