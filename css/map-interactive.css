@@ -22,8 +22,6 @@
  .database-map-actions { width:100%; }
  #databaseMapClear { margin-left:auto; }
 }
-.assistant-record-tools input::-webkit-search-cancel-button,
-.assistant-record-tools input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
 /* Clickable historic street choices. */
 .database-map-kicker #databaseMapOrigin { display:inline; margin:0; color:var(--accent); font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
 .database-map-actions button[hidden] { display:none; }

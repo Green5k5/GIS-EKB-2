@@ -1,4 +1,6 @@
 /* Interactive answers and their exact map selection. */
+.assistant-record-tools input::-webkit-search-cancel-button,
+.assistant-record-tools input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
 .assistant-result-actions { display:flex; flex-wrap:wrap; gap:8px; margin:17px 0; }
 .assistant-result-actions button, .assistant-more { padding:10px 14px; border:1px solid #595145; border-radius:9px; background:transparent; color:#e8dfd0; font:inherit; font-size:12px; cursor:pointer; }
 .assistant-result-actions button:hover, .assistant-more:hover { border-color:var(--accent); background:#2a251e; }
