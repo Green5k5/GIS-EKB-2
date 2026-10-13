@@ -572,10 +572,18 @@
       // Автопанорамирование: попап целиком в кадре
       requestAnimationFrame(() => {
         if (!this._popup || this._popup.el !== root) return;
-        const r = root.getBoundingClientRect(), c = this.container.getBoundingClientRect();
-        const pad = 16;
+        // The root is a zero-size geographic anchor; measure the visible card.
+        const r = wrap.getBoundingClientRect(), c = this.container.getBoundingClientRect();
+        const pad = 20;
+        let safeTop = c.top + pad;
+        const banner = this.container.parentElement.querySelector('#databaseMapBanner');
+        if (banner && !banner.hidden) {
+          const b = banner.getBoundingClientRect();
+          if (r.right > b.left && r.left < b.right) safeTop = Math.max(safeTop, b.bottom + pad);
+        }
         let dx = 0, dy = 0;
-        if (r.top < c.top + pad) dy = r.top - c.top - pad;
+        if (r.top < safeTop) dy = r.top - safeTop;
+        else if (r.bottom > c.bottom - pad) dy = r.bottom - c.bottom + pad;
         if (r.left < c.left + pad) dx = r.left - c.left - pad;
         else if (r.right > c.right - pad) dx = r.right - c.right + pad;
         if (dx || dy) this.panBy(dx, dy);

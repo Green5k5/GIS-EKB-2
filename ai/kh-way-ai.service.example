@@ -1,0 +1,15 @@
+[Unit]
+Description=KH WAY local database assistant
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/kh-way
+Environment=LLAMA_THREADS=4
+ExecStart=/var/www/kh-way/ai/start-model.sh
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

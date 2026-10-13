@@ -925,6 +925,68 @@ body {
   margin-bottom: 24px;
 }
 
+/* Поиск по базе на странице инфографики */
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.data-assistant { margin: 24px 0 20px; padding: 24px; border-radius: 16px; background: var(--dark); color: #f7f2e8; }
+.data-assistant-copy { display: grid; grid-template-columns: minmax(190px, .72fr) minmax(260px, 1.28fr); gap: 28px; align-items: end; margin-bottom: 20px; }
+.data-assistant-copy h2 { margin: 0; font-family: Georgia, serif; font-size: clamp(24px, 3vw, 38px); font-weight: 500; letter-spacing: -.025em; }
+.data-assistant-model-state { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; color: #aaa294; font-size: 11px; }
+.data-assistant-model-state i { width: 7px; height: 7px; border-radius: 50%; background: #6f6a61; }
+.data-assistant-model-state.is-online { color: #d4cbbd; }
+.data-assistant-model-state.is-online i { background: #8fae76; box-shadow: 0 0 0 3px rgba(143, 174, 118, .14); }
+.data-assistant-model-state.is-offline i { background: #b47d6b; }
+.data-assistant-copy p { margin: 0; max-width: 660px; color: #c9c1b2; font-size: 13px; line-height: 1.55; }
+.data-assistant-field { display: flex; min-height: 52px; background: #fff; border-radius: 12px; overflow: hidden; }
+.data-assistant-field:focus-within { outline: 2px solid var(--accent); outline-offset: 3px; }
+.data-assistant-input-wrap { position: relative; display: flex; flex: 1; min-width: 0; }
+.data-assistant-field input { flex: 1; width: 100%; min-width: 0; padding: 0 46px 0 17px; border: 0; outline: 0; box-shadow: none; appearance: none; background: transparent; color: #1a1814; font: inherit; font-size: 14px; }
+.data-assistant-field input:focus, .data-assistant-field input:focus-visible { outline: none; box-shadow: none; }
+.data-assistant-field input::-webkit-search-cancel-button, .data-assistant-field input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
+.data-assistant-field input::placeholder { color: #837c70; }
+.data-assistant-field > button { display: inline-flex; align-items: center; gap: 8px; margin: 5px; padding: 0 16px; border: 0; border-radius: 9px; background: var(--accent); color: var(--dark); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.data-assistant-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #8b8172; cursor: pointer; transition: background .15s, color .15s; }
+.data-assistant-clear[hidden] { display: none; }
+.data-assistant-clear:hover { background: #f1ece4; color: #40382d; }
+.data-assistant-clear:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.data-assistant-clear svg { stroke-linecap: round; }
+.data-assistant-field button:disabled { opacity: .65; cursor: wait; }
+.data-assistant-field button svg { width: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+.data-assistant-examples { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+.data-assistant-examples button { padding: 6px 10px; border: 1px solid #4a463f; border-radius: 999px; background: transparent; color: #c9c1b2; font: inherit; font-size: 11px; cursor: pointer; }
+.data-assistant-examples button:hover, .data-assistant-examples button:focus-visible { border-color: var(--accent); color: #fff; }
+.data-assistant-result { margin-top: 18px; padding-top: 18px; border-top: 1px solid #423e37; }
+.data-assistant-result-head { display: flex; justify-content: space-between; gap: 16px; color: #aaa294; font-size: 11px; }
+.data-assistant-status { color: var(--accent); }
+.data-assistant-list { margin-top: 14px; max-height: 420px; overflow: auto; border: 1px solid #423e37; border-radius: 12px; scrollbar-width: thin; }
+.data-assistant-list > div { display: flex; justify-content: space-between; gap: 18px; padding: 10px 14px; color: #e5ddcf; font-size: 12px; line-height: 1.5; }
+.data-assistant-list > div + div { border-top: 1px solid #35312b; }
+.data-assistant-list > div:nth-child(even) { background: rgba(255,255,255,.025); }
+.data-assistant-list b { flex-shrink: 0; font-variant-numeric: tabular-nums; color: var(--accent); }
+.data-assistant-list-note { color: #aaa294; font-size: 12px; }
+.data-assistant-answer { max-width: 850px; margin-top: 9px; color: #fff; font-family: Georgia, serif; font-size: 17px; line-height: 1.58; }
+.data-assistant-sources { margin-top: 14px; color: #c9c1b2; font-size: 11px; }
+.data-assistant-sources summary { width: max-content; max-width: 100%; cursor: pointer; color: var(--accent); }
+.data-assistant-sources > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.data-assistant-sources article { display: grid; gap: 2px; padding: 10px 12px; border-radius: 10px; background: #26231f; }
+.data-assistant-sources article b { color: #f7f2e8; font-size: 11px; }
+.data-assistant-sources article small { color: #887f70; overflow-wrap: anywhere; }
+.data-assistant-loading, .data-assistant-error { display: flex; align-items: center; gap: 10px; color: #c9c1b2; font-size: 12px; }
+.data-assistant-loading i { width: 14px; height: 14px; border: 2px solid #665f53; border-top-color: var(--accent); border-radius: 50%; animation: assistant-spin .8s linear infinite; }
+.data-assistant-error { align-items: flex-start; flex-direction: column; }
+.data-assistant-error b { color: #fff; }
+@keyframes assistant-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .data-assistant-loading i { animation: none; } }
+@media (max-width: 680px) {
+  .data-assistant { padding: 18px; margin-top: 18px; }
+  .data-assistant-copy { grid-template-columns: 1fr; gap: 7px; }
+  .data-assistant-field { flex-direction: column; padding: 5px; }
+  .data-assistant-field input { min-height: 44px; padding: 0 46px 0 11px; }
+  .data-assistant-field > button { min-height: 42px; justify-content: center; }
+  .data-assistant-sources > div { grid-template-columns: 1fr; }
+  .data-assistant-result-head { flex-direction: column; gap: 4px; }
+}
+body.dark-theme .data-assistant { background: #171510; }
+
 .info-card {
   background: var(--white);
   border-radius: 10px;

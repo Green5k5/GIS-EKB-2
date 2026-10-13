@@ -1,0 +1,3 @@
+ai/model-runtime.*.log
+models/*.gguf
+ai/llama-win-cpu-x64/

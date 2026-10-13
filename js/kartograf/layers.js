@@ -472,7 +472,9 @@
       opts = opts || {};
       this.zIndex = opts.zIndex || 200;
       this.visible = opts.visible !== false;
-      this.cursor = false;
+      this.cursor = Boolean(opts.onFeatureClick);
+      this.onFeatureClick = opts.onFeatureClick || null;
+      this.selectedStreetId = null;
       this.spec = opts.spec;
       this.palettes = opts.palettes;
       this.look = opts.look || {};
@@ -610,6 +612,12 @@
       return false;
     }
 
+    setSelectedStreet(id) {
+      this.selectedStreetId = id;
+      this._ver++;
+      if (this._map) this._map.requestRender();
+    }
+
     _paint(x, v) {
       const P = this.palettes[this.dark ? "dark" : "light"];
       const look = this.look || {};
@@ -690,6 +698,12 @@
         if (look.teeth !== false && z >= 13.6) {
           this._teeth(x, walls, v, W, P.wall, clamp01((z - 13.6) / 0.8), look.teethScale || 1);
         }
+      }
+      const selected = streets.filter(f => f.id === this.selectedStreetId);
+      if (selected.length) {
+        x.lineCap = 'round';
+        this._strokeGroups(x, v, selected, f => this._width(f, z) + 4, this.dark ? '#D3AB69' : '#B78A43', .75);
+        this._strokeGroups(x, v, selected, f => Math.max(2, this._width(f, z) - 1), this.dark ? '#F0D49F' : '#F4DCAB', 1);
       }
     }
 
@@ -911,10 +925,11 @@
       }
       return best;
     }
-    tooltipFor(f) { return f.label; }
+    tooltipFor(f) { return f.kind === 'street' && this.onFeatureClick ? f.label + ' · выбрать усадьбы' : f.label; }
     onHit(f, e) {
       const map = this._map;
       if (!map) return;
+      if (this.onFeatureClick && this.onFeatureClick(f, e) === true) return;
       map.closePopup();
       map.showTooltip(f.label, e.point.x, e.point.y);
       clearTimeout(this._tt);

@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ГИС-реконструкция поселений Екатеринбургской агломерации</title>
-<link rel="stylesheet" href="css/style.css?v=20261001-vladimir">
+<link rel="stylesheet" href="css/style.css?v=20261013-map-results2">
+<link rel="stylesheet" href="css/assistant-interactive.css?v=20261013-popup-space">
 </head>
 <body>
 
@@ -83,6 +84,10 @@
   </aside>
   <div class="map-area">
     <div id="map"></div>
+    <section class="database-map-banner" id="databaseMapBanner" aria-label="Фильтр по ответу базы" hidden>
+      <div class="database-map-copy"><span class="database-map-kicker"><span id="databaseMapOrigin">Поиск в базе</span> <span id="databaseMapCount"></span></span><strong id="databaseMapDescription"></strong><span id="databaseMapQuestion"></span></div>
+      <div class="database-map-actions"><button type="button" id="databaseMapAll">Вся выборка</button><button type="button" id="databaseMapBack">К ответу</button><button type="button" id="databaseMapClear" aria-label="Убрать фильтр поиска в базе" title="Убрать фильтр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div>
+    </section>
     <div class="cross-badge" id="crossBadge"><span class="cross-dot"></span><span id="crossText"></span></div>
     <div class="overlay-control" id="overlayControl" style="display:none">
       <button class="overlay-control-toggle" id="overlayControlToggle" type="button" aria-controls="overlaySettings" aria-expanded="false">
@@ -237,6 +242,34 @@
   <div class="page-scroll">
     <div class="page-title">Инфографика</div>
     <div class="page-sub">Екатеринбургская агломерация в цифрах. По данным ведомостей 1809–1810 гг.</div>
+    <section class="data-assistant" aria-labelledby="dataAssistantTitle">
+      <div class="data-assistant-copy">
+        <div>
+          <h2 id="dataAssistantTitle">Спросить у базы</h2>
+          <span class="data-assistant-model-state" id="dataAssistantModelState"><i></i><span>Проверяю модель</span></span>
+        </div>
+        <p>Спросите о владельцах, усадьбах, улицах или площадях. Простые вопросы обрабатываются сразу, сложные помогает разобрать локальный ИИ. Все числа и списки рассчитываются по реестру.</p>
+      </div>
+      <form class="data-assistant-form" id="dataAssistantForm">
+        <label class="sr-only" for="dataAssistantQuestion">Вопрос по базе данных</label>
+        <div class="data-assistant-field">
+          <div class="data-assistant-input-wrap">
+            <input id="dataAssistantQuestion" name="question" type="search" maxlength="300" autocomplete="off" placeholder="Например: у кого был самый большой участок в Уктусе?">
+            <button type="button" id="dataAssistantClear" class="data-assistant-clear" aria-label="Очистить вопрос" title="Очистить вопрос" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button>
+          </div>
+          <button type="submit" id="dataAssistantSubmit"><span>Найти ответ</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+        </div>
+        <div class="data-assistant-examples" aria-label="Примеры вопросов">
+          <button type="button" data-ai-question="Сколько было мужчин?">Мужчины-владельцы</button>
+          <button type="button" data-ai-question="Какие есть улицы?">Все улицы</button>
+          <button type="button" data-ai-question="Сколько усадеб у владельцев с фамилией Петров?">Фамилия Петров</button>
+          <button type="button" data-ai-question="Какая фамилия встречается чаще всего?">Частая фамилия</button>
+          <button type="button" data-ai-question="Сколько усадеб принадлежало купцам?">Усадьбы купцов</button>
+          <button type="button" data-ai-question="У кого был самый большой участок в Уктусе?">Самый большой участок</button>
+        </div>
+      </form>
+      <div class="data-assistant-result" id="dataAssistantResult" hidden aria-live="polite"></div>
+    </section>
     <div class="stat-row" id="statRow"></div>
     <div class="info-grid" id="infoGrid"></div>
   </div>
@@ -361,21 +394,23 @@
 
 <script src="js/kartograf/mvt.js?v=20260912"></script>
 <script src="js/kartograf/render.js?v=20260927-team-area"></script>
-<script src="js/kartograf/map.js?v=20260927"></script>
+<script src="js/kartograf/map.js?v=20261013-popup-space2"></script>
 <script src="js/kartograf/basemap.js?v=20260927"></script>
-<script src="js/kartograf/layers.js?v=20260927"></script>
+<script src="js/kartograf/layers.js?v=20261013-street-select"></script>
 <script src="js/data-records.js?v=20261001-vladimir"></script>
 <script src="js/data-polygons.js?v=20261001-readable-data"></script>
 <script src="js/data.js?v=20261001-readable-data"></script>
 <script src="js/utils.js?v=20261001-vladimir"></script>
 <script src="js/map.js?v=20260927-team-area"></script>
-<script src="js/filters.js?v=20260927-team-area"></script>
-<script src="js/ui.js?v=20261001-vladimir"></script>
+<script src="js/filters.js?v=20261013-stable-view"></script>
+<script src="js/ui.js?v=20261013-map-results"></script>
 <script src="js/table.js"></script>
 <script src="js/glossary-map.js?v=20260927-glossary2"></script>
 <script src="js/glossary.js?v=20260927-glossary2"></script>
-<script src="js/infographics.js?v=20261001-vladimir"></script>
-<script src="js/app.js?v=20261001-vladimir"></script>
-<script src="js/layers.js?v=20260927-team-area"></script>
+<script src="js/infographics.js?v=20261013-map-results"></script>
+<script src="js/data-assistant.js?v=20261013-cancel"></script>
+<script src="js/app.js?v=20261013-stable-view"></script>
+<script src="js/street-selection.js?v=20261013-2"></script>
+<script src="js/layers.js?v=20261013-street-select"></script>
 </body>
 </html>
