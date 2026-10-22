@@ -52,15 +52,7 @@ const plotGroups = [
 const tx = (...args) => db.prepare(...args);
 db.exec('BEGIN');
 try {
-  db.exec(`
-  DELETE FROM records;
-  DELETE FROM plots;
-  DELETE FROM historical_overlays;
-  DELETE FROM historical_features;
-  DELETE FROM glossary_terms;
-  DELETE FROM releases;
-  DELETE FROM settlements;
-`);
+  db.exec('DELETE FROM records; DELETE FROM plots; DELETE FROM historical_overlays; DELETE FROM historical_features; DELETE FROM glossary_terms; DELETE FROM releases; DELETE FROM settlements;');
   const insSettlement = tx('INSERT INTO settlements(id,slug,name,color,bounds_json,sort_order) VALUES(?,?,?,?,?,?)');
   for (const s of settlements) insSettlement.run(s.id, s.slug, s.name, s.color, JSON.stringify(s.bounds), s.sortOrder);
 

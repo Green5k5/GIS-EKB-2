@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Проверка сканов</title>
+<style>
+:root { --bg:#FAF7F2; --card:#F0EBE3; --border:#E8E2DA; --text:#2C2418; --body:#5A5040; --muted:#8A7F70;
+        --accent:#C49A5C; --ok:#4F7D52; --bad:#B4483F; --warn:#B07A1E; }
+* { box-sizing:border-box; }
+body { margin:0; font:14px/1.45 'Segoe UI', system-ui, sans-serif; background:var(--bg); color:var(--text); }
+main { max-width:1100px; margin:0 auto; padding:24px 16px 64px; }
+h1 { font:600 24px/1.2 Georgia, serif; margin:0 0 6px; }
+p.lead { color:var(--body); margin:0 0 20px; max-width:760px; }
+.panel { background:#fff; border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:16px; }
+.row { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; }
+label { display:inline-flex; gap:6px; align-items:center; cursor:pointer; }
+button { font:inherit; border:1px solid var(--accent); background:var(--accent); color:#fff; border-radius:7px; padding:7px 14px; cursor:pointer; }
+button.ghost { background:#fff; color:var(--text); border-color:var(--border); }
+button:disabled { opacity:.5; cursor:default; }
+.bar { height:6px; background:var(--card); border-radius:3px; overflow:hidden; margin-top:12px; }
+.bar > div { height:100%; width:0; background:var(--accent); transition:width .2s; }
+#status { color:var(--body); margin-top:8px; min-height:1.4em; }
+.summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+.tile { background:var(--card); border-radius:8px; padding:10px 12px; }
+.tile b { display:block; font-size:22px; font-variant-numeric:tabular-nums; }
+.tile span { color:var(--body); font-size:12px; }
+.tile.bad b { color:var(--bad); } .tile.warn b { color:var(--warn); } .tile.ok b { color:var(--ok); }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
+th { color:var(--muted); font-weight:600; font-size:12px; position:sticky; top:0; background:#fff; }
+td.num { font-variant-numeric:tabular-nums; white-space:nowrap; }
+.pill { display:inline-block; padding:1px 8px; border-radius:10px; font-size:12px; white-space:nowrap; }
+.s-ok { background:#E5EFE3; color:var(--ok); } .s-dead, .s-mismatch, .s-error { background:#F6E1DE; color:var(--bad); }
+.s-none, .s-check, .s-limit { background:#F6EBD5; color:var(--warn); }
+.tablewrap { max-height:60vh; overflow:auto; border:1px solid var(--border); border-radius:8px; }
+img.thumb { max-width:220px; max-height:90px; display:block; background:var(--card); }
+.muted { color:var(--muted); }
+a { color:#8A6431; }
+@media (max-width:640px) { .hide-sm { display:none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Проверка сканов ведомостей</h1>
+  <p class="lead">Страница проходит по всем усадьбам из <code>js/data-records.js</code> и проверяет, что ссылка на скан
+  открывается и ведёт на файл с тем же номером, что у усадьбы. Для ссылок Яндекс Диска используется его
+  публичный API, для файлов на сайте - загрузка картинки. Проверка идёт из вашего браузера; при ограничении
+  частоты запросов (ответ 429) страница сама делает паузу и продолжает.</p>
+
+  <div class="panel">
+    <div class="row" id="settlements"></div>
+    <div class="row" style="margin-top:12px">
+      <label><input type="checkbox" id="optThumbs"> показывать превью (для глазной сверки строки с владельцем)</label>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button id="btnRun">Проверить</button>
+      <button id="btnStop" class="ghost" disabled>Остановить</button>
+      <button id="btnCsv" class="ghost" disabled>Скачать CSV с проблемами</button>
+      <button id="btnCsvAll" class="ghost" disabled>Скачать CSV целиком</button>
+    </div>
+    <div class="bar"><div id="bar"></div></div>
+    <div id="status">Данные загружаются…</div>
+  </div>
+
+  <div class="panel"><div class="summary" id="summary"></div></div>
+
+  <div class="panel">
+    <div class="row" style="margin-bottom:10px">
+      <label><input type="radio" name="show" value="problems" checked> только проблемы</label>
+      <label><input type="radio" name="show" value="all"> все</label>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Поселение</th><th>№</th><th>Владелец</th><th class="hide-sm">Источник</th><th>Результат</th><th>Файл / пояснение</th><th class="thumbcol" hidden>Превью</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script src="../js/data-records.js"></script>
+<script>
+const STATUS = {
+  ok:       "открывается, номер совпадает",
+  mismatch: "номер файла не совпадает",
+  dead:     "ссылка не работает",
+  error:    "ошибка",
+  none:     "скана нет",
+  check:    "открывается, номер не проверить",
+  limit:    "не проверено (лимит)"
+};
+const PROBLEM = new Set(["mismatch", "dead", "error", "none", "check", "limit"]);
+const API = "https://cloud-api.yandex.net/v1/disk/public/resources";
+const NUM_RE = /^\s*(\d+)\s*([a-zа-я])?(?=[\s_.(\-]|$)/i;
+const CONCURRENCY = 3;
+
+let results = [];      // {rec, status, file, note, thumb}
+let stopFlag = false;
+
+const esc = s => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const baseNum = n => { const s = String(n).trim(); return s.endsWith(".0") ? s.slice(0, -2) : s; };
+const owner = d => [d.surname, d.name, d.patronymic].filter(Boolean).join(" ");
+const isYandex = u => /^https?:\/\/(disk\.yandex\.[a-z]+|yadi\.sk)\//i.test(u);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function numFromName(name) {
+  const m = NUM_RE.exec(name || "");
+  return m ? { digits: m[1], letter: (m[2] || "").toLowerCase() } : null;
+}
+
+function sameNumber(recNum, fileName) {
+  const f = numFromName(fileName);
+  if (!f) return null;                               // номер из имени не извлечь
+  const r = /^(\d+)([a-zа-я])?$/i.exec(baseNum(recNum));
+  if (!r) return null;
+  if (r[1] !== f.digits) return false;
+  return !f.letter || !r[2] || f.letter === r[2].toLowerCase();
+}
+
+async function checkYandex(url, wantThumb) {
+  const fields = "name,media_type,mime_type" + (wantThumb ? ",preview" : "");
+  for (let attempt = 0; attempt < 6; attempt++) {
+    if (stopFlag) return { status: "limit", note: "остановлено" };
+    let resp;
+    try {
+      resp = await fetch(`${API}?fields=${fields}&preview_size=L&public_key=${encodeURIComponent(url)}`);
+    } catch (e) {
+      await sleep(2000 * (attempt + 1));
+      continue;
+    }
+    if (resp.status === 429) {
+      setStatus(`Яндекс просит подождать (429), пауза 60 с…`);
+      await sleep(60000);
+      continue;
+    }
+    if (resp.status === 404 || resp.status === 403 || resp.status === 410) {
+      return { status: "dead", note: `Яндекс Диск: ${resp.status} - файл удалён или снят с публикации` };
+    }
+    if (!resp.ok) {
+      if (resp.status >= 500) { await sleep(3000); continue; }
+      return { status: "error", note: `Яндекс Диск: ${resp.status}` };
+    }
+    const data = await resp.json();
+    if (data.media_type && data.media_type !== "image" && !/pdf/.test(data.mime_type || "")) {
+      return { status: "error", file: data.name, note: `не картинка: ${data.mime_type}` };
+    }
+    return { file: (data.name || "").trim(), thumb: data.preview };
+  }
+  return { status: "limit", note: "не удалось получить ответ после нескольких попыток" };
+}
+
+function checkLocal(url) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve({ file: decodeURIComponent(url.split("/").pop()), thumb: url });
+    img.onerror = () => resolve({ status: "dead", note: "файл не найден на сайте" });
+    img.src = new URL(url, new URL("../", location.href)).href;
+  });
+}
+
+async function run() {
+  const chosen = new Set([...document.querySelectorAll("#settlements input:checked")].map(i => i.value));
+  const wantThumb = document.getElementById("optThumbs").checked;
+  const recs = allData.filter(d => chosen.has(d.settlement));
+  results = [];
+  stopFlag = false;
+  toggleButtons(true);
+
+  // одну ссылку проверяем один раз, даже если на неё ссылаются 747a/747b
+  const byUrl = new Map();
+  recs.forEach(d => {
+    if (!d.scanUrl) results.push({ rec: d, status: "none", note: "в данных нет ссылки на скан" });
+    else (byUrl.get(d.scanUrl) || byUrl.set(d.scanUrl, []).get(d.scanUrl)).push(d);
+  });
+
+  const queue = [...byUrl.entries()];
+  const total = queue.length;
+  let done = 0;
+  render();
+
+  async function worker() {
+    while (queue.length && !stopFlag) {
+      const [url, list] = queue.shift();
+      const res = isYandex(url) ? await checkYandex(url, wantThumb) : await checkLocal(url);
+      list.forEach(rec => {
+        let status = res.status, note = res.note || "";
+        if (!status) {
+          const same = sameNumber(rec.num, res.file);
+          status = same === true ? "ok" : same === false ? "mismatch" : "check";
+          if (same === false) note = `у усадьбы №${baseNum(rec.num)}, а файл «${res.file}»`;
+          if (same === null) note = `в имени «${res.file}» нет номера - сверить глазами`;
+        }
+        results.push({ rec, status, file: res.file || "", note, thumb: res.thumb || "", url });
+      });
+      done++;
+      document.getElementById("bar").style.width = (done / total * 100).toFixed(1) + "%";
+      setStatus(`Проверено ссылок: ${done} из ${total}`);
+      if (done % 20 === 0) render();
+    }
+  }
+  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+  queue.forEach(([url, list]) => list.forEach(rec => results.push({ rec, status: "limit", note: "проверка остановлена", url })));
+  setStatus(stopFlag ? `Остановлено. Проверено ссылок: ${done} из ${total}` : `Готово. Проверено ссылок: ${total}, записей: ${recs.length}`);
+  toggleButtons(false);
+  render();
+}
+
+function render() {
+  const onlyProblems = document.querySelector('input[name="show"]:checked').value === "problems";
+  const thumbs = document.getElementById("optThumbs").checked;
+  document.querySelectorAll(".thumbcol").forEach(el => el.hidden = !thumbs);
+
+  const counts = {};
+  results.forEach(r => counts[r.status] = (counts[r.status] || 0) + 1);
+  const tile = (k, cls) => `<div class="tile ${cls}"><b>${(counts[k] || 0).toLocaleString("ru-RU")}</b><span>${STATUS[k]}</span></div>`;
+  document.getElementById("summary").innerHTML =
+    tile("ok", "ok") + tile("dead", "bad") + tile("mismatch", "bad") + tile("none", "warn") +
+    tile("check", "warn") + tile("error", "bad") + tile("limit", "warn");
+
+  const rows = sorted(results).filter(r => !onlyProblems || PROBLEM.has(r.status));
+  document.getElementById("rows").innerHTML = rows.slice(0, 3000).map(r => `
+    <tr>
+      <td>${esc(r.rec.settlement)}</td>
+      <td class="num">${esc(baseNum(r.rec.num))}</td>
+      <td>${esc(owner(r.rec))}</td>
+      <td class="hide-sm muted">${esc(r.rec.source)}</td>
+      <td><span class="pill s-${r.status}">${STATUS[r.status]}</span></td>
+      <td>${r.url ? `<a href="${esc(isYandex(r.url) ? r.url : "../" + r.url)}" target="_blank" rel="noopener">${esc(r.file || "ссылка")}</a>` : ""}
+          ${r.note ? `<div class="muted">${esc(r.note)}</div>` : ""}</td>
+      <td class="thumbcol"${thumbs ? "" : " hidden"}>${thumbs && r.thumb ? `<img class="thumb" loading="lazy" referrerpolicy="no-referrer" src="${esc(isYandex(r.url) ? r.thumb : "../" + r.thumb)}">` : ""}</td>
+    </tr>`).join("") || `<tr><td colspan="7" class="muted">Нет строк для показа</td></tr>`;
+}
+
+function sorted(list) {
+  const order = ["Екатеринбург", "Нижне-Исетск", "Уктус"];
+  const n = s => parseInt(baseNum(s), 10) || 0;
+  return [...list].sort((a, b) =>
+    (order.indexOf(a.rec.settlement) - order.indexOf(b.rec.settlement)) ||
+    (n(a.rec.num) - n(b.rec.num)) || String(a.rec.num).localeCompare(String(b.rec.num)));
+}
+
+function downloadCsv(onlyProblems) {
+  const head = ["Поселение", "№", "Владелец", "Источник", "Результат", "Файл", "Пояснение", "Ссылка"];
+  const lines = sorted(results).filter(r => !onlyProblems || PROBLEM.has(r.status)).map(r => [
+    r.rec.settlement, baseNum(r.rec.num), owner(r.rec), r.rec.source, STATUS[r.status], r.file, r.note, r.url || ""
+  ]);
+  const csv = "﻿" + [head, ...lines].map(row => row.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(";")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  a.download = onlyProblems ? "сканы_проблемы.csv" : "сканы_проверка.csv";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+function setStatus(t) { document.getElementById("status").textContent = t; }
+function toggleButtons(running) {
+  document.getElementById("btnRun").disabled = running;
+  document.getElementById("btnStop").disabled = !running;
+  document.getElementById("btnCsv").disabled = running || !results.length;
+  document.getElementById("btnCsvAll").disabled = running || !results.length;
+}
+
+(function init() {
+  if (typeof allData === "undefined") {
+    setStatus("Не удалось загрузить js/data-records.js - откройте страницу из папки сайта (tools/check_scans.html).");
+    document.getElementById("btnRun").disabled = true;
+    return;
+  }
+  const counts = {}, withScan = {};
+  allData.forEach(d => {
+    counts[d.settlement] = (counts[d.settlement] || 0) + 1;
+    if (d.scanUrl) withScan[d.settlement] = (withScan[d.settlement] || 0) + 1;
+  });
+  document.getElementById("settlements").innerHTML = Object.keys(counts).map(s =>
+    `<label><input type="checkbox" value="${esc(s)}" checked> ${esc(s)} <span class="muted">(${counts[s]} усадеб, со ссылкой ${withScan[s] || 0})</span></label>`
+  ).join("");
+  setStatus(`Загружено записей: ${allData.length}. Проверка всех ссылок занимает несколько минут.`);
+  document.getElementById("btnRun").onclick = run;
+  document.getElementById("btnStop").onclick = () => { stopFlag = true; };
+  document.getElementById("btnCsv").onclick = () => downloadCsv(true);
+  document.getElementById("btnCsvAll").onclick = () => downloadCsv(false);
+  document.querySelectorAll('input[name="show"]').forEach(i => i.onchange = render);
+  document.getElementById("optThumbs").onchange = render;
+  render();
+})();
+</script>
+</body>
+</html>
