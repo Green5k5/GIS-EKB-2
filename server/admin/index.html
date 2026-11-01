@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Админ-панель · ГИС Екатеринбург</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+  <!-- Экран входа -->
+  <section id="login-screen" class="login" hidden>
+    <form id="login-form" class="card login__card">
+      <div class="logo">Е</div>
+      <h1>Админ-панель</h1>
+      <p class="muted">ГИС Екатеринбург. Введите ключ администратора.</p>
+      <input id="login-key" type="password" placeholder="Ключ" aria-label="Ключ администратора" autocomplete="current-password" required>
+      <button type="submit" class="btn btn--primary">Войти</button>
+      <p id="login-error" class="error"></p>
+    </form>
+  </section>
+
+  <!-- Админка -->
+  <div id="app" class="layout" hidden>
+
+    <header class="topbar">
+      <div class="logo">Е</div>
+      <div class="topbar__title">ГИС<br>Екатеринбург</div>
+      <span class="topbar__label">Админ-панель</span>
+      <div class="topbar__actions">
+        <a href="/" class="btn btn--small">На сайт</a>
+        <button id="logout-btn" class="btn btn--small">Выйти</button>
+      </div>
+    </header>
+
+    <nav class="sidebar">
+      <a href="#dashboard" class="sidebar__link">Сводка</a>
+      <a href="#records"   class="sidebar__link">Записи</a>
+      <a href="#plots"     class="sidebar__link">Контуры</a>
+      <a href="#import"    class="sidebar__link">Импорт</a>
+      <a href="#releases"  class="sidebar__link">Публикации</a>
+    </nav>
+
+    <main class="content">
+
+      <!-- Показывается один раздел, остальные скрывает router.js -->
+      <section id="section-dashboard" class="section" data-title="Сводка">
+        <h2>Сводка</h2>
+        <div id="stats" class="stats"></div>
+      </section>
+
+      <section id="section-records" class="section" data-title="Записи" hidden>
+        <h2>Записи</h2>
+        <p class="muted">Раздел в разработке.</p>
+      </section>
+
+      <section id="section-plots" class="section" data-title="Контуры" hidden>
+        <h2>Контуры</h2>
+        <p class="muted">Раздел в разработке.</p>
+      </section>
+
+      <section id="section-import" class="section" data-title="Импорт" hidden>
+        <h2>Импорт</h2>
+        <p class="muted">Раздел в разработке.</p>
+      </section>
+
+      <section id="section-releases" class="section" data-title="Публикации" hidden>
+        <h2>Публикации</h2>
+        <p class="muted">Раздел в разработке.</p>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="/admin/js/dev-reload.js"></script>
+  <script type="module" src="/admin/js/main.js"></script>
+</body>
+</html>
