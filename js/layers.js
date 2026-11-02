@@ -78,6 +78,7 @@ var vectorLayersData = {"fortress":[{"name":"","lines":[[[56.8469722,60.5886976]
   }
 
   function addVectorLayers() {
+    if (!Object.values(vectorLayersData).some(items => items.length)) return;
     var map = window.map;
     var features = [];
     vectorLayersData.rivers.forEach(function (f) {

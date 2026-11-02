@@ -2,6 +2,8 @@ import { DatabaseSync } from 'node:sqlite';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadEnv } from './env.js';
+loadEnv();
 
 const dbPath = process.env.DB_PATH
   ? path.resolve(process.env.DB_PATH)

@@ -4,3 +4,5 @@ server/gis-ekb.sqlite
 server/gis-ekb.sqlite-shm
 server/gis-ekb.sqlite-wal
 data/uploads/
+data/backups/
+data/test-*/

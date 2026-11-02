@@ -18,6 +18,8 @@
       this.url = url;
       this.bounds = new K.LatLngBounds(bounds);
       this.opacity = opts.opacity != null ? opts.opacity : 1;
+      this.rotation = Number(opts.rotation) || 0;
+      this.crop = opts.crop || [0,0,0,0];
       this.visible = opts.visible !== false;
       this.zIndex = opts.zIndex || 100;
       this.interactive = false;
@@ -50,7 +52,13 @@
       ctx.globalAlpha = this.opacity;
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
-      ctx.drawImage(this.img, x0, y0, x1 - x0, y1 - y0);
+      ctx.save();
+      const w=x1-x0,h=y1-y0,c=this.crop;
+      ctx.translate((x0+x1)/2,(y0+y1)/2);
+      ctx.rotate(this.rotation*Math.PI/180);
+      ctx.beginPath();ctx.rect(-w/2+w*c[0],-h/2+h*c[1],w*(1-c[0]-c[2]),h*(1-c[1]-c[3]));ctx.clip();
+      ctx.drawImage(this.img,-w/2,-h/2,w,h);
+      ctx.restore();
       return false;
     }
   }

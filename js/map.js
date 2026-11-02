@@ -135,7 +135,7 @@ function initMap() {
     console.warn("Подложка недоступна: нет папки assets/basemap");
   });
 
-  initOverlay(HISTORICAL_OVERLAYS);
+  initOverlay(publicOverlays.map(o => ({...o, url:o.fileUrl})));
 
   const initialSettlement = new URLSearchParams(window.location.search).get("settlement");
   if (initialSettlement && SETTLEMENT_BOUNDS[initialSettlement]) {
@@ -146,9 +146,10 @@ function initMap() {
 function polygonFor(item) {
   if (item.plotId != null && typeof publicPlotsById !== "undefined") {
     const plot = publicPlotsById.get(Number(item.plotId));
-    if (plot?.geometry?.type === "Polygon" && plot.geometry.coordinates?.[0]) {
+    if (plot?.geometry && plot.geometry.coordinates?.[0]) {
       return {
         coords: plot.geometry.coordinates[0],
+        rings: plot.geometry.type === 'MultiPolygon' ? plot.geometry.coordinates.flat() : plot.geometry.coordinates,
         clat: plot.focusLat,
         clng: plot.focusLng,
         plotId: plot.id
@@ -164,13 +165,13 @@ function renderMap(filtered) {
 
   const features = [];
   filtered.forEach(item => {
-    if (!item.lat || !item.lng) return;
     const color = getEstateColor(item);
     const poly = polygonFor(item);
+    if (!poly && (!item.lat || !item.lng)) return;
     if (poly) {
       features.push({
         id: item.id,
-        rings: [poly.coords.map(c => [c[1], c[0]])],
+        rings: poly.rings.map(r => r.map(c => [c[1], c[0]])),
         color, fillOpacity: 0.35, weight: 1.5, opacity: 0.8,
         data: item
       });
@@ -254,6 +255,8 @@ function initOverlay(overlays) {
   const initialOpacity = ((opacity && Number(opacity.value)) || 45) / 100;
   // Растры грузятся лениво: только когда слой включён и план попал в кадр
   overlayLayers = overlays.map(item => new Kartograf.ImageOverlay(item.url, item.bounds, {
+    rotation: item.rotation,
+    crop: item.crop,
     opacity: initialOpacity,
     visible: false,
     zIndex: 100

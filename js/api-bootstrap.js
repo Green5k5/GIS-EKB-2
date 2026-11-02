@@ -6,6 +6,7 @@ var niPolygons = {};
 var uktPolygons = {};
 var publicPlotsById = new Map();
 var publicSettlements = [];
+var publicOverlays = [];
 var publicBootstrapError = null;
 
 async function loadPublicData() {
@@ -15,12 +16,23 @@ async function loadPublicData() {
     const payload = await response.json();
 
     publicSettlements = payload.settlements || [];
+    publicOverlays = (payload.overlays || []).filter(o => o.visible);
+    if (typeof vectorLayersData !== 'undefined') {
+      vectorLayersData = { fortress: [], rivers: [], streets: [] };
+      for (const f of payload.historicalFeatures || []) if (f.visible && vectorLayersData[f.type]) {
+        vectorLayersData[f.type].push({ name: f.name, lines: f.geometry.coordinates });
+      }
+    }
     publicPlotsById = new Map((payload.plots || []).map(plot => [Number(plot.id), plot]));
 
     allData = (payload.records || []).map(record => {
       const settlement = publicSettlements.find(item => item.id === record.settlementId);
       return { ...record, settlement: settlement?.name || record.settlementId };
     });
+    const summary = document.getElementById('welcomeDataSummary');
+    if (summary) summary.textContent = allData.length
+      ? `На карте: ${allData.length.toLocaleString('ru-RU')} усадеб. Поселений: ${new Set(allData.map(r => r.settlementId)).size}.`
+      : 'Карта готовится к наполнению.';
 
     // Совместимый адаптер для текущего «Картографа».
     // Источник теперь API, а не data-polygons.js.

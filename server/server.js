@@ -7,7 +7,9 @@ import { URL } from 'node:url';
 import { loadEnv } from './env.js';
 loadEnv();
 import { db, initDb } from './db.js';
+import { initWorkspace, workspaceRoute, toRecord } from './workspace.js';
 initDb();
+initWorkspace(db);
 
 const root = path.resolve('.');
 const port = Number(process.env.PORT || 3000);
@@ -36,12 +38,13 @@ function rowRecord(x){ return {...x}; }
 function snapshot(){
   const settlements=db.prepare("SELECT id,slug,name,color,bounds_json as bounds,sort_order as sortOrder FROM settlements WHERE active=1 ORDER BY sort_order").all().map(x=>({...x,bounds:JSON.parse(x.bounds)}));
   const plots=db.prepare("SELECT id,settlement_id as settlementId,legacy_key as legacyKey,geometry_json as geometry,focus_lat as focusLat,focus_lng as focusLng FROM plots WHERE status='active'").all().map(x=>({...x,geometry:JSON.parse(x.geometry)}));
-  const records=db.prepare("SELECT id,num,settlement_id as settlementId,street,building_type as buildingType,surname,name,patronymic,soslovie,family_status as familyStatus,sex,service_type as serviceType,rank,position,service_place as servicePlace,registration_place as registrationPlace,area_sazh,source,scan_url as scanUrl,lat,lng,plot_id as plotId FROM records WHERE status='active' ORDER BY id").all();
+  const records=db.prepare("SELECT * FROM records WHERE status='active' ORDER BY id").all().map(toRecord);
   const historicalFeatures=db.prepare("SELECT id,type,name,geometry_json as geometry,visible,sort_order as sortOrder FROM historical_features ORDER BY sort_order").all().map(x=>({...x,geometry:JSON.parse(x.geometry),visible:Boolean(x.visible)}));
-  const overlays=db.prepare("SELECT id,file_url as fileUrl,settlement_id as settlementId,name,bounds_json as bounds,sort_order as sortOrder,opacity,visible FROM historical_overlays ORDER BY sort_order").all().map(x=>({...x,bounds:JSON.parse(x.bounds),visible:Boolean(x.visible)}));
+  const overlays=db.prepare("SELECT id,file_url as fileUrl,settlement_id as settlementId,name,bounds_json as bounds,sort_order as sortOrder,opacity,visible,rotation,crop_json FROM historical_overlays ORDER BY sort_order").all().map(x=>({...x,bounds:JSON.parse(x.bounds),crop:JSON.parse(x.crop_json),visible:Boolean(x.visible)}));
   const glossary=db.prepare("SELECT id,term,category,description,aliases_json as aliases,filter_key as filterKey,filter_value as filterValue,sort_order as sortOrder FROM glossary_terms ORDER BY sort_order").all().map(x=>({...x,aliases:JSON.parse(x.aliases)}));
   const content=Object.fromEntries(db.prepare('SELECT key,value_json FROM site_content').all().map(x=>[x.key,JSON.parse(x.value_json)]));
-  return {schemaVersion:1,releaseId:null,settlements,records,plots,historicalFeatures,overlays,glossary,content,settings:{}};
+  const warnings=db.prepare('SELECT id,settlement_id as settlementId,message FROM workspace_warnings WHERE resolved=0 ORDER BY id').all();
+  return {schemaVersion:1,releaseId:null,settlements,records,plots,historicalFeatures,overlays,glossary,content,settings:{},warnings};
 }
 function publicSnapshot(){ const r=db.prepare('SELECT id,snapshot_json FROM releases ORDER BY id DESC LIMIT 1').get(); if(!r) return {...snapshot(),releaseId:null}; const s=JSON.parse(r.snapshot_json); s.releaseId=r.id; return s; }
 function adminStats(){ return {records:db.prepare("SELECT COUNT(*) n FROM records WHERE status='active'").get().n,plots:db.prepare("SELECT COUNT(*) n FROM plots WHERE status='active'").get().n,settlements:db.prepare("SELECT COUNT(*) n FROM settlements WHERE active=1").get().n,releases:db.prepare('SELECT COUNT(*) n FROM releases').get().n}; }
@@ -53,7 +56,7 @@ function serveFile(res, file, type){
   const p=path.resolve(root,file); if(!p.startsWith(root) || !fs.existsSync(p) || !fs.statSync(p).isFile()) return false;
   res.writeHead(200, {'Content-Type':type || 'application/octet-stream'}); fs.createReadStream(p).pipe(res); return true;
 }
-const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml'};
+const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.pbf':'application/x-protobuf'};
 
 
 function parseCsv(text){
@@ -96,6 +99,7 @@ const server=http.createServer(async (req,res)=>{
     if(url.pathname.startsWith('/api/admin/')){
       const s=requireAuth(req,res); if(!s)return;
       if(['POST','PATCH','DELETE'].includes(req.method)) { const c=parseCookies(req); if(!mutationAllowed(req) || c.gis_csrf !== s.csrf || req.headers['x-csrf-token'] !== s.csrf){ json(res,403,{error:'CSRF'}); return; } }
+      if(await workspaceRoute(req,res,url,{db,json,snapshot})) return;
       if(url.pathname==='/api/admin/stats' && req.method==='GET'){ json(res,200,adminStats()); return; }
       if(url.pathname==='/api/admin/records' && req.method==='GET'){
         const q=(url.searchParams.get('q')||'').trim(); const settlement=url.searchParams.get('settlement')||''; const limit=Math.min(Number(url.searchParams.get('limit')||100),500); const offset=Math.max(Number(url.searchParams.get('offset')||0),0);
@@ -150,7 +154,9 @@ const server=http.createServer(async (req,res)=>{
     if(url.pathname==='/api/public/bootstrap' && req.method==='GET'){ const snap=publicSnapshot(); json(res,200,snap,{'ETag':`"release-${snap.releaseId||0}"`}); return; }
     if(url.pathname==='/admin' || url.pathname==='/admin/') { serveFile(res,'server/admin/index.html','text/html; charset=utf-8'); return; }
     if(url.pathname.startsWith('/admin/')) { const rel=url.pathname.replace(/^\/admin\//,'server/admin/'); if(serveFile(res,rel,mime[path.extname(rel)])) return; }
-    const rel=url.pathname==='/'?'index.html':url.pathname.replace(/^\//,''); if(serveFile(res,rel,mime[path.extname(rel)])) return;
+    const rel=url.pathname==='/'?'index.html':decodeURIComponent(url.pathname.replace(/^\//,''));
+    const allowed=rel==='index.html'||/^(js|css|assets)\//.test(rel)||/^data\/uploads\/[a-zA-Z0-9-]+\/[a-zA-Z0-9-]+\.(?:webp|png|jpe?g)$/.test(rel);
+    if(allowed && !rel.split(/[\\/]/).includes('..') && serveFile(res,rel,mime[path.extname(rel)])) return;
     json(res,404,{error:'NOT_FOUND'});
   } catch(e){ console.error(e); json(res,500,{error:'INTERNAL_ERROR',message:process.env.NODE_ENV==='development'?e.message:undefined}); }
 });
