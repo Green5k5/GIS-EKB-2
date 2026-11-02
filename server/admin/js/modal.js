@@ -6,6 +6,10 @@ const errorBox     = document.getElementById('modal-error');
 const saveButton   = document.getElementById('modal-save');
 const closeButton  = document.getElementById('modal-close');
 const cancelButton = document.getElementById('modal-cancel');
+const footer       = document.getElementById('modal-footer');
+const leaveBar     = document.getElementById('modal-leave');
+const stayButton   = document.getElementById('modal-stay');
+const discardButton = document.getElementById('modal-discard');
 
 let currentOnSave = null;
 let initialData = '';
@@ -15,11 +19,17 @@ function formSnapshot() {
   return new URLSearchParams(new FormData(form)).toString();
 }
 
+function toggleLeaveBar(show) {
+  leaveBar.hidden = !show;
+  footer.hidden = show;
+}
+
 // если onSave вернул false, окно остаётся открытым
 export function openModal({ title, html, onSave }) {
   titleBox.textContent = title;
   form.innerHTML = html;
   errorBox.textContent = '';
+  toggleLeaveBar(false);
   currentOnSave = onSave;
   initialData = formSnapshot();
 
@@ -37,10 +47,20 @@ export function closeModal() {
 }
 
 // случайный клик мимо окна не должен стирать то, что уже ввели
+// спрашиваем в самом окне, системный confirm показывается не везде
 function requestClose() {
   if (saving) return;
-  if (formSnapshot() !== initialData && !confirm('Закрыть без сохранения? Изменения пропадут.')) return;
-  closeModal();
+  if (formSnapshot() === initialData) {
+    closeModal();
+    return;
+  }
+  toggleLeaveBar(true);
+  stayButton.focus();
+}
+
+function stay() {
+  toggleLeaveBar(false);
+  saveButton.focus();
 }
 
 export function setFieldErrors(errors) {
@@ -59,6 +79,7 @@ form.addEventListener('submit', async event => {
   if (!currentOnSave || saving) return;
 
   errorBox.textContent = '';
+  toggleLeaveBar(false);
   saving = true;
   saveButton.disabled = true;
   saveButton.textContent = 'Сохранение…';
@@ -76,11 +97,15 @@ form.addEventListener('submit', async event => {
 
 closeButton.addEventListener('click', requestClose);
 cancelButton.addEventListener('click', requestClose);
+stayButton.addEventListener('click', stay);
+discardButton.addEventListener('click', closeModal);
 
 modal.addEventListener('click', event => {
   if (event.target === modal) requestClose();
 });
 
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && !modal.hidden) requestClose();
+  if (event.key !== 'Escape' || modal.hidden) return;
+  if (leaveBar.hidden) requestClose();
+  else stay();
 });

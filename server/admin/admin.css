@@ -82,7 +82,7 @@ input:focus, select:focus, textarea:focus {
   cursor: pointer;
 }
 .btn:hover { border-color: var(--accent); }
-.btn:focus-visible, .sidebar__link:focus-visible {
+.btn:focus-visible, .sidebar__link:focus-visible, .modal__close:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -92,6 +92,12 @@ input:focus, select:focus, textarea:focus {
   color: var(--white);
 }
 .btn--primary:hover { background: #75552A; border-color: #75552A; }
+.btn--danger {
+  background: #A84444;
+  border-color: #A84444;
+  color: var(--white);
+}
+.btn--danger:hover { background: #8F3838; border-color: #8F3838; }
 .btn--small { padding: 4px 10px; font-size: 13px; }
 
 /* Экран входа */
@@ -282,6 +288,7 @@ body.modal-open { overflow: hidden; }
 .modal__header h2 { margin: 0; }
 .modal__close {
   padding: 0 4px;
+  border-radius: 6px;
   background: none;
   border: 0;
   color: var(--muted);
@@ -299,6 +306,11 @@ body.modal-open { overflow: hidden; }
 .modal__footer .error {
   flex: 1 1 200px;
   min-height: 0;
+}
+.modal__question {
+  flex: 1 1 200px;
+  color: var(--body);
+  font-weight: 600;
 }
 
 /* Поля формы */

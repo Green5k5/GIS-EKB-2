@@ -87,11 +87,16 @@
         <button type="button" id="modal-close" class="modal__close" aria-label="Закрыть">×</button>
       </header>
       <form id="modal-form" class="modal__body" novalidate></form>
-      <footer class="modal__footer">
+      <footer id="modal-footer" class="modal__footer">
         <p id="modal-error" class="error"></p>
         <button type="button" id="modal-cancel" class="btn">Отмена</button>
         <button type="submit" id="modal-save" class="btn btn--primary" form="modal-form">Сохранить</button>
       </footer>
+      <div id="modal-leave" class="modal__footer" hidden>
+        <p class="modal__question">Изменения не сохранены</p>
+        <button type="button" id="modal-stay" class="btn">Продолжить правку</button>
+        <button type="button" id="modal-discard" class="btn btn--danger">Закрыть без сохранения</button>
+      </div>
     </div>
   </div>
 
