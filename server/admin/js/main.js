@@ -1,6 +1,7 @@
 // Вход и выход из админки
 import { api, setUnauthorizedHandler } from './api.js';
 import { startRouter } from './router.js';
+import { closeModal } from './modal.js';
 
 // разделы сами регистрируются в роутере
 import './dashboard.js';
@@ -19,6 +20,7 @@ const LOGIN_ERRORS = {
 };
 
 function showLogin() {
+  closeModal();
   app.hidden = true;
   loginScreen.hidden = false;
   loginError.textContent = '';

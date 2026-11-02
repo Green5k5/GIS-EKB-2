@@ -244,6 +244,99 @@ input:focus, select:focus, textarea:focus {
   border-color: var(--border);
   cursor: default;
 }
+.table .actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Окно с формой */
+body.modal-open { overflow: hidden; }
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+  background: rgba(44, 36, 24, .45);
+}
+.modal__window {
+  width: min(860px, 100%);
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+}
+.modal__header,
+.modal__footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+}
+.modal__header {
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.modal__header h2 { margin: 0; }
+.modal__close {
+  padding: 0 4px;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+.modal__close:hover { color: var(--text); }
+.modal__body { padding: 4px 20px 16px; }
+.modal__footer {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border);
+}
+.modal__footer .error {
+  flex: 1 1 200px;
+  min-height: 0;
+}
+
+/* Поля формы */
+.form-group {
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+}
+.form-group legend {
+  margin-bottom: 8px;
+  padding: 0;
+  font-family: Georgia, serif;
+  font-weight: 700;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.field--wide { grid-column: 1 / -1; }
+.field__label {
+  color: var(--muted);
+  font-size: 13px;
+}
+.field__error {
+  color: var(--danger);
+  font-size: 13px;
+}
+.field__error:empty { display: none; }
+.required { color: var(--danger); }
+input.invalid,
+select.invalid { border-color: var(--danger); }
 
 /* На телефоне меню строкой под шапкой */
 @media (max-width: 720px) {

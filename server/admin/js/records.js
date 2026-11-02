@@ -3,12 +3,14 @@ import { api } from './api.js';
 import { onSectionShow } from './router.js';
 import { esc, fullName, formatNumber } from './utils.js';
 import { loadSettlements, settlementOptions } from './settlements.js';
+import { openRecordForm } from './record-form.js';
 
-const filterForm       = document.getElementById('records-filter');
+const filterForm      = document.getElementById('records-filter');
 const searchInput      = document.getElementById('records-q');
 const settlementSelect = document.getElementById('records-settlement');
 const tableBox         = document.getElementById('records-table');
 const paginationBox    = document.getElementById('records-pagination');
+const addButton        = document.getElementById('records-add');
 
 const state = {
   q: '',
@@ -52,6 +54,9 @@ function recordRow(record) {
       <td class="street">${esc(record.street)}</td>
       <td class="num">${esc(formatNumber(record.area_sazh))}</td>
       <td class="num">${esc(record.plot_id ?? '-')}</td>
+      <td class="actions">
+        <button type="button" class="btn btn--small" data-edit="${esc(record.id)}">Изменить</button>
+      </td>
     </tr>`;
 }
 
@@ -71,6 +76,7 @@ function renderRecordsTable(items) {
           <th>Улица</th>
           <th class="num">Площадь, кв. саж.</th>
           <th class="num">Контур</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>${items.map(recordRow).join('')}</tbody>
@@ -95,7 +101,7 @@ function renderPagination() {
 
 // после поиска или смены поселения начинаем с первой страницы
 function applyFilters(event) {
-  event.preventDefault();
+  if (event) event.preventDefault();
   state.q = searchInput.value.trim();
   state.settlement = settlementSelect.value;
   state.offset = 0;
@@ -124,6 +130,31 @@ paginationBox.addEventListener('click', event => {
   if (!button) return;
   state.offset += button.dataset.go === 'next' ? state.limit : -state.limit;
   loadRecords();
+});
+
+tableBox.addEventListener('click', async event => {
+  const button = event.target.closest('button[data-edit]');
+  if (!button) return;
+  try {
+    await openRecordForm(Number(button.dataset.edit), loadRecords);
+  } catch (error) {
+    alert(`Не удалось открыть запись: ${error.message}`);
+  }
+});
+
+// новую запись сразу показываем в таблице, поэтому фильтр поселения сбрасываем
+function showNewRecord(id) {
+  searchInput.value = String(id);
+  settlementSelect.value = '';
+  applyFilters();
+}
+
+addButton.addEventListener('click', async () => {
+  try {
+    await openRecordForm(null, showNewRecord);
+  } catch (error) {
+    alert(`Не удалось открыть форму: ${error.message}`);
+  }
 });
 
 onSectionShow('records', showRecords);

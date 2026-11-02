@@ -10,6 +10,9 @@ const FILES = [
   '/admin/js/utils.js',
   '/admin/js/settlements.js',
   '/admin/js/records.js',
+  '/admin/js/record-fields.js',
+  '/admin/js/record-form.js',
+  '/admin/js/modal.js',
   '/admin/js/main.js',
 ];
 
