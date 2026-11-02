@@ -4,6 +4,7 @@ import { startRouter } from './router.js';
 
 // разделы сами регистрируются в роутере
 import './dashboard.js';
+import './records.js';
 
 const loginScreen = document.getElementById('login-screen');
 const loginForm   = document.getElementById('login-form');

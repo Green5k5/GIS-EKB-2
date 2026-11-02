@@ -7,6 +7,9 @@ const FILES = [
   '/admin/js/api.js',
   '/admin/js/router.js',
   '/admin/js/dashboard.js',
+  '/admin/js/utils.js',
+  '/admin/js/settlements.js',
+  '/admin/js/records.js',
   '/admin/js/main.js',
 ];
 

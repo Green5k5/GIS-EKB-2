@@ -187,6 +187,64 @@ input:focus, select:focus, textarea:focus {
 }
 .stat__label { color: var(--muted); }
 
+/* Таблицы */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.toolbar input[type="search"] {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.table-wrap {
+  padding: 0;
+  overflow-x: auto;
+}
+.table-note { padding: 16px 20px; }
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th,
+.table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+.table th {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.table tbody tr:last-child td { border-bottom: 0; }
+.table tbody tr:hover { background: var(--accent-bg); }
+.table .num {
+  text-align: right;
+  white-space: nowrap;
+}
+.table .street {
+  min-width: 160px;
+  color: var(--body);
+}
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+.pagination:empty { display: none; }
+.btn:disabled {
+  opacity: .45;
+  border-color: var(--border);
+  cursor: default;
+}
+
 /* На телефоне меню строкой под шапкой */
 @media (max-width: 720px) {
   .layout {
@@ -205,4 +263,9 @@ input:focus, select:focus, textarea:focus {
   }
   .sidebar__link { white-space: nowrap; }
   .content { padding: 16px; }
+  .pagination span {
+    order: -1;
+    flex-basis: 100%;
+    text-align: center;
+  }
 }

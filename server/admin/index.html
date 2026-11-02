@@ -51,7 +51,13 @@
 
       <section id="section-records" class="section" data-title="Записи" hidden>
         <h2>Записи</h2>
-        <p class="muted">Раздел в разработке.</p>
+        <form id="records-filter" class="toolbar">
+          <input id="records-q" type="search" placeholder="Поиск: ID, номер, ФИО" aria-label="Поиск записей">
+          <select id="records-settlement" aria-label="Поселение"></select>
+          <button type="submit" class="btn btn--primary">Найти</button>
+        </form>
+        <div id="records-table" class="card table-wrap"></div>
+        <div id="records-pagination" class="pagination"></div>
       </section>
 
       <section id="section-plots" class="section" data-title="Контуры" hidden>
