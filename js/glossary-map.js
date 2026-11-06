@@ -74,10 +74,10 @@ const GLOSSARY_FILTER_MAP = {
 
     // ===== МЕСТО СЛУЖБЫ =====
     "Екатеринбургский монетный двор": { filterKey: "servicePlace", filterValue: "Екатеринбургский монетный двор" },
+    "Екатеринбургская монетная рота": { filterKey: "servicePlace", filterValue: "Екатеринбургская монетная рота" },
     "Екатеринбургская горная команда": { filterKey: "servicePlace", filterValue: "Екатеринбургская горная команда" },
     "Екатеринбургская гранильная фабрика": { filterKey: "servicePlace", filterValue: "Екатеринбургская гранильная фабрика и Горнощитский мраморный завод" },
     "Екатеринбургский завод": { filterKey: "servicePlace", filterValue: "Екатеринбургский завод" },
-    "Екатеринбургская штатная команда": { filterKey: "servicePlace", filterValue: "Екатеринбургская штатная команда" },
     "Главная контора Екатеринбургских заводов": { filterKey: "servicePlace", filterValue: "Главная контора Екатеринбургских заводов" },
     "Екатеринбургская золотопромывальная фабрика": { filterKey: "servicePlace", filterValue: "Екатеринбургская золотопромывальная фабрика" },
     "Богоявленская кафедральная соборная церковь": { filterKey: "servicePlace", filterValue: "Богоявленская кафедральная соборная церковь" },
@@ -135,6 +135,17 @@ function applyGlossaryFilter(term) {
     if (typeof renderMap === 'function') renderMap(filtered);
     if (typeof updateStats === 'function') updateStats(filtered);
 
+    // 3a. Приближаем карту к выборке. Страница карты только что стала видимой,
+    // поэтому zoomToSelection сначала пересчитывает размер холста.
+    // Навигация пересчитывает размер ещё раз через 100 мс — подгоняем кадр повторно.
+    if (typeof zoomToSelection === 'function') {
+        zoomToSelection(false);
+        setTimeout(() => {
+            const page = document.getElementById('page-map');
+            if (page && page.classList.contains('active')) zoomToSelection(false);
+        }, 160);
+    }
+
     // 4. Подсветка активного термина
     document.querySelectorAll('.glossary-term-clickable').forEach(el => el.classList.remove('active-term'));
     const termElement = document.querySelector(`.glossary-term-clickable[data-term="${term}"]`);
@@ -155,6 +166,7 @@ function clearGlossaryFilter() {
     const btn = document.getElementById('glossary-reset-btn');
     if (btn) btn.style.display = 'none';
     if (typeof update === 'function') update();
+    if (typeof zoomToSelection === 'function') zoomToSelection();
 }
 
 // Показ кнопки сброса

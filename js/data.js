@@ -120,6 +120,7 @@ var FILTERS = [
   {
     "key": "soslovie",
     "title": "Сословие",
+    "sort": "alpha",
     "limit": 5
   },
   {
@@ -130,11 +131,13 @@ var FILTERS = [
   {
     "key": "buildingType",
     "title": "Тип постройки",
+    "sort": "alpha",
     "limit": 4
   },
   {
     "key": "familyStatus",
     "title": "Сем. положение",
+    "sort": "alpha",
     "inline": true,
     "limit": 3
   },
@@ -146,11 +149,13 @@ var FILTERS = [
   {
     "key": "registrationPlace",
     "title": "Место приписки",
+    "sort": "alpha",
     "limit": 5
   },
   {
     "key": "servicePlace",
     "title": "Место службы",
+    "sort": "alpha",
     "limit": 5
   }
 ];

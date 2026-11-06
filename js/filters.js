@@ -1,5 +1,7 @@
 // Состояние фильтров
 let state = {};
+// Русская сортировка для алфавитных списков фильтров (е/ё и регистр не мешают)
+const RU_COLLATOR = new Intl.Collator("ru", { sensitivity: "base", numeric: true });
 let searchQuery = "";
 let expanded = {};
 let databaseMapFilter = null;
@@ -139,6 +141,9 @@ function toggle(key, value) {
   if (typeof update === 'function') update();
   if (selecting && key === "settlement" && state.settlement.size === 1 && typeof flyToSettlement === "function") {
     flyToSettlement(value);
+  } else if (typeof zoomToSelection === "function") {
+    // Приближаем карту к получившейся выборке (при снятии последнего фильтра — ко всем усадьбам)
+    zoomToSelection();
   }
 }
 
@@ -178,7 +183,12 @@ function renderFilters() {
         vals.push(d[cfg.key]);
       }
     });
-    vals.sort((a, b) => (cross[b] || 0) - (cross[a] || 0));
+    if (cfg.sort === "alpha") {
+      // Алфавитный порядок (задаётся в data.js: "sort": "alpha")
+      vals.sort((a, b) => RU_COLLATOR.compare(formatNum(a) || String(a), formatNum(b) || String(b)));
+    } else {
+      vals.sort((a, b) => (cross[b] || 0) - (cross[a] || 0));
+    }
     if (!vals.length) return;
 
     const activeN = state[cfg.key].size;
@@ -264,10 +274,11 @@ function renderAreaFilter(container) {
   numbers.forEach(input => input.addEventListener("change", () => {
     setBound(input.dataset.bound, input.value);
     update();
+    zoomToSelection();
   }));
   sliders.forEach(input => {
     input.addEventListener("input", () => setBound(input.dataset.bound, positionToArea(Number(input.value))));
-    input.addEventListener("change", () => update());
+    input.addEventListener("change", () => { update(); zoomToSelection(); });
   });
 }
 
@@ -307,6 +318,7 @@ function renderActiveTags() {
       } else if (t.key === "area") {
         areaRange = { min: AREA_MIN, max: AREA_MAX };
         update();
+        zoomToSelection();
       } else {
         toggle(t.key, t.val);
       }
