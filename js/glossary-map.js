@@ -98,6 +98,14 @@ const GLOSSARY_FILTER_MAP = {
     "Верх-Исетский завод": { filterKey: "servicePlace", filterValue: "Верх-Исетский завод" },
     "Екатеринбургская заводская школа": { filterKey: "servicePlace", filterValue: "Екатеринбургская заводская школа" },
     "Тобольский гарнизон": { filterKey: "servicePlace", filterValue: "Тобольский гарнизон" },
+    "Березовские золотые промыслы": { filterKey: "servicePlace", filterValue: "Березовские золотые промыслы" },
+    "Екатеринбургская штатная команда": { filterKey: "servicePlace", filterValue: "Екатеринбургская горная команда" },
+    "Екатеринбургские заводы": { filterKey: "servicePlace", filterValue: "Екатеринбургские заводы" },
+    "Екатеринбургская монетная контора": { filterKey: "servicePlace", filterValue: "Екатеринбургская монетная контора" },
+    "Елизаветинский завод": { filterKey: "servicePlace", filterValue: "Елизаветинский завод" },
+    "Кушвинский завод": { filterKey: "servicePlace", filterValue: "Кушвинский завод" },
+    "Миасский завод": { filterKey: "servicePlace", filterValue: "Миасский завод" },
+    "Сысертский завод": { filterKey: "servicePlace", filterValue: "Сысертский завод" },
 
     // ===== РОД СЛУЖБЫ =====
     "Гражданская": { filterKey: "serviceType", filterValue: "Гражданская" },
