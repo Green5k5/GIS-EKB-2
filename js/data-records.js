@@ -22491,8 +22491,8 @@ var allData = [
     "source": "Ф. 59. Оп. 7. Д. 353. Л. 45.",
     "scanUrl": "https://disk.yandex.ru/i/-TpMoU0sYrl-qA",
     "sex": "Мужчины",
-    "lat": 56.8389,
-    "lng": 60.6057
+    "lat": 56.8467616,
+    "lng": 60.5871053
   },
   {
     "id": 979,

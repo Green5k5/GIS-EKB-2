@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ГИС-реконструкция поселений Екатеринбургской агломерации</title>
-<link rel="stylesheet" href="css/style.css?v=20261001-vladimir">
+<link rel="stylesheet" href="css/style.css?v=20261108-map-table-desktop">
 <link rel="stylesheet" href="css/map-interactive.css?v=20261013-shared-map">
 <link rel="stylesheet" href="css/scan-viewer.css?v=20261013-canvas">
 </head>
@@ -83,12 +83,28 @@
     <div id="filtersContainer"></div>
     </div>
   </aside>
+  <section class="map-table-panel" id="mapTablePanel" aria-label="Таблица участков" hidden>
+    <div class="map-table-head">
+      <div>
+        <div class="map-table-title">Таблица участков</div>
+        <div class="map-table-count" id="mapTableCount"></div>
+      </div>
+      <button class="map-table-close" id="mapTableClose" type="button" aria-label="Закрыть таблицу">×</button>
+    </div>
+    <div class="ds-table-wrap" role="region" aria-label="Список участков" tabindex="0">
+      <table class="ds-table">
+        <thead><tr><th>Поселение</th><th>№</th><th>Улица / район</th><th>Тип постройки</th><th>Фамилия Имя</th><th>Сословие</th><th>Чин</th><th>Площадь</th><th>Источник</th></tr></thead>
+        <tbody id="mapTableBody"></tbody>
+      </table>
+    </div>
+  </section>
   <div class="map-area">
     <div id="map"></div>
     <section class="database-map-banner" id="databaseMapBanner" aria-label="Фильтр карты по улице" hidden>
       <div class="database-map-copy"><span class="database-map-kicker"><span id="databaseMapOrigin">Улица на карте</span> <span id="databaseMapCount"></span></span><strong id="databaseMapDescription"></strong><span id="databaseMapQuestion"></span></div>
       <div class="database-map-actions"><button type="button" id="databaseMapAll">Все усадьбы улицы</button><button type="button" id="databaseMapClear" aria-label="Убрать фильтр улицы" title="Убрать фильтр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div>
     </section>
+    <button class="map-table-open" id="mapTableOpen" type="button">Показать таблицу</button>
     <div class="cross-badge" id="crossBadge"><span class="cross-dot"></span><span id="crossText"></span></div>
     <div class="overlay-control" id="overlayControl" style="display:none">
       <button class="overlay-control-toggle" id="overlayControlToggle" type="button" aria-controls="overlaySettings" aria-expanded="false">
@@ -370,18 +386,18 @@
 <script src="js/kartograf/map.js?v=20261013-popup-space2"></script>
 <script src="js/kartograf/basemap.js?v=20260927"></script>
 <script src="js/kartograf/layers.js?v=20261013-street-select"></script>
-<script src="js/data-records.js?v=20261105-data-fixes"></script>
-<script src="js/data-polygons.js?v=20261001-readable-data"></script>
+<script src="js/data-records.js?v=20261108-estate-969"></script>
+<script src="js/data-polygons.js?v=20261108-estate-969"></script>
 <script src="js/data.js?v=20261105-sort"></script>
 <script src="js/utils.js?v=20261105-zoom"></script>
 <script src="js/map.js?v=20260927-team-area"></script>
 <script src="js/filters.js?v=20261105-zoom"></script>
 <script src="js/ui.js?v=20261013-scan-canvas"></script>
-<script src="js/table.js"></script>
+<script src="js/table.js?v=20261108-map-table-desktop"></script>
 <script src="js/glossary-map.js?v=20261106-glossary"></script>
 <script src="js/glossary.js?v=20261106-glossary"></script>
 <script src="js/infographics.js?v=20261013-map-results"></script>
-<script src="js/app.js?v=20261105-zoom"></script>
+<script src="js/app.js?v=20261108-map-table"></script>
 <script src="js/street-selection.js?v=20261013-2"></script>
 <script src="js/layers.js?v=20261013-street-select"></script>
 </body>

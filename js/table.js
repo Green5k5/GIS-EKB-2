@@ -68,3 +68,51 @@ function initTable() {
     filterInput.addEventListener("input", filterTable);
   }
 }
+
+let mapTableOpen = false;
+
+function mapTableRowHtml(d) {
+  const owner = [d.surname, d.name].filter(Boolean).join(" ") || "-";
+  const area = d.area_sazh ? d.area_sazh + " саж." : "-";
+  return `<tr tabindex="0" data-id="${esc(d.id)}">
+    <td>${esc(d.settlement)}</td>
+    <td>${esc(formatNum(d.num))}</td>
+    <td>${esc(d.street)}</td>
+    <td>${esc(d.buildingType)}</td>
+    <td>${esc(owner)}</td>
+    <td>${esc(d.soslovie || "-")}</td>
+    <td>${esc(d.rank || "-")}</td>
+    <td style="color:var(--accent)">${esc(area)}</td>
+    <td>${esc(formatArchiveSource(d.source) || "-")}</td>
+  </tr>`;
+}
+
+function renderMapTable(filtered) {
+  if (!mapTableOpen) return;
+  document.getElementById("mapTableBody").innerHTML = filtered.map(mapTableRowHtml).join("");
+  document.getElementById("mapTableCount").textContent =
+    `Показано: ${filtered.length.toLocaleString("ru-RU")} из ${allData.length.toLocaleString("ru-RU")}`;
+}
+
+function setMapTable(open) {
+  mapTableOpen = open;
+  document.getElementById("mapTablePanel").hidden = !open;
+  document.getElementById("mapTableOpen").hidden = open;
+  if (open) renderMapTable(getFiltered());
+  if (window.map) window.map.invalidateSize();
+}
+
+function showMapTableRow(row) {
+  if (!row) return;
+  focusOnItem(Number(row.dataset.id));
+}
+
+function initMapTable() {
+  document.getElementById("mapTableOpen").addEventListener("click", () => setMapTable(true));
+  document.getElementById("mapTableClose").addEventListener("click", () => setMapTable(false));
+  const body = document.getElementById("mapTableBody");
+  body.addEventListener("click", e => showMapTableRow(e.target.closest("tr")));
+  body.addEventListener("keydown", e => {
+    if (e.key === "Enter") showMapTableRow(e.target.closest("tr"));
+  });
+}

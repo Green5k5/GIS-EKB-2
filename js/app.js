@@ -5,6 +5,7 @@ function update() {
   renderActiveTags();
   renderMap(filtered);
   updateStats(filtered);
+  renderMapTable(filtered);
   renderDatabaseMapFilter(filtered);
   if (typeof renderInfographics === "function") renderInfographics();
 
@@ -46,6 +47,7 @@ function initApp() {
   initBurger();
   initSearch();
   initTable();
+  initMapTable();
   initGlossary();
   initOrientationWarning();
   initSidebarDrag();

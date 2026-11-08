@@ -4029,3 +4029,113 @@ body.dark-theme .team-logo-dark { display: block; }
 body.dark-theme .info-icon {
   background-image: url("../assets/icons/info-dark.png");
 }
+
+.map-table-open {
+  position: absolute;
+  top: 10px;
+  left: 60px;
+  z-index: 1000;
+  padding: 8px 12px;
+  background: var(--white);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.map-table-open:hover {
+  border-color: var(--accent);
+}
+
+.has-database-filter .map-table-open {
+  top: 125px;
+}
+
+.map-table-open[hidden],
+.map-table-panel[hidden] {
+  display: none;
+}
+
+.map-table-panel {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  min-width: 320px;
+  flex-shrink: 0;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+}
+
+.map-table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.map-table-title {
+  font-family: Georgia, serif;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.map-table-count {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.map-table-close {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.map-table-close:hover {
+  background: var(--bg);
+}
+
+.map-table-panel .ds-table-wrap {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+}
+
+.map-table-panel .ds-table {
+  min-width: 1060px;
+}
+
+.map-table-panel tbody tr {
+  cursor: pointer;
+}
+
+.map-table-panel tbody tr:nth-child(even) {
+  background: var(--bg);
+}
+
+.map-table-panel tbody tr:hover,
+.map-table-panel tbody tr:focus {
+  background: var(--accent-bg);
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .map-table-open,
+  .map-table-panel {
+    display: none;
+  }
+}

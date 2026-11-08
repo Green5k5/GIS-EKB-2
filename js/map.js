@@ -168,8 +168,6 @@ function renderMap(filtered) {
         data: item
       });
     } else {
-      // Контура в ГИС-слое нет (сейчас так только у №969): рисуем
-      // пунктирный кружок, чтобы его не приняли за точное место участка.
       const minSize = mobile ? 6 : 5;
       features.push({
         id: item.id,
