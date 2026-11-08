@@ -75,6 +75,7 @@ function clearAll() {
   if (typeof resetAllFilters === 'function') resetAllFilters();
   clearSearch();
   if (typeof update === 'function') update();
+  if (typeof zoomToSelection === 'function') zoomToSelection();
 }
 
 // Фокус на объекте

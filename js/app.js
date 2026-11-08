@@ -20,6 +20,15 @@ function fitToEstates(maxZoom, animate) {
   window.map.fitBounds(bounds, opts);
 }
 
+// Приближает карту к текущей выборке усадеб (после фильтра, перехода из глоссария).
+// invalidateSize нужен, потому что страница карты могла быть скрыта и холст
+// мог иметь нулевой/устаревший размер — без этого рамка считалась неверно.
+function zoomToSelection(animate) {
+  if (!window.map) return;
+  window.map.invalidateSize();
+  fitToEstates(18, animate !== false);
+}
+
 function getResponsiveFitOptions(maxZoom) {
   const mobile = window.matchMedia("(max-width: 768px)").matches;
   return {
