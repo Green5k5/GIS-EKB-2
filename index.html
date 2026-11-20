@@ -7,23 +7,45 @@
 <link rel="stylesheet" href="css/style.css?v=20261001-vladimir">
 <link rel="stylesheet" href="css/map-interactive.css?v=20261013-shared-map">
 <link rel="stylesheet" href="css/scan-viewer.css?v=20261013-canvas">
+<link rel="stylesheet" href="css/header-preview.css?v=20261108-3">
+<link rel="stylesheet" href="css/data-workspace.css?v=6">
+<link rel="stylesheet" href="css/map-table.css?v=2">
 </head>
 <body>
 
 <!-- НАВИГАЦИЯ -->
 <nav class="nav">
-  <div class="nav-logo">Е</div>
-  <div class="nav-title">ГИС<br>Екатеринбург</div>
+  <a class="nav-brand" href="/" aria-label="ГИС ЕКБ — Реконструкция Екатеринбурга, на главную">
+    <img class="nav-brand-light" src="assets/branding/gis.svg?v=2" width="176" height="50" alt="ГИС ЕКБ. Реконструкция Екатеринбурга">
+    <img class="nav-brand-dark" src="assets/branding/gis-dark.svg?v=2" width="176" height="50" alt="" aria-hidden="true">
+  </a>
   <button class="burger" id="burgerBtn" type="button" aria-label="Открыть меню" aria-controls="mobileMenu" aria-expanded="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
   <div class="nav-items">
-    <a class="nav-item active" data-page="map"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 8L8 14L20 20L32 14Z"/><path d="M8 20L20 26L32 20"/></svg>Карта</a>
-    <a class="nav-item" data-page="method"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="13" cy="13" r="3.5"/><circle cx="27" cy="13" r="3.5"/><circle cx="13" cy="27" r="3.5"/><circle cx="27" cy="27" r="3.5"/><line x1="13" y1="16.5" x2="13" y2="23.5"/><line x1="27" y1="16.5" x2="27" y2="23.5"/><line x1="16.5" y1="13" x2="23.5" y2="13"/><line x1="16.5" y1="27" x2="23.5" y2="27"/></svg>Методология</a>
-    <a class="nav-item" data-page="glossary"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="5" width="22" height="30" rx="1.5"/><line x1="15" y1="12" x2="25" y2="12"/><line x1="15" y1="18" x2="25" y2="18"/><line x1="15" y1="24" x2="22" y2="24"/></svg>Глоссарий</a>
-    <a class="nav-item" data-page="info"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="22" width="6" height="12" rx="0.5"/><rect x="17" y="14" width="6" height="20" rx="0.5"/><rect x="26" y="6" width="6" height="28" rx="0.5"/><line x1="8" y1="34" x2="32" y2="34"/></svg>Инфографика</a>
-    <a class="nav-item" data-page="data"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="20" cy="10" rx="11" ry="4.5"/><path d="M9 10v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V10"/><path d="M9 16v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V16"/><path d="M9 22v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V22"/></svg>Данные</a>
-    <a class="nav-item" data-page="team"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="13" r="5.5"/><path d="M9 34c0-5 4.5-9.5 11-9.5s11 4.5 11 9.5"/></svg>Команда</a>
+    <a class="nav-item active" data-page="map"><svg aria-hidden="true" focusable="false" width="25" height="18" viewBox="0 0 25 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.91687 11.1513L12.1915 16.6303L22.7357 11.0198M2.17982 6.19983L11.9682 11.3276L22.5604 6.11217L12.1729 1.11572L2.17982 6.19983Z" stroke-width="2" stroke="currentColor"/>
+</svg>Карта</a>
+    <a class="nav-item" data-page="method"><svg aria-hidden="true" focusable="false" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="header-method-1" fill="white">
+<path d="M7.68996 16.6601C7.68996 18.7835 5.96865 20.5048 3.84531 20.5048C1.72197 20.5048 0.000663814 18.7835 0.000663814 16.6601C0.000663814 14.5368 1.72197 12.8155 3.84531 12.8155C5.96865 12.8155 7.68996 14.5368 7.68996 16.6601Z"/>
+<path d="M20.7034 16.6601C20.7034 18.7835 18.9821 20.5048 16.8587 20.5048C14.7354 20.5048 13.0141 18.7835 13.0141 16.6601C13.0141 14.5368 14.7354 12.8155 16.8587 12.8155C18.9821 12.8155 20.7034 14.5368 20.7034 16.6601Z"/>
+<path d="M7.68929 3.84466C7.68929 5.96799 5.96798 7.6893 3.84464 7.6893C1.72131 7.6893 0 5.96799 0 3.84466C0 1.72132 1.72131 1.13052e-05 3.84464 1.13052e-05C5.96798 1.13052e-05 7.68929 1.72132 7.68929 3.84466Z"/>
+<path d="M20.7027 3.84465C20.7027 5.96798 18.9814 7.68929 16.858 7.68929C14.7347 7.68929 13.0134 5.96798 13.0134 3.84465C13.0134 1.72131 14.7347 0 16.858 0C18.9814 0 20.7027 1.72131 20.7027 3.84465Z"/>
+</mask>
+<path d="M7.68996 16.6601C7.68996 18.7835 5.96865 20.5048 3.84531 20.5048C1.72197 20.5048 0.000663814 18.7835 0.000663814 16.6601C0.000663814 14.5368 1.72197 12.8155 3.84531 12.8155C5.96865 12.8155 7.68996 14.5368 7.68996 16.6601ZM20.7034 16.6601C20.7034 18.7835 18.9821 20.5048 16.8587 20.5048C14.7354 20.5048 13.0141 18.7835 13.0141 16.6601C13.0141 14.5368 14.7354 12.8155 16.8587 12.8155C18.9821 12.8155 20.7034 14.5368 20.7034 16.6601ZM7.68929 3.84466C7.68929 5.96799 5.96798 7.6893 3.84464 7.6893C1.72131 7.6893 0 5.96799 0 3.84466C0 1.72132 1.72131 1.13052e-05 3.84464 1.13052e-05C5.96798 1.13052e-05 7.68929 1.72132 7.68929 3.84466ZM20.7027 3.84465C20.7027 5.96798 18.9814 7.68929 16.858 7.68929C14.7347 7.68929 13.0134 5.96798 13.0134 3.84465C13.0134 1.72131 14.7347 0 16.858 0C18.9814 0 20.7027 1.72131 20.7027 3.84465Z" stroke-width="4" stroke="currentColor" mask="url(#header-method-1)"/>
+<path d="M3.85901 14.3135V6.56635M6.99392 4.00806H13.48M16.6869 6.56635V14.3135M13.48 16.8001H6.99392" stroke-width="2" stroke="currentColor"/>
+</svg>Методология</a>
+    <a class="nav-item" data-page="glossary"><svg aria-hidden="true" focusable="false" width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.90031 5.30142H11.5008M4.90031 9.01327H10.3846M4.90031 12.7176H9.40066M1 1V18.947H15.5511V1H1Z" stroke-width="2" stroke="currentColor"/>
+</svg>Глоссарий</a>
+    <a class="nav-item" data-page="info"><svg aria-hidden="true" focusable="false" width="19" height="22" viewBox="0 0 19 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.9845 7.55981V1H17.6259V20.1545H11.9845M11.9845 7.55981H6.34313V11.8892M11.9845 7.55981V20.1545M6.34313 11.8892H1V20.1545H6.34313M6.34313 11.8892V20.1545M6.34313 20.1545H11.9845" stroke-width="2" stroke="currentColor"/>
+</svg>Инфографика</a>
+    <a class="nav-item" data-page="data"><svg aria-hidden="true" focusable="false" width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.3192 8.28077V3.37415C14.0686 1.58325 7.85378 -0.92395 1 3.37422V8.9342M16.3192 3.37415C9.98822 9.64696 3.46849 5.98789 1 3.37422M16.3192 8.28077C14.48 9.90224 8.84119 12.303 1 8.9342M16.3192 8.28077V12.7821M1 8.9342V12.7821M1 12.7821V16.63C3.58949 18.2756 10.2786 20.5795 16.3192 16.63V12.7821M1 12.7821C3.6379 14.2825 10.3948 16.3832 16.3192 12.7821" stroke-width="2" stroke="currentColor"/>
+</svg>Данные</a>
+    <a class="nav-item" data-page="team"><svg aria-hidden="true" focusable="false" width="42" height="24" viewBox="0 0 42 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="6" r="4"/><circle cx="21" cy="6" r="4"/><circle cx="35" cy="6" r="4"/><path d="M1 21c0-7 12-7 12 0M15 21c0-7 12-7 12 0M29 21c0-7 12-7 12 0"/></svg>Команда</a>
   </div>
   <div class="nav-counter" id="navCounter">Показано: <b id="statShown">0</b> / <span id="statTotal">0</span></div>
 
@@ -49,12 +71,29 @@
 
 <!-- МОБИЛЬНОЕ МЕНЮ -->
 <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <a class="nav-item active" data-page="map" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 8L8 14L20 20L32 14Z"/><path d="M8 20L20 26L32 20"/></svg>Карта</a>
-  <a class="nav-item" data-page="method" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="13" cy="13" r="3.5"/><circle cx="27" cy="13" r="3.5"/><circle cx="13" cy="27" r="3.5"/><circle cx="27" cy="27" r="3.5"/><line x1="13" y1="16.5" x2="13" y2="23.5"/><line x1="27" y1="16.5" x2="27" y2="23.5"/><line x1="16.5" y1="13" x2="23.5" y2="13"/><line x1="16.5" y1="27" x2="23.5" y2="27"/></svg>Методология</a>
-  <a class="nav-item" data-page="glossary" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="5" width="22" height="30" rx="1.5"/><line x1="15" y1="12" x2="25" y2="12"/><line x1="15" y1="18" x2="25" y2="18"/><line x1="15" y1="24" x2="22" y2="24"/></svg>Глоссарий</a>
-  <a class="nav-item" data-page="info" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="22" width="6" height="12" rx="0.5"/><rect x="17" y="14" width="6" height="20" rx="0.5"/><rect x="26" y="6" width="6" height="28" rx="0.5"/><line x1="8" y1="34" x2="32" y2="34"/></svg>Инфографика</a>
-  <a class="nav-item" data-page="data" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="20" cy="10" rx="11" ry="4.5"/><path d="M9 10v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V10"/><path d="M9 16v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V16"/><path d="M9 22v6c0 2.5 5 4.5 11 4.5s11-2 11-4.5V22"/></svg>Данные</a>
-  <a class="nav-item" data-page="team" onclick="closeMobile()"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="13" r="5.5"/><path d="M9 34c0-5 4.5-9.5 11-9.5s11 4.5 11 9.5"/></svg>Команда</a>
+  <a class="nav-item active" data-page="map" onclick="closeMobile()"><svg aria-hidden="true" focusable="false" width="25" height="18" viewBox="0 0 25 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.91687 11.1513L12.1915 16.6303L22.7357 11.0198M2.17982 6.19983L11.9682 11.3276L22.5604 6.11217L12.1729 1.11572L2.17982 6.19983Z" stroke-width="2" stroke="currentColor"/>
+</svg>Карта</a>
+  <a class="nav-item" data-page="method" onclick="closeMobile()"><svg aria-hidden="true" focusable="false" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="header-method-2" fill="white">
+<path d="M7.68996 16.6601C7.68996 18.7835 5.96865 20.5048 3.84531 20.5048C1.72197 20.5048 0.000663814 18.7835 0.000663814 16.6601C0.000663814 14.5368 1.72197 12.8155 3.84531 12.8155C5.96865 12.8155 7.68996 14.5368 7.68996 16.6601Z"/>
+<path d="M20.7034 16.6601C20.7034 18.7835 18.9821 20.5048 16.8587 20.5048C14.7354 20.5048 13.0141 18.7835 13.0141 16.6601C13.0141 14.5368 14.7354 12.8155 16.8587 12.8155C18.9821 12.8155 20.7034 14.5368 20.7034 16.6601Z"/>
+<path d="M7.68929 3.84466C7.68929 5.96799 5.96798 7.6893 3.84464 7.6893C1.72131 7.6893 0 5.96799 0 3.84466C0 1.72132 1.72131 1.13052e-05 3.84464 1.13052e-05C5.96798 1.13052e-05 7.68929 1.72132 7.68929 3.84466Z"/>
+<path d="M20.7027 3.84465C20.7027 5.96798 18.9814 7.68929 16.858 7.68929C14.7347 7.68929 13.0134 5.96798 13.0134 3.84465C13.0134 1.72131 14.7347 0 16.858 0C18.9814 0 20.7027 1.72131 20.7027 3.84465Z"/>
+</mask>
+<path d="M7.68996 16.6601C7.68996 18.7835 5.96865 20.5048 3.84531 20.5048C1.72197 20.5048 0.000663814 18.7835 0.000663814 16.6601C0.000663814 14.5368 1.72197 12.8155 3.84531 12.8155C5.96865 12.8155 7.68996 14.5368 7.68996 16.6601ZM20.7034 16.6601C20.7034 18.7835 18.9821 20.5048 16.8587 20.5048C14.7354 20.5048 13.0141 18.7835 13.0141 16.6601C13.0141 14.5368 14.7354 12.8155 16.8587 12.8155C18.9821 12.8155 20.7034 14.5368 20.7034 16.6601ZM7.68929 3.84466C7.68929 5.96799 5.96798 7.6893 3.84464 7.6893C1.72131 7.6893 0 5.96799 0 3.84466C0 1.72132 1.72131 1.13052e-05 3.84464 1.13052e-05C5.96798 1.13052e-05 7.68929 1.72132 7.68929 3.84466ZM20.7027 3.84465C20.7027 5.96798 18.9814 7.68929 16.858 7.68929C14.7347 7.68929 13.0134 5.96798 13.0134 3.84465C13.0134 1.72131 14.7347 0 16.858 0C18.9814 0 20.7027 1.72131 20.7027 3.84465Z" stroke-width="4" stroke="currentColor" mask="url(#header-method-2)"/>
+<path d="M3.85901 14.3135V6.56635M6.99392 4.00806H13.48M16.6869 6.56635V14.3135M13.48 16.8001H6.99392" stroke-width="2" stroke="currentColor"/>
+</svg>Методология</a>
+  <a class="nav-item" data-page="glossary" onclick="closeMobile()"><svg aria-hidden="true" focusable="false" width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.90031 5.30142H11.5008M4.90031 9.01327H10.3846M4.90031 12.7176H9.40066M1 1V18.947H15.5511V1H1Z" stroke-width="2" stroke="currentColor"/>
+</svg>Глоссарий</a>
+  <a class="nav-item" data-page="info" onclick="closeMobile()"><svg aria-hidden="true" focusable="false" width="19" height="22" viewBox="0 0 19 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.9845 7.55981V1H17.6259V20.1545H11.9845M11.9845 7.55981H6.34313V11.8892M11.9845 7.55981V20.1545M6.34313 11.8892H1V20.1545H6.34313M6.34313 11.8892V20.1545M6.34313 20.1545H11.9845" stroke-width="2" stroke="currentColor"/>
+</svg>Инфографика</a>
+  <a class="nav-item" data-page="data" onclick="closeMobile()"><svg aria-hidden="true" focusable="false" width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.3192 8.28077V3.37415C14.0686 1.58325 7.85378 -0.92395 1 3.37422V8.9342M16.3192 3.37415C9.98822 9.64696 3.46849 5.98789 1 3.37422M16.3192 8.28077C14.48 9.90224 8.84119 12.303 1 8.9342M16.3192 8.28077V12.7821M1 8.9342V12.7821M1 12.7821V16.63C3.58949 18.2756 10.2786 20.5795 16.3192 16.63V12.7821M1 12.7821C3.6379 14.2825 10.3948 16.3832 16.3192 12.7821" stroke-width="2" stroke="currentColor"/>
+</svg>Данные</a>
+  <a class="nav-item" data-page="team" onclick="closeMobile()"><svg aria-hidden="true" focusable="false" width="42" height="24" viewBox="0 0 42 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="6" r="4"/><circle cx="21" cy="6" r="4"/><circle cx="35" cy="6" r="4"/><path d="M1 21c0-7 12-7 12 0M15 21c0-7 12-7 12 0M29 21c0-7 12-7 12 0"/></svg>Команда</a>
 </div>
 
 <!-- СТРАНИЦА: КАРТА -->
@@ -71,10 +110,10 @@
       <svg class="sidebar-handle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m7 14 5-5 5 5"/></svg>
     </button>
     <div class="sidebar-content" id="sidebarContent" tabindex="-1">
-    <div class="welcome-panel" id="welcomePanel"><button class="welcome-close" onclick="this.parentElement.style.display='none'">×</button><div class="welcome-title">О проекте</div><div class="welcome-text">ГИС-реконструкция поселений Екатеринбургской агломерации по материалам ведомостей 1809–1810 гг. На карте отмечены 2 570 усадеб трёх поселений. Используйте фильтры и поиск по фамилии владельца.</div></div>
+    <div class="welcome-panel" id="welcomePanel"><button class="welcome-close" onclick="this.parentElement.style.display='none'">×</button><div class="welcome-title">О проекте</div><div class="welcome-text">ГИС-реконструкция поселений Екатеринбургской агломерации по материалам ведомостей 1809–1810 гг. <span id="welcomeDataSummary">Данные карты загружаются.</span> Используйте фильтры и поиск по фамилии владельца.</div></div>
     <div class="search-box">
       <svg class="search-svg" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#8A7F70" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="12.5" y1="12.5" x2="18" y2="18" stroke-linecap="round"/></svg>
-      <input type="text" id="searchInput" placeholder="Поиск по фамилии владельца..."/>
+      <input type="text" id="searchInput" placeholder="Поиск: владелец, № усадьбы, улица..."/>
       <button class="search-clear" id="searchClear" onclick="clearSearch()">×</button>
     </div>
     <div class="search-results" id="searchResults"></div>
@@ -83,11 +122,28 @@
     <div id="filtersContainer"></div>
     </div>
   </aside>
+  <section class="map-table-panel" id="mapTablePanel" aria-label="Таблица участков" hidden>
+    <div class="map-table-head">
+      <div>
+        <div class="map-table-title">Таблица участков</div>
+        <div class="map-table-count" id="mapTableCount" role="status"></div>
+      </div>
+      <details class="map-table-columns"><summary id="mapTableColumnsSummary">Столбцы</summary><div id="mapTableColumnChoices"></div></details>
+      <button class="map-table-close" id="mapTableClose" type="button" aria-label="Закрыть таблицу">×</button>
+    </div>
+    <div class="ds-table-wrap" role="region" aria-label="Список участков" tabindex="0">
+      <table class="ds-table">
+        <thead id="mapTableHead"></thead>
+        <tbody id="mapTableBody"></tbody>
+      </table>
+    </div>
+  </section>
   <div class="map-area">
+    <button class="map-table-open" id="mapTableOpen" type="button" aria-controls="mapTablePanel" aria-expanded="false">Показать таблицу</button>
     <div id="map"></div>
     <section class="database-map-banner" id="databaseMapBanner" aria-label="Фильтр карты по улице" hidden>
       <div class="database-map-copy"><span class="database-map-kicker"><span id="databaseMapOrigin">Улица на карте</span> <span id="databaseMapCount"></span></span><strong id="databaseMapDescription"></strong><span id="databaseMapQuestion"></span></div>
-      <div class="database-map-actions"><button type="button" id="databaseMapAll">Все усадьбы улицы</button><button type="button" id="databaseMapClear" aria-label="Убрать фильтр улицы" title="Убрать фильтр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div>
+      <div class="database-map-actions"><button type="button" id="databaseMapAll">Все усадьбы улицы</button><button type="button" id="databaseMapBack">К таблице</button><button type="button" id="databaseMapClear" aria-label="Убрать фильтр улицы" title="Убрать фильтр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div>
     </section>
     <div class="cross-badge" id="crossBadge"><span class="cross-dot"></span><span id="crossText"></span></div>
     <div class="overlay-control" id="overlayControl" style="display:none">
@@ -243,6 +299,7 @@
   <div class="page-scroll">
     <div class="page-title">Инфографика</div>
     <div class="page-sub">Екатеринбургская агломерация в цифрах. По данным ведомостей 1809–1810 гг.</div>
+
     <div class="stat-row" id="statRow"></div>
     <div class="info-grid" id="infoGrid"></div>
   </div>
@@ -251,36 +308,46 @@
 <!-- СТРАНИЦА: ДАННЫЕ -->
 <div class="page" id="page-data">
   <div class="page-scroll">
-    <div class="page-title">Источники и датасеты</div>
-    <div class="page-sub">Скачайте данные проекта. Лицензия CC BY 4.0</div>
-    <div class="content-card" style="background:var(--accent-bg);margin-bottom:16px">
-      <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:1.5px;margin-bottom:4px">ЦИТИРОВАНИЕ</div>
-      <div style="font-size:12px;color:var(--body)">Пименова К. Д. и др. ГИС-реконструкция поселений Екатеринбургской агломерации (1809–1810). УрФУ, 2023–2026.</div>
-    </div>
-    <!-- <div class="ds-grid">
-      <div class="ds-card"><div class="ds-icon"><svg viewBox="0 0 40 40" fill="none" stroke="var(--ekb)" stroke-width="1.5"><ellipse cx="20" cy="10" rx="12" ry="5"/><path d="M8 10V24C8 27 13 30 20 30S32 27 32 24V10"/><path d="M8 17C8 20 13 23 20 23S32 20 32 17"/></svg></div><div><div class="ds-title">Екатеринбург</div><div class="ds-meta">2 103 усадьбы / 30 атрибутов</div></div><button class="ds-btn" onclick="downloadCSV('Екатеринбург')">Скачать CSV</button></div>
-      <div class="ds-card"><div class="ds-icon"><svg viewBox="0 0 40 40" fill="none" stroke="var(--niz)" stroke-width="1.5"><ellipse cx="20" cy="10" rx="12" ry="5"/><path d="M8 10V24C8 27 13 30 20 30S32 27 32 24V10"/><path d="M8 17C8 20 13 23 20 23S32 20 32 17"/></svg></div><div><div class="ds-title">Нижне-Исетск</div><div class="ds-meta">243 усадьбы / 20 атрибутов</div></div><button class="ds-btn" onclick="downloadCSV('Нижне-Исетск')">Скачать CSV</button></div>
-      <div class="ds-card"><div class="ds-icon"><svg viewBox="0 0 40 40" fill="none" stroke="var(--ukt)" stroke-width="1.5"><ellipse cx="20" cy="10" rx="12" ry="5"/><path d="M8 10V24C8 27 13 30 20 30S32 27 32 24V10"/><path d="M8 17C8 20 13 23 20 23S32 20 32 17"/></svg></div><div><div class="ds-title">Уктус</div><div class="ds-meta">224 усадьбы / 13 атрибутов</div></div><button class="ds-btn" onclick="downloadCSV('Уктус')">Скачать CSV</button></div>
-    </div>
-    <div style="margin-bottom:24px"><button class="ds-btn" onclick="downloadCSV()" style="width:100%;text-align:center;padding:12px;font-size:13px;border-radius:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><path d="M12 4v12m0 0l-5-5m5 5l5-5"/><line x1="4" y1="20" x2="20" y2="20"/></svg>Скачать полный датасет (все 2 570 записей)</button></div>
-    <div style="margin-bottom:24px"><button class="ds-btn" style="width:100%;text-align:center;padding:12px;font-size:13px;border-radius:8px;background:var(--card);color:var(--body)" onclick="alert('QGIS-проект будет доступен для скачивания позже')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><path d="M21 8v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8"/><path d="M1 4h22v4H1z"/><line x1="10" y1="12" x2="14" y2="12"/></svg>Скачать архив QGIS-проекта</button></div>
-    <div style="margin-bottom:16px"><a href="https://docs.google.com/spreadsheets/d/1gcdJOg1_6ainZjQa_qUE09itYSDBTYgObM-RD0twq6w/edit?usp=sharing" target="_blank" class="ds-btn" style="display:inline-block;text-decoration:none">Открыть в Google Sheets</a></div>
-    <div class="section-title">База данных онлайн</div>
-    <div class="ds-tabs" id="dsTabs"><div class="ds-tab active" onclick="filterTableByCity('', event)">Все</div><div class="ds-tab" onclick="filterTableByCity('Екатеринбург', event)">Екатеринбург</div><div class="ds-tab" onclick="filterTableByCity('Нижне-Исетск', event)">Нижне-Исетск</div><div class="ds-tab" onclick="filterTableByCity('Уктус', event)">Уктус</div></div>
-    <div class="ds-filter-row"><input class="ds-filter" type="text" id="dsFilter" placeholder="Фильтр: фамилия, сословие, улица..." oninput="filterTable()"/></div> -->
-    <div class="table-scroll-hint" aria-hidden="true">Проведите по таблице в сторону, чтобы увидеть все столбцы</div>
-    <div class="ds-table-wrap" role="region" aria-label="Таблица источников и данных" tabindex="0">
-      <table class="ds-table" id="dsTable">
-        <thead><tr><th>№</th><th>Улица / район</th><th>Тип постройки</th><th>Фамилия Имя</th><th>Сословие</th><th>Чин</th><th>Площадь</th><th>Источник</th></tr>
-        </thead>
-        <tbody id="dsTableBody"></tbody>
-      </table>
-    </div>
-    <div style="text-align:center;padding:12px;font-size:11px;color:var(--muted)" id="dsTableInfo">Показано 1–25 из 2 570</div>
+    <div class="page-title">Данные и анализ</div>
+    <div class="page-sub">Исторический реестр усадеб · фильтры и выгрузка данных</div>
+    <section class="data-assistant data-assistant--unavailable" aria-labelledby="dataAssistantTitle">
+      <div class="data-assistant-copy">
+        <h2 id="dataAssistantTitle">Спросить у базы</h2>
+        <p>Пока работаем над ИИ-помощником. Для поиска по усадьбам воспользуйтесь таблицей ниже.</p>
+      </div>
+    </section>
+    <section id="estateTableSection" class="estate-table-section" aria-labelledby="estateTableTitle">
+      <div class="table-section-heading"><div><h2 id="estateTableTitle">Таблица усадеб</h2><p>Фильтр — в заголовке каждого столбца. Нажмите на название, чтобы изменить порядок строк.</p></div><div class="table-main-actions"><button type="button" id="tableExpand" aria-expanded="false">На весь экран</button><button type="button" id="tableMap">Выборка на карте ↗</button><button type="button" id="tableExport" class="table-primary">Скачать CSV</button></div></div>
+      <div class="table-ai-scope" id="tableAIScope" hidden><div><span class="table-kicker">ВЫБОРКА ПО ОТВЕТУ ИИ</span><strong id="tableAIScopeLabel"></strong><small id="tableAIScopeDescription"></small></div><button type="button" id="tableClearAI">Весь реестр ×</button></div>
+      <div class="table-selection-stats" id="tableSelectionStats" aria-label="Статистика текущей выборки"></div>
+      <div class="table-toolbar">
+        <label class="table-search"><span class="sr-only">Поиск по всем полям таблицы</span><input class="ds-filter" id="dsFilter" type="search" placeholder="Поиск по всем полям таблицы…"></label>
+        <div class="table-city-tabs" role="group" aria-label="Поселение в таблице"><button type="button" class="active" data-table-city="" aria-pressed="true">Все</button><button type="button" data-table-city="Екатеринбург" aria-pressed="false">Екатеринбург</button><button type="button" data-table-city="Нижне-Исетск" aria-pressed="false">Нижне-Исетск</button><button type="button" data-table-city="Уктус" aria-pressed="false">Уктус</button></div>
+        <details class="table-columns"><summary id="tableColumnsSummary">Столбцы</summary><div id="tableColumnChoices"></div></details>
+        <button type="button" id="tableResetFilters">Сбросить фильтры</button>
+      </div>
+      <div class="table-filter-chips" id="tableFilterChips" aria-label="Фильтры столбцов"></div>
+      <div class="table-scroll-hint">Таблица прокручивается вправо. Через «Столбцы» доступны семья, служба, примечания и другие сведения.</div>
+      <div class="ds-table-wrap" role="region" aria-label="Таблица усадеб для анализа" tabindex="0"><table class="ds-table" id="dsTable"><thead id="dsTableHead"></thead><tbody id="dsTableBody"></tbody></table></div>
+      <div class="table-pagination"><span id="dsTableInfo" role="status" aria-live="polite"></span><label>Строк на странице <select id="tablePageSize"><option value="50">50</option><option value="100" selected>100</option><option value="250">250</option><option value="0">Все</option></select></label><div class="table-page-buttons"><button type="button" data-table-page="first" aria-label="Первая страница">«</button><button type="button" data-table-page="prev" aria-label="Предыдущая страница">‹</button><span id="tablePageNumber"></span><button type="button" data-table-page="next" aria-label="Следующая страница">›</button><button type="button" data-table-page="last" aria-label="Последняя страница">»</button></div></div>
+      <p class="table-export-note">CSV содержит все поля и все строки текущей выборки с учётом фильтров и сортировки — независимо от страницы и скрытых столбцов. Формат для Excel: UTF-8, разделитель «;», десятичная запятая.</p>
+    </section>
+    <div class="content-card table-citation"><strong>Цитирование · CC BY 4.0</strong><p>Пименова К. Д. и др. ГИС-реконструкция поселений Екатеринбургской агломерации (1809–1810). УрФУ, 2023–2026.</p></div>
   </div>
 </div>
+<div id="tableFilterDialog" class="table-filter-popover" popover="manual" role="dialog" aria-labelledby="tableFilterTitle">
+  <div class="table-popover-heading"><strong id="tableFilterTitle"></strong><button type="button" id="tableFilterClose" aria-label="Закрыть фильтр">×</button></div>
+  <fieldset id="tableNumberCondition"><legend>Диапазон</legend><label>От<input id="tableNumberMin" type="text" inputmode="decimal" placeholder="Любое"></label><label>До<input id="tableNumberMax" type="text" inputmode="decimal" placeholder="Любое"></label></fieldset>
+  <div id="tableTextValues">
+    <input id="tableValueSearch" type="search" aria-label="Найти значение в фильтре" placeholder="Найти значение…">
+    <div class="table-popover-select"><label><input id="tableSelectAll" type="checkbox">Все</label><small id="tableValuesCount"></small></div>
+    <div id="tableFilterValues" class="table-filter-values"></div>
+  </div>
+  <p id="tableFilterError" role="alert"></p>
+  <div class="table-popover-footer"><button type="button" id="tableFilterClear">Сбросить</button><button type="button" id="tableFilterApply" class="table-primary">Применить</button></div>
+</div>
 
-<!-- СТРАНИЦА: КОМАНДА -->
+
 <div class="page" id="page-team">
   <div class="page-scroll">
     <header class="team-header">
@@ -369,20 +436,21 @@
 <script src="js/kartograf/render.js?v=20260927-team-area"></script>
 <script src="js/kartograf/map.js?v=20261013-popup-space2"></script>
 <script src="js/kartograf/basemap.js?v=20260927"></script>
-<script src="js/kartograf/layers.js?v=20261013-street-select"></script>
-<script src="js/data-records.js?v=20261105-data-fixes"></script>
-<script src="js/data-polygons.js?v=20261001-readable-data"></script>
+<script src="js/kartograf/layers.js?v=20261108-confluences"></script>
+<script src="js/api-bootstrap.js?v=2"></script>
 <script src="js/data.js?v=20261105-sort"></script>
-<script src="js/utils.js?v=20261105-zoom"></script>
-<script src="js/map.js?v=20260927-team-area"></script>
-<script src="js/filters.js?v=20261105-zoom"></script>
-<script src="js/ui.js?v=20261013-scan-canvas"></script>
-<script src="js/table.js"></script>
+<script src="js/utils.js?v=map-table1"></script>
+<script src="js/map.js?v=20261108-estate-source"></script>
+<script src="js/filters.js?v=map-table1"></script>
+<script src="js/ui.js?v=map-table1"></script>
+<script src="js/table-model.js?v=2"></script>
+<script src="js/map-table.js?v=2"></script>
+<script src="js/table.js?v=map-columns2"></script>
 <script src="js/glossary-map.js?v=20261106-glossary"></script>
 <script src="js/glossary.js?v=20261106-glossary"></script>
 <script src="js/infographics.js?v=20261013-map-results"></script>
-<script src="js/app.js?v=20261105-zoom"></script>
+<script src="js/app.js?v=assistant-unavailable"></script>
 <script src="js/street-selection.js?v=20261013-2"></script>
-<script src="js/layers.js?v=20261013-street-select"></script>
+<script src="js/layers.js?v=20261108-confluences"></script>
 </body>
 </html>

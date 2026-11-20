@@ -4,6 +4,9 @@ function update() {
   renderFilters();
   renderActiveTags();
   renderMap(filtered);
+  renderMapTable(filtered);
+  if (mapTableSelectedId !== null && !filtered.some(item => Number(item.id) === Number(mapTableSelectedId))) closeSelected();
+  showSearchResults(searchQuery);
   updateStats(filtered);
   renderDatabaseMapFilter(filtered);
   if (typeof renderInfographics === "function") renderInfographics();
@@ -46,6 +49,7 @@ function initApp() {
   initBurger();
   initSearch();
   initTable();
+  initMapTable();
   initGlossary();
   initOrientationWarning();
   initSidebarDrag();
@@ -89,4 +93,9 @@ function initThemeToggle() {
 }
 
 // Запуск приложения после загрузки DOM
-document.addEventListener("DOMContentLoaded", initApp);
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadPublicData();
+  if (publicBootstrapError) return;
+  refreshAreaBounds();
+  initApp();
+});

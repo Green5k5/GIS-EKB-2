@@ -1,0 +1,129 @@
+.map-table-open {
+  position: absolute;
+  top: 10px;
+  left: 60px;
+  z-index: 1000;
+  padding: 8px 12px;
+  background: var(--white);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.map-table-open:hover {
+  border-color: var(--accent);
+}
+
+.has-database-filter .map-table-open {
+  top: 125px;
+}
+
+.map-table-open[hidden],
+.map-table-panel[hidden] {
+  display: none;
+}
+
+.map-table-panel {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  min-width: 320px;
+  flex-shrink: 0;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+}
+
+.map-table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.map-table-title {
+  font-family: Georgia, serif;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.map-table-count {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.map-table-close {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.map-table-close:hover {
+  background: var(--bg);
+}
+
+.map-table-panel .ds-table-wrap {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+}
+
+.map-table-panel .ds-table {
+  min-width: 1060px;
+}
+
+.map-table-panel tbody tr {
+  cursor: pointer;
+}
+
+.map-table-panel tbody tr:nth-child(even) {
+  background: var(--bg);
+}
+
+.map-table-panel tbody tr:hover,
+.map-table-panel tbody tr:focus {
+  background: var(--accent-bg);
+  outline: none;
+}
+
+
+.map-table-panel { width: 32%; min-width: 300px; max-width: 620px; min-height: 0; }
+.map-table-panel .ds-table-wrap { scrollbar-width: thin; scrollbar-color: var(--accent) var(--bg); }
+.map-table-panel tr.is-selected { background: var(--accent-bg); box-shadow: inset 3px 0 var(--accent); }
+.map-table-panel .map-table-empty { text-align: center; padding: 28px; color: var(--muted); }
+@media (max-width: 1100px) and (min-width: 769px) { .map-table-panel { min-width: 260px; width: 32%; } }
+@media (max-width: 768px) {
+  .map-table-panel { position: absolute; bottom: 0; left: 0; width: 100%; max-width: none; height: 42%; min-width: 0; z-index: 1100; border-top: 1px solid var(--border); }
+  .map-table-open { left: 55px; }
+  .map-page.has-map-table .map-area { margin-bottom: 42vh; }
+}
+
+.map-page .map-area { min-width: 0; }
+.map-table-head > div { margin-right: auto; }
+.map-table-columns { position: relative; color: var(--text); font-size: 12px; }
+.map-table-columns summary { cursor: pointer; white-space: nowrap; padding: 7px; border: 1px solid var(--border); border-radius: 6px; }
+#mapTableColumnChoices { position: absolute; right: 0; top: calc(100% + 7px); width: 280px; max-height: 390px; overflow: auto; scrollbar-width: thin; padding: 12px; background: var(--white); border: 1px solid var(--border); border-radius: 9px; box-shadow: 0 12px 40px #0002; z-index: 15; }
+#mapTableColumnChoices label { display: flex; gap: 9px; align-items: baseline; font-size: 12px; line-height: 1.5; padding: 6px; cursor: pointer; }
+.map-table-panel .ds-table { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-size: 12px; }
+.map-table-panel .ds-table th, .map-table-panel .ds-table td { min-width: 120px; max-width: 280px; white-space: normal; overflow-wrap: anywhere; padding: 12px; vertical-align: top; line-height: 1.5; }
+.map-table-panel .ds-table th { background: var(--card); }
+.map-table-panel .ds-table [data-column='owner'], .map-table-panel .ds-table [data-column='street'], .map-table-panel .ds-table [data-column='source'] { min-width: 210px; }
+.map-table-panel .ds-table [data-column='num'] { position: sticky; left: 0; min-width: 58px; max-width: 58px; background: var(--white); border-right: 1px solid var(--border); z-index: 1; }
+.map-table-panel .ds-table th[data-column='num'] { z-index: 4; background: var(--card); }
+.map-table-panel tr:nth-child(even) [data-column='num'] { background: var(--bg); }
+.map-table-panel tr.is-selected td, .map-table-panel tbody tr:hover td { background: var(--accent-bg); }

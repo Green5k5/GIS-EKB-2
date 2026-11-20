@@ -135,7 +135,7 @@ function initMap() {
     console.warn("Подложка недоступна: нет папки assets/basemap");
   });
 
-  initOverlay(HISTORICAL_OVERLAYS);
+  initOverlay(publicOverlays.map(o => ({...o, url:o.fileUrl})));
 
   const initialSettlement = new URLSearchParams(window.location.search).get("settlement");
   if (initialSettlement && SETTLEMENT_BOUNDS[initialSettlement]) {
@@ -144,10 +144,18 @@ function initMap() {
 }
 
 function polygonFor(item) {
-  const numKey = String(Math.round(parseFloat(item.num)));
-  if (item.settlement === "Нижне-Исетск") return niPolygons[numKey];
-  if (item.settlement === "Екатеринбург") return ekbPolygons[numKey];
-  if (item.settlement === "Уктус" && typeof uktPolygons !== "undefined") return uktPolygons[numKey];
+  if (item.plotId != null && typeof publicPlotsById !== "undefined") {
+    const plot = publicPlotsById.get(Number(item.plotId));
+    if (plot?.geometry && plot.geometry.coordinates?.[0]) {
+      return {
+        coords: plot.geometry.coordinates[0],
+        rings: plot.geometry.type === 'MultiPolygon' ? plot.geometry.coordinates.flat() : plot.geometry.coordinates,
+        clat: plot.focusLat,
+        clng: plot.focusLng,
+        plotId: plot.id
+      };
+    }
+  }
   return null;
 }
 
@@ -157,13 +165,13 @@ function renderMap(filtered) {
 
   const features = [];
   filtered.forEach(item => {
-    if (!item.lat || !item.lng) return;
     const color = getEstateColor(item);
     const poly = polygonFor(item);
+    if (!poly && (!item.lat || !item.lng)) return;
     if (poly) {
       features.push({
         id: item.id,
-        rings: [poly.coords.map(c => [c[1], c[0]])],
+        rings: poly.rings.map(r => r.map(c => [c[1], c[0]])),
         color, fillOpacity: 0.35, weight: 1.5, opacity: 0.8,
         data: item
       });
@@ -211,7 +219,7 @@ function estatePopupHtml(item) {
     html += `<div class="popup-note">Контур участка не оцифрован; точка показывает приблизительное место.</div>`;
   }
   if (item.scanUrl) {
-    html += `<div class="popup-row"><span class="popup-lbl"></span><span><a href="#" onclick="openScan('${esc(item.scanUrl)}'); return false;">Открыть цифровой образ</a></span></div>`;
+    html += `<div class="popup-row"><span class="popup-lbl"></span><span><a href="#" onclick="openEstateScan(${Number(item.id)}); return false;">Открыть цифровой образ</a></span></div>`;
   }
   return html + "</div>";
 }
@@ -247,6 +255,8 @@ function initOverlay(overlays) {
   const initialOpacity = ((opacity && Number(opacity.value)) || 45) / 100;
   // Растры грузятся лениво: только когда слой включён и план попал в кадр
   overlayLayers = overlays.map(item => new Kartograf.ImageOverlay(item.url, item.bounds, {
+    rotation: item.rotation,
+    crop: item.crop,
     opacity: initialOpacity,
     visible: false,
     zIndex: 100

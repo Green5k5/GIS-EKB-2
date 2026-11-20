@@ -65,10 +65,15 @@ document.addEventListener('DOMContentLoaded', () => {
     fitToEstates(16, true);
   });
 });
-const AREA_VALUES = allData.map(item => Number(item.area_sazh)).filter(value => Number.isFinite(value) && value > 0);
-const AREA_MIN = Math.floor(Math.min(...AREA_VALUES));
-const AREA_MAX = Math.ceil(Math.max(...AREA_VALUES));
+let AREA_MIN = 1;
+let AREA_MAX = 2;
 let areaRange = { min: AREA_MIN, max: AREA_MAX };
+function refreshAreaBounds() {
+  const values = allData.map(item => Number(item.area_sazh)).filter(value => Number.isFinite(value) && value > 0);
+  AREA_MIN = values.length ? Math.max(1, Math.floor(Math.min(...values))) : 1;
+  AREA_MAX = values.length ? Math.max(AREA_MIN + 1, Math.ceil(Math.max(...values))) : 2;
+  areaRange = { min: AREA_MIN, max: AREA_MAX };
+}
 
 function areaRangeActive() {
   return areaRange.min > AREA_MIN || areaRange.max < AREA_MAX;

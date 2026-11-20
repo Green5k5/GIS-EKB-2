@@ -1,0 +1,23 @@
+{
+  "llama": {
+    "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11320/llama-b11320-bin-win-cpu-x64.zip",
+    "sha256": "20661e00d6e7a98cecf87342af12d6bf836803229000cf19b338521273bd1fc1"
+  },
+  "model": {
+    "url": "https://huggingface.co/bartowski/Qwen_Qwen3-4B-GGUF/resolve/cb76885dc66d50759b207c5a48c4e78dfa00c638/Qwen_Qwen3-4B-IQ3_M.gguf",
+    "sha256": "2746853ef81b0ca0f7f7f4594c2c3c776fa3fe777e1d0c396985faa1348e9070"
+  },
+  "php": {
+    "url": "https://downloads.php.net/~windows/releases/php-8.4.27-1-nts-Win32-vs17-x64.zip",
+    "fallback": "https://downloads.php.net/~windows/releases/archives/php-8.4.27-1-nts-Win32-vs17-x64.zip",
+    "sha256": "dbae154a0a89791f36c3d48e68bae797878333e7d6cb5721e74617de59b63ab7"
+  },
+  "caddy": {
+    "url": "https://github.com/caddyserver/caddy/releases/download/v2.10.2/caddy_2.10.2_windows_amd64.zip",
+    "sha256": "9fd1ef9be5d9b05852b66ccc25f96f23d8651bcab20779861a745bdffa273722"
+  },
+  "node": {
+    "url": "https://nodejs.org/dist/v22.15.1/node-v22.15.1-win-x64.zip",
+    "sha256": "7c7997d6ef2efd9525a54b033fc0be6f22549a5905f5da6573a41e61a436a1b5"
+  }
+}

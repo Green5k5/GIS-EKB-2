@@ -62,6 +62,7 @@ function closeMobile() {
 function clearSearch() {
   const searchInput = document.getElementById("searchInput");
   searchQuery = "";
+  document.getElementById("searchClear")?.classList.remove("show");
   if (searchInput) {
     searchInput.value = "";
     // Закрываем выпадающий список результатов поиска
@@ -115,12 +116,10 @@ function focusOnItem(id) {
 // и не зависит от порядка слов: "Иван Петров" найдёт "Петров Иван".
 function matchesSearch(item, query) {
   if (!query) return true;
-  var full = ((item.surname || "") + " " +
-              (item.name || "") + " " +
-              (item.patronymic || "")).toLowerCase();
-  var tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
-  for (var i = 0; i < tokens.length; i++) {
-    if (full.indexOf(tokens[i]) === -1) return false;
-  }
+  const normalize = value => String(value ?? '').toLowerCase().replace(/ё/g, 'е');
+  const full = normalize([item.surname, item.name, item.patronymic, item.settlement,
+    formatNum(item.num), item.street, item.buildingType, item.soslovie, item.rank].filter(Boolean).join(' '));
+  const tokens = normalize(query).split(/\s+/).filter(Boolean);
+  for (const token of tokens) if (!full.includes(token)) return false;
   return true;
 }

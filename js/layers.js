@@ -77,8 +77,8 @@ var vectorLayersData = {"fortress":[{"name":"","lines":[[[56.8469722,60.5886976]
     return { north: north, south: south };
   }
 
-  function addVectorLayers() {
-    var map = window.map;
+  window.createHistoricalLayer = function (source, onFeatureClick) {
+    var vectorLayersData = source;
     var features = [];
     vectorLayersData.rivers.forEach(function (f) {
       var label = f.name ? "р. " + f.name : "";
@@ -92,8 +92,8 @@ var vectorLayersData = {"fortress":[{"name":"","lines":[[[56.8469722,60.5886976]
           if (cut.south.length > 1) open.push(cut.south);
         });
       }
-      if (bed.length) features.push({ kind: "riverbed", lines: bed, label: label + " (русло под прудом)" });
-      if (open.length) features.push({ kind: "river", name: f.name, lines: open, label: label });
+      if (bed.length) features.push({ kind: "riverbed", name: f.name, lines: bed, label: label + " (русло под прудом)" });
+      if (open.length) features.push({ kind: "river", name: f.name, joinTo: f.name === "Исеть" ? null : "Исеть", lines: open, label: label });
     });
     vectorLayersData.streets.forEach(function (f) {
       features.push({ kind: "street", streetName: f.name, lines: f.lines, label: f.name ? "ул. " + f.name : "" });
@@ -105,8 +105,15 @@ var vectorLayersData = {"fortress":[{"name":"","lines":[[[56.8469722,60.5886976]
     // Выше исторических планов (100), ниже усадеб (300)
     var layer = new Kartograf.HistoricLayer(features, {
       zIndex: 200, spec: STYLE.spec, palettes: STYLE.palettes, look: STYLE.look, smooth: SMOOTH_M,
-      onFeatureClick: selectHistoricStreet
+      onFeatureClick: onFeatureClick
     });
+    return layer;
+  };
+
+  function addVectorLayers() {
+    if (!Object.values(vectorLayersData).some(items => items.length)) return;
+    var map = window.map;
+    var layer = window.createHistoricalLayer(vectorLayersData, selectHistoricStreet);
     var applyTheme = function () {
       layer.setTheme(document.body.classList.contains("dark-theme"));
     };
@@ -148,6 +155,7 @@ var vectorLayersData = {"fortress":[{"name":"","lines":[[[56.8469722,60.5886976]
 
   // Ждём, пока app.js создаст карту
   function waitForMap() {
+    if (!document.getElementById("overlayControl")) return;
     if (window.map && window.Kartograf && window.map.addLayer) {
       addVectorLayers();
     } else {

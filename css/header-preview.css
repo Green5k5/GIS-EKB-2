@@ -1,0 +1,93 @@
+/* Header preview based on the supplied artwork. */
+.nav {
+  height: 64px;
+  padding: 3px 24px 0;
+  border-top: 4px solid #343e2e;
+  border-bottom: 1px solid #a4a09c;
+  gap: 0;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  text-decoration: none;
+}
+
+.nav-brand img {
+  display: block;
+  width: 140.8px;
+  height: 40px;
+}
+.nav-brand .nav-brand-dark { display: none; }
+
+.nav-items {
+  align-self: stretch;
+  align-items: center;
+  margin-left: 48px;
+  gap: 20px;
+}
+
+.nav-items .nav-item {
+  position: relative;
+  justify-content: center;
+  min-height: 48px;
+  padding: 2px 4px 8px;
+  gap: 5px;
+  border-radius: 0;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.nav-items .nav-item svg {
+  width: 23px;
+  height: 21px;
+  margin: 0;
+  color: #171a15;
+}
+
+.nav-items .nav-item[data-page='team'] svg { width: 34px; }
+.nav-items .nav-item:hover { background: transparent; color: var(--text); }
+.nav-items .nav-item.active { color: var(--accent); }
+.nav-items .nav-item.active::after {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 27px;
+  height: 2px;
+  margin: 0;
+  border-radius: 0;
+  transform: translateX(-50%);
+}
+
+.nav-counter { margin-left: auto; padding-left: 20px; }
+.nav-brand:focus-visible, .nav-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.page { top: 64px; }
+.theme-toggle.floating { top: 78px; }
+body.dark-theme .nav-brand .nav-brand-light { display: none; }
+body.dark-theme .nav-brand .nav-brand-dark { display: block; }
+body.dark-theme .nav-items .nav-item svg { color: #f0ebdf; }
+
+@media (min-width: 769px) and (max-width: 1100px) {
+  .nav { padding-right: 16px; padding-left: 16px; }
+  .nav-items { margin-left: 30px; gap: 12px; }
+  .nav-counter { display: none !important; }
+}
+
+@media (max-width: 768px) {
+  :root { --mobile-header-height: calc(64px + env(safe-area-inset-top)); }
+  .nav {
+    height: var(--mobile-header-height);
+    padding: env(safe-area-inset-top) 10px 0 14px;
+    gap: 10px;
+  }
+  .nav-brand img { width: 140.8px; height: 40px; }
+  .page, .mobile-menu { top: var(--mobile-header-height); }
+  .theme-toggle.floating { top: calc(env(safe-area-inset-top) + 12px); }
+  .mobile-menu .nav-item[data-page='team'] svg { width: 34px; }
+}

@@ -18,6 +18,8 @@
       this.url = url;
       this.bounds = new K.LatLngBounds(bounds);
       this.opacity = opts.opacity != null ? opts.opacity : 1;
+      this.rotation = Number(opts.rotation) || 0;
+      this.crop = opts.crop || [0,0,0,0];
       this.visible = opts.visible !== false;
       this.zIndex = opts.zIndex || 100;
       this.interactive = false;
@@ -50,7 +52,13 @@
       ctx.globalAlpha = this.opacity;
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
-      ctx.drawImage(this.img, x0, y0, x1 - x0, y1 - y0);
+      ctx.save();
+      const w=x1-x0,h=y1-y0,c=this.crop;
+      ctx.translate((x0+x1)/2,(y0+y1)/2);
+      ctx.rotate(this.rotation*Math.PI/180);
+      ctx.beginPath();ctx.rect(-w/2+w*c[0],-h/2+h*c[1],w*(1-c[0]-c[2]),h*(1-c[1]-c[3]));ctx.clip();
+      ctx.drawImage(this.img,-w/2,-h/2,w,h);
+      ctx.restore();
       return false;
     }
   }
@@ -511,6 +519,45 @@
           cosLat: Math.cos((lat / Math.max(1, n)) * Math.PI / 180), cx: cx / n, cy: cy / n
         });
       });
+      // Join tributaries to the final, smoothed river centerline. Snapping before
+      // roundCorners would leave gaps again near bends in the receiving river.
+      for (const feature of this.features.filter(f => f.kind === 'river' && f.joinTo)) {
+        const targets = this.features.filter(f =>
+          (f.kind === 'river' || f.kind === 'riverbed') && f.name === feature.joinTo);
+        feature.lines = feature.lines.map(line => {
+          if (line.length < 4) return line;
+          let nearest = null;
+          for (const end of [0, line.length - 2]) {
+            const px = line[end], py = line[end + 1];
+            for (const target of targets) for (const receiving of target.lines) {
+              for (let i = 2; i < receiving.length; i += 2) {
+                const ax = receiving[i - 2], ay = receiving[i - 1];
+                const dx = receiving[i] - ax, dy = receiving[i + 1] - ay;
+                const length2 = dx * dx + dy * dy;
+                if (!length2) continue;
+                const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / length2));
+                const x = ax + t * dx, y = ay + t * dy;
+                const distance2 = (px - x) ** 2 + (py - y) ** 2;
+                if (!nearest || distance2 < nearest.distance2) nearest = { end, x, y, distance2 };
+              }
+            }
+          }
+          // Ignore disconnected or unrelated imported waterways.
+          if (!nearest || Math.sqrt(nearest.distance2) * EARTH_M * feature.cosLat > 500) return line;
+          const joined = new Float64Array(line.length + 2);
+          const offset = nearest.end === 0 ? 2 : 0;
+          joined.set(line, offset);
+          const mouth = nearest.end === 0 ? 0 : line.length;
+          joined[mouth] = nearest.x;
+          joined[mouth + 1] = nearest.y;
+          feature.bbox[0] = Math.min(feature.bbox[0], nearest.x);
+          feature.bbox[1] = Math.min(feature.bbox[1], nearest.y);
+          feature.bbox[2] = Math.max(feature.bbox[2], nearest.x);
+          feature.bbox[3] = Math.max(feature.bbox[3], nearest.y);
+          feature.len += Math.sqrt(nearest.distance2);
+          return joined;
+        });
+      }
       // стороны «наружу» для стен крепости: центр — среднее всех точек стен
       const walls = this.features.filter(f => f.kind === "fortress");
       if (walls.length) {

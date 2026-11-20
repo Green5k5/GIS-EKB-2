@@ -1,3 +1,30 @@
-ai/model-runtime.*.log
+# Local configuration and dependencies
+.env
+.env.*
+!.env.example
+node_modules/
+.runtime/
+# Local model/runtime downloads
 models/*.gguf
+models/*.part
+models/*.verified
 ai/llama-win-cpu-x64/
+ai/model-runtime.*.log
+# Editable database, uploads and backups
+server/*.sqlite*
+data/uploads/
+data/backups/
+data/test-*/
+# Generated tools and editor files
+tools/assets/
+tools/css/
+tools/docs/
+tools/js/
+tools/server/
+tools/tools/
+tools/vendor/
+tools/index.html
+tools/package.json
+*.log
+.DS_Store
+Thumbs.db

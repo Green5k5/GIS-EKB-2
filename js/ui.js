@@ -77,9 +77,10 @@ function initSearch() {
 
   inp.addEventListener("input", function () {
     if (clr) clr.className = "search-clear" + (this.value ? " show" : "");
-    showSearchResults(this.value);
     searchQuery = this.value.trim();
     if (typeof update === 'function') update();
+    setMapTable(true);
+    zoomToSelection();
   });
 }
 
@@ -92,7 +93,7 @@ function showSearchResults(q) {
     return;
   }
   q = q.toLowerCase();
-  const matches = allData.filter(d => matchesDatabaseMapFilter(d) && matchesSearch(d, q)).slice(0, 15);
+  const matches = getFiltered().slice(0, 15);
   if (!matches.length) {
     res.className = "search-results";
     res.innerHTML = "";
@@ -320,11 +321,11 @@ function ensureScanModal() {
   modal.className = "scan-modal";
   modal.setAttribute("role", "dialog");
   modal.setAttribute("aria-modal", "true");
-  modal.setAttribute("aria-label", "Просмотр цифрового образа");
+  modal.setAttribute("aria-labelledby", "scanModalTitle");
   modal.innerHTML = `
     <div class="scan-modal-dialog">
       <div class="scan-modal-toolbar">
-        <div class="scan-modal-title">Цифровой образ</div>
+        <div class="scan-modal-title" id="scanModalTitle">Цифровой образ</div>
         <div class="scan-modal-actions">
           <button type="button" onclick="changeScanZoom(-0.25)" aria-label="Уменьшить">−</button>
           <button type="button" class="scan-zoom-label" onclick="resetScanZoom()" aria-label="Масштаб 100 процентов" title="Показать в масштабе 100%">100%</button>
@@ -345,9 +346,15 @@ function ensureScanModal() {
   return modal;
 }
 
-async function openScan(url) {
+function openEstateScan(id) {
+  const item = allData.find(record => Number(record.id) === Number(id));
+  if (item) return openScan(item.scanUrl, item.source);
+}
+
+async function openScan(url, source = "") {
   if (!url) return;
   const modal = ensureScanModal();
+  modal.querySelector(".scan-modal-title").textContent = formatArchiveSource(source) || "Цифровой образ";
   const image = modal.querySelector(".scan-modal-image");
   const status = modal.querySelector(".scan-modal-status");
   const generation = ++scanView.generation;
@@ -437,6 +444,7 @@ document.addEventListener("keydown", e => {
 
 /* ===== Показ выбранного участка ===== */
 function closeSelected() {
+  selectMapTableRow(null);
   const sec = document.getElementById("selectedSection");
   const card = document.getElementById("selectedCard");
   if (sec) sec.style.display = "none";
@@ -446,6 +454,7 @@ function closeSelected() {
 }
 
 function showSelected(item) {
+  selectMapTableRow(item.id);
   const sec = document.getElementById("selectedSection");
   if (!sec) return;
   sec.style.display = "block";
@@ -483,7 +492,7 @@ function showSelected(item) {
             </div>
             <div class="scan-text">
               <b>Источник</b>
-              <a href="#" onclick="openScan('${esc(item.scanUrl)}'); return false;">Открыть цифровой образ</a>
+              <a href="#" onclick="openEstateScan(${Number(item.id)}); return false;">Открыть цифровой образ</a>
             </div>
           </div>`;
   }

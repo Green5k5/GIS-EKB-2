@@ -7,11 +7,11 @@ const context = {
   document: {addEventListener() {}, getElementById() {return null;}},
   estateLayer: {getLayers() {return [{}];}, getBounds() {return {isValid() {return true;}};}},
   flyToSettlement(name) {cameraCalls.push(name);},
-  matchesSearch() {return true;}, closeSelected() {}
+  matchesSearch() {return true;}, closeSelected() {}, mapTableSelectedId: null
 };
 vm.createContext(context);
 for (const path of ['js/data-records.js', 'js/data.js', 'js/filters.js', 'js/app.js']) vm.runInContext(fs.readFileSync(path, 'utf8'), context);
-for (const name of ['renderFilters', 'renderActiveTags', 'renderMap', 'updateStats', 'renderDatabaseMapFilter', 'renderInfographics']) context[name] = () => {};
+for (const name of ['renderFilters', 'renderActiveTags', 'renderMap', 'renderMapTable', 'showSearchResults', 'updateStats', 'renderDatabaseMapFilter', 'renderInfographics']) context[name] = () => {};
 context.initFiltersState();
 // Фильтр сословия/пола приближает карту к выборке
 context.toggle('soslovie', 'Купцы');
