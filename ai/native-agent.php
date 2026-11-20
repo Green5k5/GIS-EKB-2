@@ -10,7 +10,7 @@ function agent_request(array $config, array $messages, array $tools, string $cho
     $ch=curl_init($config['model_url']);
     curl_setopt_array($ch,[CURLOPT_POST=>true,CURLOPT_RETURNTRANSFER=>true,CURLOPT_HTTPHEADER=>['Content-Type: application/json'],CURLOPT_POSTFIELDS=>json_encode($payload,JSON_UNESCAPED_UNICODE),CURLOPT_TIMEOUT=>$timeout,CURLOPT_CONNECTTIMEOUT=>2]);
     $raw=curl_exec($ch); $status=curl_getinfo($ch,CURLINFO_RESPONSE_CODE); curl_close($ch);
-    if($raw===false || $status!==200) throw new RuntimeException('Локальная модель недоступна или не успела ответить. Проверьте запуск ai/start-model.cmd (на VDS — службу модели).');
+    if($raw===false || $status!==200) throw new RuntimeException('Локальная модель недоступна или не успела ответить. Проверьте запуск через bash ai/start-model.sh или состояние службы модели.');
     $json=json_decode($raw,true); $message=$json['choices'][0]['message'] ?? null;
     if (PHP_SAPI==='cli' && getenv('KH_WAY_AI_DEBUG')==='1') fwrite(STDERR,json_encode($json['choices'][0] ?? [],JSON_UNESCAPED_UNICODE)."\n");
     if(!is_array($message) || ($json['choices'][0]['finish_reason'] ?? '')==='length') throw new RuntimeException('Модель не завершила ответ. Попробуйте более короткий вопрос.');

@@ -7,7 +7,7 @@ Type=simple
 User=www-data
 WorkingDirectory=/var/www/kh-way
 Environment=LLAMA_THREADS=4
-ExecStart=/var/www/kh-way/ai/start-model.sh
+ExecStart=/bin/bash /var/www/kh-way/ai/start-model.sh
 Restart=on-failure
 RestartSec=3
 
