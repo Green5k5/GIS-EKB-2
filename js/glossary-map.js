@@ -118,8 +118,14 @@ const GLOSSARY_FILTER_MAP = {
 };
 
 // Функция для применения фильтра по клику на термин
+function glossaryMapping(term) {
+    if (!publicSite) return GLOSSARY_FILTER_MAP[term];
+    const entry = publicSite.glossary.find(item => item.term === term);
+    return entry?.filterKey && FILTERS.some(filter => filter.key === entry.filterKey) ? entry : null;
+}
+
 function applyGlossaryFilter(term) {
-    const mapping = GLOSSARY_FILTER_MAP[term];
+    const mapping = glossaryMapping(term);
     if (!mapping) return;
 
     // 1. Переключаемся на страницу карты
@@ -156,7 +162,7 @@ function applyGlossaryFilter(term) {
 
     // 4. Подсветка активного термина
     document.querySelectorAll('.glossary-term-clickable').forEach(el => el.classList.remove('active-term'));
-    const termElement = document.querySelector(`.glossary-term-clickable[data-term="${term}"]`);
+    const termElement = [...document.querySelectorAll('.glossary-term-clickable')].find(el => el.dataset.term === term);
     if (termElement) {
         termElement.classList.add('active-term');
         termElement.scrollIntoView({ behavior: 'smooth', block: 'center' });

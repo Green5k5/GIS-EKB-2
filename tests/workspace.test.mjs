@@ -314,6 +314,71 @@ test("workspace: isolated end-to-end import, edits, conflicts, publication, back
       (await request("/api/public/bootstrap")).result.records.length,
       2,
     );
+    for (const asset of ["/admin/site-editor.js", "/admin/site-editor.css", "/admin/editor-table.js",
+      "/admin/editor-dom.js", "/admin/editor-glossary.js", "/admin/editor-filters.js", "/assets/glossary-icons.svg"]) {
+      assert.equal((await fetch(base + asset)).status, 200, asset);
+    }
+    const siteBefore = await call("");
+    const rowId = siteBefore.records[0].id;
+    const bulk = (rows) => request(root + "/records/bulk", {
+      method: "PATCH", body: { revision: siteBefore.revision, rows },
+    });
+    const row = { id: rowId, changes: { notes: "Исправлено в таблице" } };
+    assert.equal((await bulk([row, { id: 99999999, changes: { notes: "Нет строки" } }])).response.status, 422);
+    assert.equal((await call("")).records[0].notes, siteBefore.records[0].notes);
+    assert.ok((await bulk([row])).response.ok);
+    assert.equal((await bulk([row])).response.status, 409);
+    const iconBuffer = await sharp({
+      create: { width: 96, height: 96, channels: 4, background: { r: 64, g: 120, b: 100, alpha: 1 } },
+    }).png().toBuffer();
+    const glossary = [
+      { term: "Тест", category: "Категория", description: "Определение",
+        aliases: ["Синоним"], filterKey: "", filterValue: "", icon: "coins" },
+      { term: "Мой значок", category: "Категория", description: "Описание",
+        aliases: [], filterKey: "", filterValue: "", icon: "data:image/png;base64," + iconBuffer.toString("base64") },
+    ];
+    const draftBefore = await call("");
+    const site = { glossary, filters: [{ key: "settlement", title: "Исторические поселения",
+      sort: "alpha", limit: 5, inline: false, hiddenValues: [] }], tableFilters: ["num"],
+      areaFilter: true, areaFilterTitle: "Размер участков" };
+    const editor = (changes) => request(root + "/editor", {
+      method: "PATCH", body: { revision: draftBefore.revision, ...changes },
+    });
+    const pendingRecord = { id: rowId, changes: { notes: "Черновик из таблицы" } };
+    const invalidIcon = { ...glossary[0], icon: "https://example.com/icon.svg" };
+    assert.equal((await editor({ site: { glossary: [invalidIcon] }, records: [pendingRecord] })).response.status, 422);
+    assert.equal((await editor({ site, records: [pendingRecord, { id: 99999999, changes: { notes: "Нет строки" } }] })).response.status, 422);
+    const afterFailures = await call("");
+    assert.equal(afterFailures.records[0].notes, row.changes.notes);
+    assert.deepEqual(afterFailures.site, draftBefore.site);
+    const draftBytes = Buffer.from(JSON.stringify({ revision: draftBefore.revision, site, records: [pendingRecord] }));
+    const split = draftBytes.indexOf(Buffer.from(pendingRecord.changes.notes)) + 1;
+    assert.ok(split > 1);
+    const streamedDraft = new ReadableStream({
+      async start(controller) {
+        controller.enqueue(draftBytes.subarray(0, split));
+        await new Promise(resolve => setTimeout(resolve, 30));
+        controller.enqueue(draftBytes.subarray(split));
+        controller.close();
+      },
+    });
+    const draftResponse = await fetch(base + root + "/editor", {
+      method: "PATCH", duplex: "half", body: streamedDraft,
+      headers: { cookie, Origin: base, "X-CSRF-Token": csrf, "Content-Type": "application/json" },
+    });
+    assert.ok(draftResponse.ok, await draftResponse.text());
+    assert.equal((await editor({ site })).response.status, 409);
+    assert.deepEqual((await request("/api/public/bootstrap")).result.site, siteBefore.site);
+    await call("/publish", { method: "POST", body: { note: "Редактор данных" } });
+    const published = (await request("/api/public/bootstrap")).result;
+    assert.deepEqual(published.site.glossary, glossary);
+    assert.deepEqual(published.site.filters, site.filters);
+    assert.deepEqual(published.site.tableFilters, ["num"]);
+    assert.equal(published.site.areaFilter, true);
+    assert.equal(published.site.areaFilterTitle, site.areaFilterTitle);
+    assert.equal(published.records[0].notes, pendingRecord.changes.notes);
+    await call("/restore/" + firstRelease, { method: "POST" });
+    assert.deepEqual((await request("/api/public/bootstrap")).result.site, siteBefore.site);
     const zip = zipSync({ "../../escape.xlsx": table() });
     prepared = await batch(zip, true);
     assert.equal(prepared.status, "ready");

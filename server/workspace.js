@@ -12,6 +12,7 @@ import {
   removeFile,
 } from "./batch-files.js";
 import sharp from "sharp";
+import { siteConfiguration, validateSiteSection, saveSiteContent } from "./site-config.js";
 import {
   analyzeBundle,
   geometryBounds,
@@ -108,6 +109,88 @@ function saveRecord(db, r, id, localEdit) {
       .run(...values).lastInsertRowid,
   );
 }
+function editRecord(db, id, b, activeOnly = false) {
+  const old = id
+      ? db.prepare("SELECT * FROM records WHERE id=?").get(id)
+      : null;
+  if (id && (!old || (activeOnly && old.status !== "active"))) throw new Error("Усадьба не найдена.");
+  const r = { ...(old ? toRecord(old) : {}), ...b };
+  r.issues = (r.issues || []).filter((issue) => {
+    if (issue.field === "geometry" && b.geometry) return false;
+    if (
+      issue.field &&
+      Object.hasOwn(b, issue.field) &&
+      old &&
+      String(b[issue.field] ?? "") !==
+        String(toRecord(old)[issue.field] ?? "") &&
+      String(b[issue.field] ?? "").trim() !== ""
+    )
+      return false;
+    return true;
+  });
+  if (
+    !String(r.num || "").trim() ||
+    !db.prepare("SELECT id FROM settlements WHERE id=?").get(r.settlementId)
+  )
+    throw new Error("Укажите номер и поселение.");
+  if (
+    db
+      .prepare(
+        "SELECT id FROM records WHERE settlement_id=? AND num=? AND status='active' AND id<>?",
+      )
+      .get(r.settlementId, String(r.num), id || -1)
+  )
+    throw new Error("Такой номер уже есть в этом поселении.");
+  for (const k of ["lat", "lng", "area_sazh"]) {
+    r[k] = r[k] == null || r[k] === "" ? null : Number(r[k]);
+    if (r[k] != null && !Number.isFinite(r[k]))
+      throw new Error("Проверьте площадь и положение на карте.");
+  }
+  if (
+    (r.lat == null) !== (r.lng == null) ||
+    (r.lat != null && (Math.abs(r.lat) > 90 || Math.abs(r.lng) > 180)) ||
+    (r.area_sazh != null && r.area_sazh < 0)
+  )
+    throw new Error("Проверьте площадь и положение на карте.");
+  if (b.geometry) {
+    validateGeometry(b.geometry);
+    const bounds = geometryBounds(b.geometry);
+    r.lat = (bounds[0][0] + bounds[1][0]) / 2;
+    r.lng = (bounds[0][1] + bounds[1][1]) / 2;
+    if (old?.plot_id)
+      db.prepare(
+        "UPDATE plots SET geometry_json=?,focus_lat=?,focus_lng=? WHERE id=?",
+      ).run(JSON.stringify(b.geometry), r.lat, r.lng, old.plot_id);
+    else {
+      const ex = db
+        .prepare(
+          "SELECT id FROM plots WHERE settlement_id=? AND legacy_key=?",
+        )
+        .get(r.settlementId, r.num);
+      if (ex) {
+        r.plotId = ex.id;
+        db.prepare(
+          "UPDATE plots SET geometry_json=?,focus_lat=?,focus_lng=?,status='active' WHERE id=?",
+        ).run(JSON.stringify(b.geometry), r.lat, r.lng, ex.id);
+      } else
+        r.plotId = Number(
+          db
+            .prepare(
+              "INSERT INTO plots(settlement_id,legacy_key,geometry_json,focus_lat,focus_lng) VALUES(?,?,?,?,?)",
+            )
+            .run(
+              r.settlementId,
+              r.num,
+              JSON.stringify(b.geometry),
+              r.lat,
+              r.lng,
+            ).lastInsertRowid,
+        );
+    }
+  }
+  return saveRecord(db, r, id, true);
+}
+
 function txn(db, fn) {
   db.exec("BEGIN");
   try {
@@ -119,6 +202,27 @@ function txn(db, fn) {
     throw e;
   }
 }
+
+function applyRecordEdits(db, rows) {
+  if (!Array.isArray(rows) || !rows.length) throw new Error("Нет правок таблицы для сохранения.");
+  for (const row of rows) {
+    const { id, changes } = row || {};
+    if (!Number.isSafeInteger(id) || id < 1 || !changes || Array.isArray(changes) ||
+        typeof changes !== "object" ||
+        Object.entries(changes).some(([key, value]) => {
+          if (!Object.hasOwn(columns, key) || ["localEdit", "sourceKey", "issues", "plotId"].includes(key)) return true;
+          if (["extra", "sourceData"].includes(key)) return !value || typeof value !== "object" || Array.isArray(value);
+          return typeof value !== "string" && !(["area_sazh", "lat", "lng"].includes(key) && (value === null || Number.isFinite(value)));
+        }))
+      throw new Error("Некорректные поля таблицы.");
+    try {
+      editRecord(db, id, changes, true);
+    } catch (error) {
+      throw new Error(`Усадьба ID ${id}. ${error.message}`);
+    }
+  }
+}
+
 function backup(db) {
   const file = path.resolve(
     "data/backups",
@@ -137,6 +241,7 @@ function revision(db) {
       JSON.stringify([
         db.prepare("SELECT * FROM records ORDER BY id").all(),
         db.prepare("SELECT * FROM plots ORDER BY id").all(),
+        db.prepare("SELECT * FROM site_content ORDER BY key").all(),
         db.prepare("SELECT * FROM historical_overlays ORDER BY id").all(),
       ]),
     )
@@ -150,12 +255,14 @@ function publish(db, snapshot, note) {
   );
 }
 async function jsonBody(req) {
-  let data = "";
+  const chunks = [];
+  let size = 0;
   for await (const chunk of req) {
-    data += chunk;
-    if (data.length > 15_000_000) throw new Error("Слишком большой запрос.");
+    size += chunk.length;
+    if (size > 15_000_000) throw new Error("Слишком большой запрос.");
+    chunks.push(chunk);
   }
-  return data ? JSON.parse(data) : {};
+  return size ? JSON.parse(Buffer.concat(chunks, size).toString("utf8")) : {};
 }
 
 export async function workspaceRoute(req, res, url, { db, json, snapshot }) {
@@ -237,6 +344,7 @@ export async function workspaceRoute(req, res, url, { db, json, snapshot }) {
         ...current,
         hasChanges: !latest || latest.snapshot_json !== JSON.stringify(current),
         revision: revision(db),
+        site: siteConfiguration(current),
         records: db
           .prepare("SELECT * FROM records WHERE status='active' ORDER BY id")
           .all()
@@ -555,6 +663,29 @@ export async function workspaceRoute(req, res, url, { db, json, snapshot }) {
       json(res, 200, { ok: true });
       return true;
     }
+    if (["/editor", "/site", "/records/bulk"].includes(route) && method === "PATCH") {
+      const body = await jsonBody(req);
+      if (body.revision !== revision(db)) {
+        json(res, 409, { error: "Данные изменились. Откройте актуальную версию и повторите правки." });
+        return true;
+      }
+      const content = route === "/site"
+        ? { [body.section]: body.value, ...(body.section === "filters" && Object.hasOwn(body, "areaFilter")
+          ? { areaFilter: body.areaFilter } : {}) }
+        : route === "/editor" ? body.site ?? {} : {};
+      if (!content || typeof content !== "object" || Array.isArray(content))
+        throw new Error("Проверьте настройки редактора.");
+      const entries = Object.entries(content).map(([key, value]) => [key, validateSiteSection(key, value)]);
+      const rows = route === "/records/bulk" ? body.rows : body.records;
+      const updateRecords = route === "/records/bulk" || (route === "/editor" && Object.hasOwn(body, "records"));
+      if (!entries.length && !updateRecords) throw new Error("Нет правок для сохранения.");
+      txn(db, () => {
+        if (updateRecords) applyRecordEdits(db, rows);
+        for (const [key, value] of entries) saveSiteContent(db, key, value);
+      });
+      json(res, 200, { ok: true });
+      return true;
+    }
     const rm = route.match(/^\/records(?:\/(\d+))?$/);
     if (rm && ["POST", "PATCH", "DELETE"].includes(method)) {
       const id = Number(rm[1]) || null;
@@ -566,91 +697,12 @@ export async function workspaceRoute(req, res, url, { db, json, snapshot }) {
         json(res, 200, { ok: true });
         return true;
       }
-      const b = await jsonBody(req),
-        old = id
-          ? db.prepare("SELECT * FROM records WHERE id=?").get(id)
-          : null;
-      if (id && !old) {
+      const body = await jsonBody(req);
+      if (id && !db.prepare("SELECT id FROM records WHERE id=?").get(id)) {
         json(res, 404, { error: "Усадьба не найдена." });
         return true;
       }
-      const r = { ...(old ? toRecord(old) : {}), ...b };
-      r.issues = (r.issues || []).filter((issue) => {
-        if (issue.field === "geometry" && b.geometry) return false;
-        if (
-          issue.field &&
-          Object.hasOwn(b, issue.field) &&
-          old &&
-          String(b[issue.field] ?? "") !==
-            String(toRecord(old)[issue.field] ?? "") &&
-          String(b[issue.field] ?? "").trim() !== ""
-        )
-          return false;
-        return true;
-      });
-      if (
-        !String(r.num || "").trim() ||
-        !db.prepare("SELECT id FROM settlements WHERE id=?").get(r.settlementId)
-      )
-        throw new Error("Укажите номер и поселение.");
-      if (
-        db
-          .prepare(
-            "SELECT id FROM records WHERE settlement_id=? AND num=? AND status='active' AND id<>?",
-          )
-          .get(r.settlementId, String(r.num), id || -1)
-      )
-        throw new Error("Такой номер уже есть в этом поселении.");
-      for (const k of ["lat", "lng", "area_sazh"]) {
-        r[k] = r[k] == null || r[k] === "" ? null : Number(r[k]);
-        if (r[k] != null && !Number.isFinite(r[k]))
-          throw new Error("Проверьте площадь и положение на карте.");
-      }
-      if (
-        (r.lat == null) !== (r.lng == null) ||
-        (r.lat != null && (Math.abs(r.lat) > 90 || Math.abs(r.lng) > 180)) ||
-        (r.area_sazh != null && r.area_sazh < 0)
-      )
-        throw new Error("Проверьте площадь и положение на карте.");
-      const saved = txn(db, () => {
-        if (b.geometry) {
-          validateGeometry(b.geometry);
-          const bounds = geometryBounds(b.geometry);
-          r.lat = (bounds[0][0] + bounds[1][0]) / 2;
-          r.lng = (bounds[0][1] + bounds[1][1]) / 2;
-          if (old?.plot_id)
-            db.prepare(
-              "UPDATE plots SET geometry_json=?,focus_lat=?,focus_lng=? WHERE id=?",
-            ).run(JSON.stringify(b.geometry), r.lat, r.lng, old.plot_id);
-          else {
-            const ex = db
-              .prepare(
-                "SELECT id FROM plots WHERE settlement_id=? AND legacy_key=?",
-              )
-              .get(r.settlementId, r.num);
-            if (ex) {
-              r.plotId = ex.id;
-              db.prepare(
-                "UPDATE plots SET geometry_json=?,focus_lat=?,focus_lng=?,status='active' WHERE id=?",
-              ).run(JSON.stringify(b.geometry), r.lat, r.lng, ex.id);
-            } else
-              r.plotId = Number(
-                db
-                  .prepare(
-                    "INSERT INTO plots(settlement_id,legacy_key,geometry_json,focus_lat,focus_lng) VALUES(?,?,?,?,?)",
-                  )
-                  .run(
-                    r.settlementId,
-                    r.num,
-                    JSON.stringify(b.geometry),
-                    r.lat,
-                    r.lng,
-                  ).lastInsertRowid,
-              );
-          }
-        }
-        return saveRecord(db, r, id, true);
-      });
+      const saved = txn(db, () => editRecord(db, id, body));
       json(res, 200, { id: saved });
       return true;
     }
@@ -841,6 +893,8 @@ export async function workspaceRoute(req, res, url, { db, json, snapshot }) {
             Number(f.visible),
             f.sortOrder || 0,
           );
+        db.exec("DELETE FROM site_content");
+        for (const [key, value] of Object.entries(data.content || {})) saveSiteContent(db, key, value);
         for (const warning of data.warnings || [])
           db.prepare(
             "INSERT INTO workspace_warnings(settlement_id,batch_id,message) VALUES(?,?,?)",

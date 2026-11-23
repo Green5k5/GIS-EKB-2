@@ -1,4 +1,5 @@
 import { fileKind, ignoredReason } from "./import-policy.js";
+import { createSiteEditor } from "./site-editor.js?v=bulk-table";
 ("use strict");
 const $ = (id) => document.getElementById(id),
   esc = (s) =>
@@ -108,12 +109,15 @@ function canLeave() {
   return true;
 }
 function setView(name) {
+  if (view === "editor" && name !== view && !siteEditor.canLeave()) return false;
   if (!canLeave()) return false;
+  if (name === view && name === "editor") return true;
+  if (view === "editor") siteEditor.leave();
   document.querySelector(".sidebar").classList.remove("expanded");
   $("mobileMenu").setAttribute("aria-expanded", "false");
   view = name;
   $("publishButton").hidden = name === "import";
-  for (const n of ["map", "import", "layers", "history"])
+  for (const n of ["map", "import", "layers", "history", "editor"])
     $(n + "View").hidden = n !== name;
   document
     .querySelectorAll("nav [data-view]")
@@ -123,7 +127,9 @@ function setView(name) {
     import: "Загрузить данные",
     layers: "Старые карты",
     history: "История публикаций",
+    editor: "Редактор данных",
   }[name];
+  if (name === "editor" && data) siteEditor.load(data);
   if (name === "map") requestAnimationFrame(() => map?.invalidateSize());
   if (name === "import" && reviewMap)
     requestAnimationFrame(() => reviewMap.invalidateSize());
@@ -417,7 +423,9 @@ function renderHistory() {
     '<div class="empty-list">Здесь появится первая опубликованная версия.</div>';
 }
 async function refresh({ fitMap = false } = {}) {
+  const firstLoad = !data;
   data = await api("");
+  if (firstLoad && view === "editor") siteEditor.load(data);
   $("recordCount").textContent = $("navCount").textContent =
     data.records.length;
   $("plotCount").textContent = data.records.filter((r) =>
@@ -447,6 +455,7 @@ async function refresh({ fitMap = false } = {}) {
   renderLayers();
   renderHistory();
   if (fitMap) fit();
+  return data;
 }
 async function boot() {
   const session = await api("/api/admin/session");
@@ -1472,13 +1481,20 @@ $("imageInput").onchange = action(async (e) => {
   });
   e.target.value = "";
 });
+const siteEditor = createSiteEditor($("editorView"), {
+  api, refresh, toast,
+  openRecord(id) {
+    if (setView("map")) openRecord(id);
+  },
+});
+
 $("publishButton").onclick = action(async () => {
-  if (dirty)
-    throw new Error("Сначала сохраните изменения в открытой карточке.");
+  if (dirty || (view === "editor" && siteEditor.hasChanges()))
+    throw new Error("Сначала сохраните открытые правки.");
   if (
     !(await confirmAction(
       "Опубликовать карту?",
-      "Посетители увидят текущие усадьбы, их данные и исторические планы. Предыдущая версия останется в истории.",
+      "Посетители увидят текущие данные, глоссарий, фильтры, тексты и исторические планы. Предыдущая версия останется в истории.",
       "Опубликовать",
       true,
     ))
@@ -1492,6 +1508,8 @@ $("publishButton").onclick = action(async () => {
   toast("На сайте опубликована версия №" + r.id);
 });
 $("resetButton").onclick = action(async () => {
+  const inEditor = view === "editor";
+  if (inEditor && !siteEditor.canLeave()) return;
   if (!canLeave()) return;
   if (
     !(await confirmAction(
@@ -1505,6 +1523,7 @@ $("resetButton").onclick = action(async () => {
   dirty = false;
   closeInspector();
   await refresh();
+  if (inEditor) siteEditor.load(data);
   setView("map");
   toast("Карта очищена. Резервная копия сохранена.");
 });
@@ -1525,12 +1544,13 @@ $("releaseList").onclick = action(async (e) => {
   toast("Версия восстановлена и опубликована.");
 });
 $("logout").onclick = action(async () => {
+  if (view === "editor" && !siteEditor.canLeave()) return;
   if (!canLeave()) return;
   await api("/api/admin/logout", { method: "POST" });
   location.reload();
 });
 window.addEventListener("beforeunload", (e) => {
-  if (dirty) {
+  if (dirty || (view === "editor" && siteEditor.hasChanges())) {
     e.preventDefault();
     e.returnValue = "";
   }

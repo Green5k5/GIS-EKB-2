@@ -121,7 +121,7 @@ function getFiltered() {
 
 // Получение кросс-статистики
 function getCrossCounts(dimKey) {
-  const counts = {};
+  const counts = Object.create(null);
   allData.forEach(item => {
     if (!matchesDatabaseMapFilter(item)) return;
     if (searchQuery && !matchesSearch(item, searchQuery)) return;
@@ -175,16 +175,14 @@ function renderFilters() {
   container.innerHTML = "";
 
   FILTERS.forEach(cfg => {
-    let title = cfg.title;
-    if (cfg.key === "soslovie") title = "Сословно-профессиональная группа";
-    if (cfg.key === "familyStatus") title = "Семейное положение";
+    const title = cfg.title;
     const cross = getCrossCounts(cfg.key);
     const vals = [];
-    const seen = {};
-    const hiddenValues = HIDDEN_FILTER_VALUES[cfg.key];
+    const seen = new Set();
+    const hiddenValues = cfg.hiddenValues ? new Set(cfg.hiddenValues) : HIDDEN_FILTER_VALUES[cfg.key];
     allData.forEach(d => {
-      if (d[cfg.key] && !hiddenValues?.has(d[cfg.key]) && !seen[d[cfg.key]]) {
-        seen[d[cfg.key]] = true;
+      if (d[cfg.key] && !hiddenValues?.has(d[cfg.key]) && !seen.has(d[cfg.key])) {
+        seen.add(d[cfg.key]);
         vals.push(d[cfg.key]);
       }
     });
@@ -197,13 +195,13 @@ function renderFilters() {
     if (!vals.length) return;
 
     const activeN = state[cfg.key].size;
-    const limit = cfg.limit || 999;
+    const limit = cfg.limit || Infinity;
     const isExp = expanded[cfg.key];
     const show = isExp ? vals : vals.slice(0, limit);
 
     const div = document.createElement("div");
     div.className = "filter-section";
-    let h = `<div class="filter-title">${title}${activeN ? `<span class="filter-count">${activeN}</span>` : ""}</div>`;
+    let h = `<div class="filter-title">${esc(title)}${activeN ? `<span class="filter-count">${activeN}</span>` : ""}</div>`;
     if (cfg.inline) h += '<div class="filter-row">';
 
     show.forEach(v => {
@@ -229,8 +227,10 @@ function renderFilters() {
     }
     div.innerHTML = h;
     container.appendChild(div);
-    if (cfg.key === "sex") renderAreaFilter(container);
+    if (cfg.key === "sex" && publicSite?.areaFilter !== false) renderAreaFilter(container);
   });
+
+  if (publicSite?.areaFilter !== false && !container.querySelector(".area-filter")) renderAreaFilter(container);
 
   // Обработчики событий
   container.onclick = function (e) {
@@ -250,7 +250,7 @@ function renderFilters() {
 function renderAreaFilter(container) {
   const section = document.createElement("div");
   section.className = "filter-section area-filter";
-  section.innerHTML = `<div class="filter-title">Площадь усадьбы <span>саж²</span></div>
+  section.innerHTML = `<div class="filter-title">${esc(publicSite?.areaFilterTitle || "Площадь усадьбы")} <span>саж²</span></div>
     <div class="area-inputs">
       <label><span>От</span><input type="number" inputmode="numeric" min="${AREA_MIN}" max="${AREA_MAX}" step="1" value="${areaRange.min}" data-bound="min" aria-label="Площадь от, квадратных саженей"></label>
       <label><span>До</span><input type="number" inputmode="numeric" min="${AREA_MIN}" max="${AREA_MAX}" step="1" value="${areaRange.max}" data-bound="max" aria-label="Площадь до, квадратных саженей"></label>

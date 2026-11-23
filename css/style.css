@@ -1,4 +1,4 @@
-:root {
+:root, :host {
   --bg: #FAF7F2;
   --white: #FFF;
   --card: #F0EBE3;
@@ -864,6 +864,17 @@ body {
   width: 24px;
   height: 24px;
   display: block;
+}
+
+.gl-cat[hidden] {
+  display: none;
+}
+
+.gl-icon-image {
+  display: block;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
 }
 
 .gl-term {
