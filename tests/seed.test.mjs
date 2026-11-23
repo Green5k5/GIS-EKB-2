@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 
 test('fresh workspace includes the source map; subsequent starts preserve edits and cleared maps', () => {
-  const directory = fs.mkdtempSync(path.resolve('data/test-seed-'));
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gis-ekb-seed-'));
   const file = path.join(directory, 'seed.sqlite');
   const migrate = () => {
     const run = spawnSync(process.execPath, ['server/migrate.js'], {

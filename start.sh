@@ -28,7 +28,7 @@ if [[ "$mode" == --setup-only || package-lock.json -nt node_modules/.package-loc
   const { dependencies } = JSON.parse(fs.readFileSync("package.json", "utf8"));
   await Promise.all(Object.keys(dependencies).map(name => import(name)));
 ' >/dev/null 2>&1; then
-  npm ci --omit=dev
+  npm ci --omit=dev --include=optional
 fi
 
 node tools/configure-local.mjs
