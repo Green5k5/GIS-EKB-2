@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ГИС-реконструкция поселений Екатеринбургской агломерации</title>
-<link rel="stylesheet" href="css/style.css?v=20261001-vladimir">
+<link rel="stylesheet" href="css/style.css?v=glossary-icons">
 <link rel="stylesheet" href="css/map-interactive.css?v=20261013-shared-map">
 <link rel="stylesheet" href="css/scan-viewer.css?v=20261013-canvas">
 <link rel="stylesheet" href="css/header-preview.css?v=20261108-3">
@@ -110,7 +110,7 @@
       <svg class="sidebar-handle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m7 14 5-5 5 5"/></svg>
     </button>
     <div class="sidebar-content" id="sidebarContent" tabindex="-1">
-    <div class="welcome-panel" id="welcomePanel"><button class="welcome-close" onclick="this.parentElement.style.display='none'">×</button><div class="welcome-title">О проекте</div><div class="welcome-text">ГИС-реконструкция поселений Екатеринбургской агломерации по материалам ведомостей 1809–1810 гг. <span id="welcomeDataSummary">Данные карты загружаются.</span> Используйте фильтры и поиск по фамилии владельца.</div></div>
+    <div class="welcome-panel" id="welcomePanel"><button class="welcome-close" onclick="this.parentElement.style.display='none'">×</button><div class="welcome-title" id="welcomeTitle">О проекте</div><div class="welcome-text"><span id="welcomeIntro">ГИС-реконструкция поселений Екатеринбургской агломерации по материалам ведомостей 1809–1810 гг. </span><span id="welcomeDataSummary">Данные карты загружаются.</span><span id="welcomeHelp"> Используйте фильтры и поиск по фамилии владельца.</span></div></div>
     <div class="search-box">
       <svg class="search-svg" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#8A7F70" stroke-width="2"><circle cx="8" cy="8" r="6"/><line x1="12.5" y1="12.5" x2="18" y2="18" stroke-linecap="round"/></svg>
       <input type="text" id="searchInput" placeholder="Поиск: владелец, № усадьбы, улица..."/>
@@ -437,17 +437,18 @@
 <script src="js/kartograf/map.js?v=20261013-popup-space2"></script>
 <script src="js/kartograf/basemap.js?v=20260927"></script>
 <script src="js/kartograf/layers.js?v=20261108-confluences"></script>
-<script src="js/api-bootstrap.js?v=2"></script>
+<script src="js/api-bootstrap.js?v=site-config"></script>
 <script src="js/data.js?v=20261105-sort"></script>
 <script src="js/utils.js?v=map-table1"></script>
 <script src="js/map.js?v=20261108-estate-source"></script>
-<script src="js/filters.js?v=map-table1"></script>
+<script src="js/filters.js?v=filter-titles"></script>
 <script src="js/ui.js?v=map-table1"></script>
-<script src="js/table-model.js?v=2"></script>
+<script src="js/table-model.js?v=3"></script>
 <script src="js/map-table.js?v=2"></script>
-<script src="js/table.js?v=map-columns2"></script>
-<script src="js/glossary-map.js?v=20261106-glossary"></script>
-<script src="js/glossary.js?v=20261106-glossary"></script>
+<script src="js/table.js?v=site-config"></script>
+<script src="js/glossary-map.js?v=site-config"></script>
+<script src="js/glossary-icons.js?v=1"></script>
+<script src="js/glossary.js?v=glossary-icons"></script>
 <script src="js/infographics.js?v=20261013-map-results"></script>
 <script src="js/app.js?v=assistant-unavailable"></script>
 <script src="js/street-selection.js?v=20261013-2"></script>

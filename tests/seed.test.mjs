@@ -5,6 +5,8 @@ import { DatabaseSync } from 'node:sqlite';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { snapshot } from '../server/snapshot.js';
+import { siteConfiguration, validateSiteSection } from '../server/site-config.js';
 
 test('fresh workspace includes the source map; subsequent starts preserve edits and cleared maps', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gis-ekb-seed-'));
@@ -25,6 +27,10 @@ test('fresh workspace includes the source map; subsequent starts preserve edits 
     assert.equal(count('historical_overlays'), 21);
     assert.equal(count('historical_features'), 56);
     assert.ok(count('glossary_terms') >= 75);
+    const terms = siteConfiguration(snapshot(db)).glossary;
+    assert.ok(terms.some(row => row.term === 'Аршин'));
+    assert.ok(terms.some(row => Array.isArray(row.filterValue)));
+    assert.doesNotThrow(() => validateSiteSection('glossary', terms));
     assert.equal(count('settlements'), 3);
     for (const row of db.prepare('SELECT file_url FROM historical_overlays').all()) {
       assert.ok(fs.existsSync(row.file_url), row.file_url);

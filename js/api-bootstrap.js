@@ -7,6 +7,7 @@ var uktPolygons = {};
 var publicPlotsById = new Map();
 var publicSettlements = [];
 var publicOverlays = [];
+var publicSite;
 var publicBootstrapError = null;
 
 async function loadPublicData() {
@@ -15,6 +16,15 @@ async function loadPublicData() {
     if (!response.ok) throw new Error(`API: ${response.status}`);
     const payload = await response.json();
 
+    publicSite = payload.site;
+    if (publicSite) {
+      FILTERS = publicSite.filters;
+      document.title = publicSite.texts.siteTitle;
+      for (const [key, id] of Object.entries({ welcomeTitle: "welcomeTitle", welcomeIntro: "welcomeIntro", welcomeHelp: "welcomeHelp", tableTitle: "estateTableTitle", assistantTitle: "dataAssistantTitle" })) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = (key === "welcomeHelp" ? " " : "") + publicSite.texts[key] + (key === "welcomeIntro" ? " " : "");
+      }
+    }
     publicSettlements = payload.settlements || [];
     publicOverlays = (payload.overlays || []).filter(o => o.visible);
     if (typeof vectorLayersData !== 'undefined') {

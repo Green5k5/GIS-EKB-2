@@ -303,6 +303,8 @@ nav button.active {
   padding: 34px 35px 25px;
   flex: 1;
 }
+#editorView { min-width: 0; padding: 0; }
+html:has(#editorView[data-expanded]) { overflow: hidden; }
 .page-heading {
   display: flex;
   justify-content: space-between;

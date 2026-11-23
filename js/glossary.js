@@ -120,7 +120,8 @@ function prepareGlossaryEntries() {
     if (term) entriesByTerm.set(term, entry);
   });
 
-  GLOSSARY_ADDITIONS.forEach(item => {
+  if (publicSite) entriesByTerm.clear();
+  (publicSite?.glossary ?? GLOSSARY_ADDITIONS).forEach(item => {
     let entry = entriesByTerm.get(item.term);
     if (!entry) {
       entry = document.createElement("div");
@@ -128,10 +129,29 @@ function prepareGlossaryEntries() {
       entry.innerHTML = '<div class="gl-cat"></div><div class="gl-body"><div class="gl-term"></div><div class="gl-desc"></div></div>';
       entriesByTerm.set(item.term, entry);
     }
-    entry.querySelector(".gl-cat").textContent = item.category;
+    entry.dataset.aliases = (item.aliases || []).join(" ");
+    const categoryElement = entry.querySelector(".gl-cat");
+    categoryElement.textContent = item.category;
+    categoryElement.dataset.icon = item.icon || "";
     entry.querySelector(".gl-term").textContent = item.term;
     entry.querySelector(".gl-desc").textContent = item.description;
   });
+
+  if (publicSite) {
+    const categories = new Set(publicSite.glossary.map(item => item.category));
+    const group = document.getElementById("glCats");
+    for (const button of group.querySelectorAll(".gl-cat-btn")) {
+      if (!categories.delete(button.dataset.cat)) button.remove();
+    }
+    for (const category of categories) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "gl-cat-btn";
+      button.dataset.cat = category;
+      button.textContent = category;
+      group.appendChild(button);
+    }
+  }
 
   const sortedEntries = Array.from(entriesByTerm.values()).sort((a, b) => {
     const aTerm = a.querySelector(".gl-term").textContent.trim();
@@ -165,14 +185,18 @@ function decorateGlossaryCategoryIcons() {
 
   document.querySelectorAll(".gl-entry .gl-cat").forEach(categoryElement => {
     const category = categoryElement.textContent.trim();
-    const icon = categoryIcons.get(category);
+    const selected = categoryElement.dataset.icon;
+    const icon = selected ? createGlossaryIcon(selected)
+      : categoryIcons.get(category)?.cloneNode(true) || (publicSite?.glossaryIcons ? createGlossaryIcon("book") : null);
     categoryElement.dataset.cat = category;
     categoryElement.title = category;
     categoryElement.setAttribute("aria-label", category);
     if (icon) {
-      const iconClone = icon.cloneNode(true);
-      iconClone.setAttribute("aria-hidden", "true");
-      categoryElement.replaceChildren(iconClone);
+      icon.setAttribute("aria-hidden", "true");
+      categoryElement.replaceChildren(icon);
+    } else if (selected === "none") {
+      categoryElement.hidden = true;
+      categoryElement.replaceChildren();
     }
   });
 }
@@ -186,7 +210,7 @@ function initGlossary() {
     searchInput.addEventListener("input", function (e) {
       const q = e.target.value.toLowerCase();
       document.querySelectorAll(".gl-entry").forEach(el => {
-        el.style.display = el.textContent.toLowerCase().indexOf(q) !== -1 ? "flex" : "none";
+        el.style.display = (el.textContent + " " + (el.dataset.aliases || "")).toLowerCase().indexOf(q) !== -1 ? "flex" : "none";
       });
       document.querySelectorAll(".gl-letter").forEach(el => {
         let next = el.nextElementSibling;
@@ -245,7 +269,7 @@ function initGlossary() {
     if (!termElement) return;
 
     const termText = termElement.textContent.trim();
-    const mapping = GLOSSARY_FILTER_MAP[termText];
+    const mapping = glossaryMapping(termText);
 
     if (mapping) {
       termElement.classList.add('glossary-term-clickable');

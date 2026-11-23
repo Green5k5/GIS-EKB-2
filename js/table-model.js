@@ -17,7 +17,11 @@ const EstateTable = (() => {
   const normalize = value => String(value ?? '').toLocaleLowerCase('ru').replace(/ё/g, 'е').trim();
   function value(record, key) {
     if (key === 'owner') return [record.surname, record.name, record.patronymic].filter(Boolean).join(' ');
-    if (key === 'extra' || key === 'sourceData') return Object.entries(record[key] || {}).map(([k, v]) => `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`).join('; ');
+    if (key === 'extra' || key === 'sourceData') {
+      const data = record[key];
+      if (typeof data === 'string') return data;
+      return Object.entries(data || {}).map(([k, v]) => `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`).join('; ');
+    }
     return record[key] ?? '';
   }
   function number(value) {

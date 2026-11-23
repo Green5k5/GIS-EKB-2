@@ -1,3 +1,4 @@
+import { siteConfiguration } from './site-config.js';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -159,11 +160,11 @@ const server=http.createServer(async (req,res)=>{
       if(url.pathname==='/api/admin/preview' && req.method==='GET'){json(res,200,snapshot());return;}
       json(res,404,{error:'ADMIN_ROUTE_NOT_FOUND'}); return;
     }
-    if(url.pathname==='/api/public/bootstrap' && req.method==='GET'){ const snap=publicSnapshot(); json(res,200,snap,{'ETag':`"release-${snap.releaseId||0}"`}); return; }
+    if(url.pathname==='/api/public/bootstrap' && req.method==='GET'){ const snap=publicSnapshot(); json(res,200,{...snap,site:siteConfiguration(snap)},{'ETag':`"release-${snap.releaseId||0}"`}); return; }
     if (req.method === 'GET' || req.method === 'HEAD') {
       if (url.pathname === '/admin' || url.pathname === '/admin/') {
         if (serveFile(req, res, 'server/admin/index.html')) return;
-      } else if (/^\/admin\/(?:admin\.(?:js|css)|import-policy\.js)$/.test(url.pathname)) {
+      } else if (/^\/admin\/(?:admin\.(?:js|css)|import-policy\.js|site-editor\.(?:js|css)|editor-(?:dom|table|glossary|filters)\.js)$/.test(url.pathname)) {
         if (serveFile(req, res, `server${url.pathname}`)) return;
       } else {
         const rel = url.pathname === '/' ? 'index.html' : url.pathname.slice(1);
