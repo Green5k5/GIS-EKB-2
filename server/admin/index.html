@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Мастерская карты — ГИС Екатеринбург</title>
-    <link rel="stylesheet" href="/admin/admin.css?v=import-preview" />
+    <link rel="stylesheet" href="/admin/admin.css?v=change-grid" />
   </head>
   <body>
     <section id="login" class="login-screen">
@@ -323,7 +323,7 @@
               </div>
               <button id="retryReviewChanges" class="secondary" type="button" hidden>Повторить проверку изменений</button>
               <input id="reviewChangesSearch" type="search" aria-label="Поиск по номеру усадьбы или поселению" placeholder="Номер усадьбы или поселение" hidden />
-              <div id="reviewChangesList" class="review-changes-list"></div>
+              <div id="reviewChangesList" hidden></div>
             </section>
             <div class="review-plan-section">
               <div class="plan-review-heading">
@@ -458,6 +458,6 @@
     <script src="/js/layers.js?v=20261108-confluences"></script>
     <script src="/js/table-model.js?v=4"></script>
     <script src="/js/glossary-icons.js?v=1"></script>
-    <script type="module" src="/admin/admin.js?v=import-preview"></script>
+    <script type="module" src="/admin/admin.js?v=change-grid"></script>
   </body>
 </html>

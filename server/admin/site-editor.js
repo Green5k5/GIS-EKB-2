@@ -1,5 +1,5 @@
-import { button, el, entryChanged, fieldChanged, formatNumber, glyph, splitLines, switchInput } from "./editor-dom.js?v=import-preview";
-import { createEstateEditor, isExtraColumn, jsonRecordFields, mergeExtraColumnEdits, numericRecordFields, recordFieldLabel, recordFieldText, withExtraColumns } from "./editor-table.js?v=import-preview";
+import { button, el, entryChanged, fieldChanged, formatNumber, glyph, loadEditorStyles, splitLines, switchInput } from "./editor-dom.js?v=change-grid";
+import { changedEstateColumns, createEstateEditor, isExtraColumn, jsonRecordFields, mergeExtraColumnEdits, numericRecordFields, recordFieldLabel, recordFieldText, withExtraColumns } from "./editor-table.js?v=change-grid";
 import { createGlossaryEditor } from "./editor-glossary.js?v=bulk-table";
 import { createMapFilterEditor, movedFilters } from "./editor-filters.js?v=bulk-table";
 
@@ -23,15 +23,7 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
   const loading = el("p", "editor-loading", "Загружаем редактор…");
   loading.setAttribute("role", "status");
   loading.style.padding = "24px";
-  const styles = ["/css/style.css?v=glossary-icons", "/css/data-workspace.css?v=6", "/admin/site-editor.css?v=import-preview"];
-  const styleRequests = styles.map(href => new Promise((resolve, reject) => {
-    const link = el("link");
-    link.rel = "stylesheet";
-    link.href = href;
-    link.onload = resolve;
-    link.onerror = reject;
-    shadow.append(link);
-  }));
+  const stylesLoaded = loadEditorStyles(shadow);
 
   const panel = el("div", "editor-panel");
   panel.hidden = true;
@@ -95,7 +87,7 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
   const viewport = el("div", "editor-viewport");
   panel.append(command, header, viewport);
   shadow.append(loading, panel);
-  Promise.all(styleRequests).then(() => {
+  stylesLoaded.then(() => {
     stylesReady = true;
     reveal();
   }).catch(() => {
@@ -103,7 +95,7 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
   });
 
   let snapshot, glossaryRows, filterRows, area, tableFilters, publishedTableFilters;
-  let recordsById, settlementsById, draftRecordIds;
+  let recordsById, settlementsById, draftRecordIds, publishedDifferences;
   let section = "records", saving = false, uploads = 0, reloadNeeded = false;
   let inertBeforeExpand = [];
   const recordChanges = new Map();
@@ -123,9 +115,21 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
     return editedRecords.get(id);
   };
   const getRecords = () => Array.from(recordsById.keys(), getRecord);
+  const getHighlights = (record, includePublished) => {
+    const original = recordsById.get(record.id);
+    const pending = recordChanges.get(record.id);
+    const published = includePublished && publishedDifferences[record.id];
+    if (!pending && !published) return null;
+    const keys = changedEstateColumns(record, original, pending);
+    if (published) {
+      const previous = published.added ? {} : withExtraColumns({ ...original, ...published });
+      for (const key of changedEstateColumns(original, previous, published)) keys.add(key);
+    }
+    return keys;
+  };
   const table = createEstateEditor({
     getSnapshot, getRecords, getRecord,
-    getChanges: id => recordChanges.get(id), isChanged: id => recordChanges.has(id) || draftRecordIds.has(id),
+    getChanges: id => recordChanges.get(id), getHighlights, isChanged: id => recordChanges.has(id) || draftRecordIds.has(id),
     changeRecord, changeRecords, openRecord,
   });
   const glossary = createGlossaryEditor({
@@ -152,6 +156,7 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
     })]));
     recordChanges.clear();
     draftRecordIds = new Set(snapshot.changedRecordIds || []);
+    publishedDifferences = snapshot.changedRecordFields || {};
     editedRecords.clear();
     glossaryRows = draftRows(snapshot.site.glossary.map(row => ({
       ...row, icon: row.icon || "", aliases: toList(row.aliases), filterKey: row.filterKey || "",

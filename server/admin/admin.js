@@ -1,7 +1,7 @@
 import { fileKind, ignoredReason } from "./import-policy.js";
-import { createSiteEditor } from "./site-editor.js?v=import-preview";
-import { recordFieldLabel } from "./editor-table.js?v=import-preview";
-import { escapeHtml as esc } from "./editor-dom.js?v=import-preview";
+import { createSiteEditor } from "./site-editor.js?v=change-grid";
+import { createEstatePreview } from "./editor-table.js?v=change-grid";
+import { escapeHtml as esc } from "./editor-dom.js?v=change-grid";
 ("use strict");
 const $ = (id) => document.getElementById(id);
 const HISTORY_ICON = '<svg class="admin-icon" width="22" height="22" aria-hidden="true" focusable="false"><use href="/assets/admin-icons.svg?v=1#history" width="100%" height="100%"></use></svg>';
@@ -34,7 +34,7 @@ let csrf = "",
 let ignoredFiles = [],
   uploading = false,
   reviewResult = null,
-  reviewChanges = [],
+  reviewGrid,
   reviewChangesRequest = 0,
   planSelection = new Set();
 function toast(message, error = false) {
@@ -1211,7 +1211,7 @@ async function loadReviewChanges() {
   const id = batchId;
   $("applyButton").disabled = true;
   $("reviewChangesSummary").textContent = "Сравниваем с рабочей базой…";
-  $("reviewChangesList").replaceChildren();
+  $("reviewChangesList").hidden = true;
   $("reviewChangesSearch").hidden = $("retryReviewChanges").hidden = true;
   try {
     const { counts, records } = await api(`/batches/${id}/changes?overwrite=${Number($("overwriteEdits").checked)}`);
@@ -1223,55 +1223,23 @@ async function loadReviewChanges() {
       `Без изменений: ${format.format(counts.unchanged)}`,
       ...(counts.kept ? [`С ручными правками: ${format.format(counts.kept)}`] : []),
     ].join(" · ");
-    const settlements = new Map(reviewResult.settlements.map(item => [item.id, item.name]));
-    reviewChanges = records.map(record => ({
-      ...record,
-      label: `№ ${record.num} · ${settlements.get(record.settlementId) || record.settlementId}`,
-    }));
+    reviewGrid ??= createEstatePreview($("reviewChangesList"));
+    await reviewGrid.styled;
+    if (request !== reviewChangesRequest || id !== batchId) return;
+    reviewGrid.setRecords(records, reviewResult.settlements);
+    $("reviewChangesList").hidden = false;
     renderReviewChanges();
     $("reviewChangesSearch").hidden = !records.length;
     $("applyButton").disabled = false;
   } catch (error) {
     if (request !== reviewChangesRequest || id !== batchId) return;
-    $("reviewChangesSummary").textContent = error.message;
+    $("reviewChangesSummary").textContent = error.message || "Не удалось загрузить стили таблицы. Обновите страницу.";
     $("retryReviewChanges").hidden = false;
   }
 }
 function renderReviewChanges() {
-  const query = EstateTable.normalize($("reviewChangesSearch").value);
-  const matches = reviewChanges.map((record, index) => ({ record, index }))
-    .filter(({ record }) => EstateTable.normalize(record.label).includes(query));
-  $("reviewChangesList").innerHTML = matches.map(({ record, index }) => `
-    <details data-review-change="${index}">
-      <summary>${esc(record.label)} <span>${record.status === "created" ? "Добавление" : "Обновление"}</span></summary>
-    </details>`).join("") || '<p class="muted">Нет подходящих изменений усадеб.</p>';
+  reviewGrid?.render($("reviewChangesSearch").value);
 }
-const importChangeLabels = { geometry: "Контур", sourceKey: "Номер строки в источнике", issues: "Предупреждения" };
-function reviewValue(value) {
-  if (value == null || value === "" || (Array.isArray(value) && !value.length)) return "—";
-  if (Array.isArray(value)) return value.join(" · ");
-  return typeof value === "object" ? JSON.stringify(value) : String(value);
-}
-function reviewChangeTable(changes) {
-  const rows = changes.map(([field, header, before, after]) => {
-    const label = importChangeLabels[field] || recordFieldLabel(field);
-    return `<tr><th scope="row">${esc(header ? `${label} · ${header}` : label)}</th>
-      <td>${esc(reviewValue(before))}</td><td>${esc(reviewValue(after))}</td></tr>`;
-  }).join("");
-  return `<div class="review-change-table"><table><thead><tr><th>Поле</th><th>Было</th><th>Станет</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-}
-$("reviewChangesList").addEventListener("toggle", ({ target }) => {
-  if (!target.open || target.children.length !== 1 || target.dataset.reviewChange === undefined) return;
-  const { changes } = reviewChanges[Number(target.dataset.reviewChange)];
-  const fields = changes.filter(([field]) => field !== "sourceData");
-  const source = changes.filter(([field]) => field === "sourceData");
-  if (!changes.length) {
-    target.insertAdjacentHTML("beforeend", '<p class="muted">Усадьба будет возвращена в рабочую коллекцию.</p>');
-    return;
-  }
-  if (fields.length) target.insertAdjacentHTML("beforeend", reviewChangeTable(fields));
-  if (source.length) target.insertAdjacentHTML("beforeend", `<details><summary>Исходные столбцы из файла</summary>${reviewChangeTable(source)}</details>`);
-}, true);
 $("reviewChangesSearch").oninput = renderReviewChanges;
 $("overwriteEdits").onchange = loadReviewChanges;
 $("retryReviewChanges").onclick = loadReviewChanges;

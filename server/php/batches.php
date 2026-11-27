@@ -355,7 +355,7 @@ function previewBatchChanges(array $batch, bool $overwrite): array
         foreach (batchRecordPlan($batch['result'], $overwrite) as [$status, $id, $row, $geometry, $changes]) {
             $counts[$status]++;
             if (in_array($status, ['created','updated'], true)) {
-                $records[] = ['status'=>$status, 'num'=>$row['num'], 'settlementId'=>$row['settlementId'], 'changes'=>$changes];
+                $records[] = ['status'=>$status, 'num'=>$row['num'], 'settlementId'=>$row['settlementId'], 'row'=>$row, 'changes'=>$changes];
             }
         }
         return ['counts'=>$counts, 'records'=>$records];

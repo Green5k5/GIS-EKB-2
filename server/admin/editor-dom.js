@@ -32,6 +32,18 @@ export function el(tag, className = "", text) {
   return node;
 }
 
+export function loadEditorStyles(shadow) {
+  const styles = ["/css/style.css?v=glossary-icons", "/css/data-workspace.css?v=6", "/admin/site-editor.css?v=change-grid"];
+  return Promise.all(styles.map(href => new Promise((resolve, reject) => {
+    const link = el("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.onload = resolve;
+    link.onerror = reject;
+    shadow.append(link);
+  })));
+}
+
 export function glyph(name) {
   const svg = document.createElementNS(svgNamespace, "svg");
   svg.classList.add("editor-glyph");

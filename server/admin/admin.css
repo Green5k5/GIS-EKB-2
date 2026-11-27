@@ -1898,15 +1898,13 @@ label.field {
   margin: 0 0 22px;
 }
 #reviewChanges > :not(:first-child) { margin-top: 10px; }
-#reviewChangesSearch { max-width: 330px; }
-.review-changes-list { max-height: 420px; overflow: auto; }
-.review-changes-list details { border-top: 1px solid var(--line); padding: 8px 4px; }
-.review-changes-list summary { cursor: pointer; }
-.review-changes-list summary span { color: var(--muted); font-size: 12px; margin-left: 8px; }
-.review-change-table { overflow: auto; margin: 8px 0 2px; }
-.review-change-table table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
-.review-change-table :is(th, td) { padding: 6px; vertical-align: top; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
-.review-change-table th:first-child { width: 30%; }
+#reviewChangesSearch {
+  width: min(100%, 330px);
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+}
 .plan-review-heading {
   display: flex;
   gap: 20px;

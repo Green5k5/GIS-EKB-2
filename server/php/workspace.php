@@ -10,20 +10,21 @@ function currentWorkspace(): array
     $publishedRecords = array_column($published['records'] ?? [], null, 'id');
     $publishedPlots = array_column($published['plots'] ?? [], null, 'id');
     $draftPlots = array_column($draft['plots'], null, 'id');
-    $changedRecordIds = [];
+    $changedRecordFields = [];
     foreach ($draft['records'] as $row) {
         $previous = $publishedRecords[$row['id']] ?? [];
         $plotId = $row['plotId'];
         $changedGeometry = $plotId !== null &&
             ($draftPlots[$plotId]['geometry'] ?? null) != ($publishedPlots[$plotId]['geometry'] ?? null);
-        if ($changedGeometry || hasUnpublishedRecordChanges($row, $previous)) {
-            $changedRecordIds[] = $row['id'];
-        }
+        $fields = unpublishedRecordFields($row, $previous);
+        if ($changedGeometry) $fields['geometry'] = null;
+        if ($fields) $changedRecordFields[$row['id']] = $fields;
     }
     return [
         ...$current,
         'hasChanges'=>!$latest || $published != $draft,
-        'changedRecordIds'=>$changedRecordIds,
+        'changedRecordIds'=>array_keys($changedRecordFields),
+        'changedRecordFields'=>(object) $changedRecordFields,
         'revision'=>revision(),
         'site'=>siteConfiguration($current),
         'releases'=>all('SELECT id,created_at AS createdAt,note FROM releases ORDER BY id DESC LIMIT 30'),
@@ -31,20 +32,18 @@ function currentWorkspace(): array
     ];
 }
 
-function hasUnpublishedRecordChanges(array $row, array $previous): bool
+function unpublishedRecordFields(array $row, array $previous): array
 {
-    if (!$previous) return true;
+    if (!$previous) return ['added'=>true];
+    $fields = [];
     foreach ($row as $field => $value) {
         if ($field === 'localEdit') continue;
         $old = $previous[$field] ?? null;
         if ($old === null && ($value === '' || $value === [])) continue;
-        if (in_array($field, NUMBER_FIELDS, true) && $value !== null && $old !== null) {
-            if ((float) $old !== (float) $value) return true;
-        } elseif ($value !== $old) {
-            return true;
-        }
+        if (in_array($field, NUMBER_FIELDS, true) && $value !== null && $old !== null && (float) $old === (float) $value) continue;
+        if ($value !== $old) $fields[$field] = $old;
     }
-    return false;
+    return $fields;
 }
 
 function saveEditorChanges(string $route): void

@@ -257,6 +257,11 @@
 .editor-inline-note { padding: 7px 4px; color: var(--edit-muted); font-size: 12px; }
 
 .editor-table {
+  --border: var(--edit-line);
+  --white: var(--edit-white);
+  --bg: var(--edit-paper);
+  --accent-bg: var(--edit-green-soft);
+  --body: var(--edit-ink);
   min-width: 0;
   padding: 14px 14px 0;
   border: 1px solid var(--edit-line);
@@ -358,6 +363,27 @@
 .editor-table #dsTable .editor-cell:hover { background: #c8a77312; }
 .editor-table #dsTable .editor-cell:focus-visible { outline-offset: -2px; }
 .editor-table #dsTable .editor-map-link { margin-inline: auto; display: flex; color: var(--edit-green); }
+.estate-preview { padding: 0; border: 0; box-shadow: none; }
+.estate-preview .ds-table-wrap { max-height: min(460px, 65dvh); }
+.estate-preview #dsTable .table-heading { display: flex; padding: 0 10px; }
+.estate-preview #dsTable td { padding: 0; }
+.estate-preview #dsTable .editor-cell { display: flex; align-items: center; }
+.estate-preview #dsTable .editor-cell::after { display: none; }
+.estate-preview #dsTable td.table-number .editor-cell { justify-content: end; }
+.estate-preview #dsTable td[data-column="map"] { text-align: center; }
+.estate-change-dialog {
+  color: var(--edit-ink);
+  background: var(--edit-white);
+  width: min(560px, calc(100vw - 28px));
+  max-height: 80dvh;
+  padding: 20px;
+  border: 1px solid var(--edit-line);
+  border-radius: 12px;
+}
+.estate-change-dialog::backdrop { background: #231d17a0; }
+.estate-change-dialog dt { font-weight: 700; }
+.estate-change-dialog dd { margin: 4px 0 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.estate-change-dialog form { display: flex; justify-content: end; }
 .editor-cell-fields { display: grid; gap: 7px; padding: 6px; text-align: left; white-space: normal; }
 .editor-cell-fields .editor-input { min-height: 32px; padding: 5px 6px; border-radius: 6px; font-size: 12px; }
 .editor-cell-fields textarea { min-height: 68px; max-height: 180px; resize: vertical; }

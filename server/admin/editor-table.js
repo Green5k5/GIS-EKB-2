@@ -1,4 +1,4 @@
-import { button, el, escapeHtml, field, formatNumber, glyph, searchBox, selectInput, textInput } from "./editor-dom.js?v=import-preview";
+import { button, el, escapeHtml, field, formatNumber, glyph, loadEditorStyles, searchBox, selectInput, textInput } from "./editor-dom.js?v=change-grid";
 
 export const jsonRecordFields = ["extra", "sourceData"];
 export const numericRecordFields = ["area_sazh", "lat", "lng"];
@@ -92,7 +92,128 @@ function cellText(record, column) {
   return key === "scanUrl" && value ? "Ссылка на скан" : String(value ?? "") || "—";
 }
 
-export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChanges, isChanged, changeRecord, changeRecords, openRecord }) {
+export function changedEstateColumns(record, previous, changes = {}) {
+  const keys = new Set(Object.keys(changes || {}));
+  if (keys.has("added")) {
+    for (const column of columns) if (cellText(record, column) !== "—") keys.add(column.key);
+  }
+  if (fieldsByColumn.get("owner").some(key => keys.has(key))) keys.add("owner");
+  if (keys.has("settlementId")) keys.add("settlement");
+  if (["plotId", "geometry", "lat", "lng"].some(key => keys.has(key)) || (keys.has("added") && record.plotId)) keys.add("map");
+  if (keys.has("extra") || keys.has("sourceData")) {
+    for (const { key } of [...extraColumns, sourceRowColumn]) {
+      if (recordFieldText(key, record[key]) !== recordFieldText(key, previous[key])) keys.add(key);
+    }
+  }
+  return keys;
+}
+
+export function createEstatePreview(host) {
+  const shadow = host.attachShadow({ mode: "open" });
+  const styled = loadEditorStyles(shadow);
+  const block = el("div", "editor-table estate-preview");
+  const wrap = el("div", "ds-table-wrap");
+  wrap.tabIndex = 0;
+  wrap.setAttribute("aria-label", "Таблица изменений усадеб");
+  const table = el("table", "ds-table");
+  table.id = "dsTable";
+  const head = table.createTHead();
+  const body = table.createTBody();
+  wrap.append(table);
+  const dialog = el("dialog", "estate-change-dialog");
+  const title = el("h4");
+  title.id = "estate-change-title";
+  dialog.setAttribute("aria-labelledby", title.id);
+  const values = el("dl");
+  const beforeText = el("dd");
+  const afterText = el("dd");
+  values.append(el("dt", "", "Было"), beforeText, el("dt", "", "Станет"), afterText);
+  const close = el("form");
+  close.method = "dialog";
+  const closeButton = button("Закрыть", null, { className: "editor-primary" });
+  closeButton.type = "submit";
+  close.append(closeButton);
+  dialog.append(title, values, close);
+  block.append(wrap, dialog);
+  shadow.append(block);
+
+  const map = { key: "map", label: "Карта" };
+  const optional = [
+    { key: "sourceKey", label: "Ключ строки источника" },
+    { key: "issues", label: "Предупреждения" },
+  ];
+  const previewColumns = [...columns, ...optional, map];
+  let shown = [], rows = [];
+
+  const description = (record, column) => {
+    if (column.key === "scanUrl") return record.scanUrl || "—";
+    if (column.key === "map") return record.geometry || (record.plotId ? "Есть контур" : "—");
+    if (column.key === "issues") return record.issues?.map(issue => issue.message).join(" · ") || "—";
+    return cellText(record, column);
+  };
+
+  body.onclick = event => {
+    const control = event.target.closest("[data-preview-column]");
+    if (!control) return;
+    const { before, after } = rows[Number(control.closest("tr").dataset.previewRow)];
+    const column = shown[Number(control.dataset.previewColumn)];
+    title.textContent = `Усадьба № ${after.num} · ${column.label}`;
+    beforeText.textContent = description(before, column);
+    afterText.textContent = description(after, column);
+    dialog.showModal();
+  };
+
+  function setRecords(records, settlements) {
+    const names = new Map(settlements.map(({ id, name }) => [id, name]));
+    const changed = new Set();
+    rows = records.map(({ status, row, changes }, index) => {
+      const added = status === "created";
+      const settlement = names.get(row.settlementId) || row.settlementId;
+      const previous = added ? {} : { ...row, extra: { ...row.extra }, sourceData: { ...row.sourceData } };
+      const current = { ...row, settlement };
+      const fields = added ? { added: true } : {};
+      for (const [field, header, old, next] of changes) {
+        fields[field] = true;
+        if (header !== null) {
+          if (added) continue;
+          if (old == null) delete previous[field][header];
+          else previous[field][header] = old;
+        } else if (field === "geometry") {
+          previous.geometry = old || "—";
+          current.geometry = next;
+        } else if (!added) {
+          previous[field] = field === "issues" ? old.map(message => ({ message })) : old;
+        }
+      }
+      if (!added) previous.settlement = names.get(previous.settlementId) || previous.settlementId;
+      const before = withExtraColumns(previous), after = withExtraColumns(current);
+      const highlights = changedEstateColumns(after, before, fields);
+      for (const key of highlights) changed.add(key);
+      return { index, before, after, highlights, searchText: EstateTable.normalize(`№ ${row.num} · ${settlement}`) };
+    });
+    const aliases = new Set(fieldsByColumn.get("owner"));
+    shown = previewColumns.filter(column => column.visible || column.key === "map" ||
+      (column.key !== "id" && !aliases.has(column.key) && changed.has(column.key)));
+    head.innerHTML = `<tr>${shown.map(({ key, label }) => `<th data-column="${key}" scope="col">
+      <div class="table-heading"><span>${escapeHtml(key === "num" ? "№" : label)}</span></div></th>`).join("")}</tr>`;
+  }
+
+  function render(query) {
+    const needle = EstateTable.normalize(query);
+    body.innerHTML = rows.filter(row => row.searchText.includes(needle)).map(({ index, after, highlights }) =>
+      `<tr data-preview-row="${index}">${shown.map((column, i) => {
+        const text = escapeHtml(column.key === "scanUrl" ? cellText(after, column) : description(after, column));
+        const marked = highlights.has(column.key);
+        return `<td data-column="${column.key}" class="${column.numeric ? "table-number " : ""}${marked ? "is-dirty" : ""}">
+          ${marked ? `<button type="button" class="editor-button editor-cell" data-preview-column="${i}" aria-label="${escapeHtml(column.label)}, ${text}. Сравнить значения"><span>${text}</span></button>`
+            : `<div class="editor-cell"><span>${text}</span></div>`}</td>`;
+      }).join("")}</tr>`).join("") || `<tr><td colspan="${shown.length || 1}" class="table-empty">Нет подходящих изменений усадеб.</td></tr>`;
+    wrap.scrollTo(0, 0);
+  }
+  return { styled, setRecords, render };
+}
+
+export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChanges, getHighlights, isChanged, changeRecord, changeRecords, openRecord }) {
   let query = "", city = "", sort = null, filterColumn = null, activeCell, searchTimer;
   let visibleCount = 0, recordCount = 0, lastMarkup;
   let visibleColumns = defaultColumns();
@@ -442,8 +563,11 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
       updateRowCount();
       if (focusOnClose) wrap.focus({ preventScroll: true });
     } else {
-      cell.className = cellClasses(column, getChanges(id));
-      cell.innerHTML = cellContent(getRecord(id), column);
+      const record = getRecord(id);
+      const highlights = getHighlights(record, changedOnly.checked);
+      for (const item of cell.parentElement.cells) item.classList.toggle("is-dirty", highlights?.has(item.dataset.column) || false);
+      cell.classList.remove("is-editing");
+      cell.innerHTML = cellContent(record, column);
       if (focusOnClose) cell.firstElementChild?.focus({ preventScroll: true });
     }
     lastMarkup = undefined;
@@ -472,7 +596,7 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
         changeRecord(id, key, input.value);
         const pending = getChanges(id) || {};
         input.classList.toggle("is-dirty", Object.hasOwn(pending, key));
-        cell.classList.toggle("is-dirty", keys.some(field => Object.hasOwn(pending, field)));
+        cell.classList.toggle("is-dirty", getHighlights(getRecord(id), changedOnly.checked)?.has(column.key) || false);
       };
       group.append(keys.length > 1 ? field(label, input) : input);
       return input;
@@ -499,10 +623,10 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
     if (inputs[0].tagName === "INPUT") inputs[0].select();
   }
 
-  function cellClasses(column, draft) {
+  function cellClasses(column, highlights) {
     const keys = fieldsByColumn.get(column.key);
     return [column.numeric && "table-number", keys.length && "is-editable",
-      draft && keys.some(key => Object.hasOwn(draft, key)) && "is-dirty"].filter(Boolean).join(" ");
+      highlights?.has(column.key) && "is-dirty"].filter(Boolean).join(" ");
   }
 
   function cellContent(record, column) {
@@ -587,10 +711,10 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
     const top = wrap.scrollTop, left = wrap.scrollLeft;
     const shown = columns.filter(column => visibleColumns.has(column.key));
     const markup = rows.map(record => {
-      const draft = getChanges(record.id);
-      const cells = shown.map(column => `<td data-column="${column.key}" class="${cellClasses(column, draft)}">${cellContent(record, column)}</td>`).join("");
+      const highlights = getHighlights(record, changedOnly.checked);
+      const cells = shown.map(column => `<td data-column="${column.key}" class="${cellClasses(column, highlights)}">${cellContent(record, column)}</td>`).join("");
       const mapLabel = escapeHtml(`Усадьба № ${record.num} на карте`);
-      return `<tr data-record-id="${Number(record.id)}">${cells}<td>
+      return `<tr data-record-id="${Number(record.id)}">${cells}<td data-column="map" class="${highlights?.has("map") ? "is-dirty" : ""}">
         <button type="button" class="editor-button editor-icon-button editor-quiet editor-map-link"
           aria-label="${mapLabel}" title="${mapLabel}">${mapIcon}</button></td></tr>`;
     }).join("") || emptyRows();
