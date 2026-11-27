@@ -28,3 +28,4 @@ tools/package.json
 *.log
 .DS_Store
 Thumbs.db
+data/sessions/

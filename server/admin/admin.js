@@ -1015,10 +1015,10 @@ async function resumeImport() {
     renderFileQueue();
     setView("import");
     if (b.status === "ready") showReview(b.result);
-    else if (b.status === "analyzing") {
+    else if (b.status === "analyzing" && data.importProcessor !== "browser") {
       stage("processing");
       pollBatch();
-    }
+    } else if (b.status === "analyzing") stage("upload");
   } catch {
     localStorage.removeItem("gis-import-batch");
   }
@@ -1054,15 +1054,41 @@ function stage(name) {
   );
   $("step3").classList.toggle("current", false);
 }
+function analyzeInBrowser({ batch, analysisToken }) {
+  return new Promise((resolve) => {
+    const worker = new Worker("/admin/import-worker.js?v=php-import");
+    worker.onmessage = ({ data }) => {
+      if (data.progress) {
+        $("processingText").textContent = data.progress;
+        return;
+      }
+      worker.terminate();
+      resolve(data);
+    };
+    worker.onerror = (event) => {
+      worker.terminate();
+      resolve({ error: event.message || "Не удалось запустить обработку файлов в браузере." });
+    };
+    worker.postMessage({ batch, analysisToken, csrf });
+  });
+}
+
 async function analyze() {
   stage("processing");
   $("uploadProgress").removeAttribute("value");
   try {
     await uploadPending();
-    await api("/batches/" + batchId + "/analyze", {
+    const started = await api("/batches/" + batchId + "/analyze", {
       method: "POST",
       body: JSON.stringify({ settlementName: $("importSettlement").value }),
     });
+    if (started.analysisToken) {
+      const analysis = await analyzeInBrowser(started);
+      await api("/batches/" + started.batch.id + "/analysis", {
+        method: "POST",
+        body: JSON.stringify({ analysisToken: started.analysisToken, ...analysis }),
+      });
+    }
     pollBatch();
   } catch (e) {
     stage("upload");
