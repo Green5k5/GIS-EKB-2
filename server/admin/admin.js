@@ -1,5 +1,5 @@
 import { fileKind, ignoredReason } from "./import-policy.js";
-import { createSiteEditor } from "./site-editor.js?v=bulk-table";
+import { createSiteEditor } from "./site-editor.js?v=estate-columns";
 ("use strict");
 const $ = (id) => document.getElementById(id),
   esc = (s) =>

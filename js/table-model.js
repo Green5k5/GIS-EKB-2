@@ -14,7 +14,7 @@ const EstateTable = (() => {
     ['lat', 'Широта', false, true], ['lng', 'Долгота', false, true], ['id', 'ID записи', false, true],
   ].map(([key, label, visible = false, numeric = false]) => ({ key, label, visible, numeric }));
   const collator = new Intl.Collator('ru', { sensitivity: 'base', numeric: true });
-  const normalize = value => String(value ?? '').toLocaleLowerCase('ru').replace(/ё/g, 'е').trim();
+  const normalize = value => String(value ?? '').toLowerCase().replace(/ё/g, 'е').trim();
   function value(record, key) {
     if (key === 'owner') return [record.surname, record.name, record.patronymic].filter(Boolean).join(' ');
     if (key === 'extra' || key === 'sourceData') {
@@ -46,16 +46,16 @@ const EstateTable = (() => {
   }
   function select(records, state, ignoreKey = null) {
     const query = normalize(state.query);
+    const selectionColumns = state.columns ?? columns;
     const rows = records.filter(record => {
       if (state.scope !== null && !state.scope.has(Number(record.id))) return false;
       if (state.city && record.settlement !== state.city) return false;
-      if (query && !columns.some(c => normalize(value(record, c.key)).includes(query))) return false;
       for (const [key, filter] of state.filters) if (key !== ignoreKey && !matches(record, key, filter)) return false;
-      return true;
+      return !query || selectionColumns.some(c => normalize(value(record, c.key)).includes(query));
     });
     if (state.sort) {
       const { key, direction } = state.sort;
-      const column = columns.find(c => c.key === key);
+      const column = selectionColumns.find(c => c.key === key);
       rows.sort((a, b) => {
         const av = value(a, key), bv = value(b, key);
         const an = column.numeric ? number(av) : av, bn = column.numeric ? number(bv) : bv;

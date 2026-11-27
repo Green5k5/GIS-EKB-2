@@ -1,5 +1,5 @@
 import { button, el, entryChanged, fieldChanged, formatNumber, glyph, splitLines, switchInput } from "./editor-dom.js?v=inline-2";
-import { createEstateEditor, jsonRecordFields, numericRecordFields, recordFieldLabel, recordFieldText } from "./editor-table.js?v=bulk-table";
+import { createEstateEditor, isExtraColumn, jsonRecordFields, mergeExtraColumnEdits, numericRecordFields, recordFieldLabel, recordFieldText, withExtraColumns } from "./editor-table.js?v=estate-columns";
 import { createGlossaryEditor } from "./editor-glossary.js?v=bulk-table";
 import { createMapFilterEditor, movedFilters } from "./editor-filters.js?v=bulk-table";
 
@@ -23,7 +23,7 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
   const loading = el("p", "editor-loading", "Загружаем редактор…");
   loading.setAttribute("role", "status");
   loading.style.padding = "24px";
-  const styles = ["/css/style.css?v=glossary-icons", "/css/data-workspace.css?v=6", "/admin/site-editor.css?v=bulk-table"];
+  const styles = ["/css/style.css?v=glossary-icons", "/css/data-workspace.css?v=6", "/admin/site-editor.css?v=estate-columns"];
   const styleRequests = styles.map(href => new Promise((resolve, reject) => {
     const link = el("link");
     link.rel = "stylesheet";
@@ -107,13 +107,22 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
   let section = "records", saving = false, uploads = 0, reloadNeeded = false;
   let inertBeforeExpand = [];
   const recordChanges = new Map();
+  const editedRecords = new Map();
 
   const getSnapshot = () => snapshot;
   const getRecord = id => {
-    const record = { ...recordsById.get(id), ...recordChanges.get(id) };
-    return { ...record, settlement: settlementsById.get(record.settlementId) || record.settlementId };
+    const original = recordsById.get(id);
+    const changes = recordChanges.get(id);
+    if (!changes) return original;
+    if (!editedRecords.has(id)) {
+      const record = changes.extra !== undefined || changes.sourceData !== undefined
+        ? withExtraColumns(original, changes) : { ...original, ...changes };
+      record.settlement = settlementsById.get(record.settlementId) || record.settlementId;
+      editedRecords.set(id, record);
+    }
+    return editedRecords.get(id);
   };
-  const getRecords = () => [...recordsById.keys()].map(getRecord);
+  const getRecords = () => Array.from(recordsById.keys(), getRecord);
   const table = createEstateEditor({
     getSnapshot, getRecords, getRecord,
     getChanges: id => recordChanges.get(id), changeRecord, changeRecords, openRecord,
@@ -136,9 +145,12 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
   function load(nextSnapshot, { preserveView = false } = {}) {
     table.finishCell();
     snapshot = nextSnapshot;
-    recordsById = new Map(snapshot.records.map(record => [record.id, record]));
     settlementsById = new Map(snapshot.settlements.map(item => [item.id, item.name]));
+    recordsById = new Map(snapshot.records.map(record => [record.id, withExtraColumns({
+      ...record, settlement: settlementsById.get(record.settlementId) || record.settlementId,
+    })]));
     recordChanges.clear();
+    editedRecords.clear();
     glossaryRows = draftRows(snapshot.site.glossary.map(row => ({
       ...row, icon: row.icon || "", aliases: toList(row.aliases), filterKey: row.filterKey || "",
       filterValue: row.filterKey ? toList(row.filterValue) : [],
@@ -162,12 +174,16 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
   }
 
   function stageRecordField(id, key, value) {
-    const baseline = recordFieldText(key, recordsById.get(id)[key]);
+    const original = recordsById.get(id);
     const changes = recordChanges.get(id) || {};
+    const record = isExtraColumn(key) && (changes.extra !== undefined || changes.sourceData !== undefined)
+      ? withExtraColumns(original, { extra: changes.extra, sourceData: changes.sourceData }) : original;
+    const baseline = recordFieldText(key, record[key]);
     if (value == null || value === baseline) delete changes[key];
     else changes[key] = value;
     if (Object.keys(changes).length) recordChanges.set(id, changes);
     else recordChanges.delete(id);
+    editedRecords.delete(id);
   }
 
   function changeRecord(id, key, value) {
@@ -366,7 +382,7 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
             throw editorError("records", `Усадьба № ${getRecord(id).num}. Введите число в поле «${recordFieldLabel(key)}».`);
         }
       }
-      return { id, changes };
+      return { id, changes: mergeExtraColumnEdits(changes, recordsById.get(id).extra) };
     });
     return { revision: snapshot.revision, site, ...(records.length ? { records } : {}) };
   }

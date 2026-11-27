@@ -359,7 +359,8 @@
 .editor-cell-fields .editor-input { min-height: 32px; padding: 5px 6px; border-radius: 6px; font-size: 12px; }
 .editor-cell-fields textarea { min-height: 68px; max-height: 180px; resize: vertical; }
 .editor-cell-fields .editor-field-label { font-size: 10px; }
-.editor-table-count { padding: 9px 1px; color: var(--edit-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.editor-table-pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-block: 6px; }
+.editor-table-count { flex: 1; padding: 3px 1px; color: var(--edit-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 .editor-replace {
   display: grid;
   gap: 11px;

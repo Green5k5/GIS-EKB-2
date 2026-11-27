@@ -2,7 +2,70 @@ import { button, el, field, formatNumber, glyph, searchBox, selectInput, textInp
 
 export const jsonRecordFields = ["extra", "sourceData"];
 export const numericRecordFields = ["area_sazh", "lat", "lng"];
-export const columnLabel = key => EstateTable.columns.find(column => column.key === key)?.label || key;
+const extraColumns = [
+  ["rankClass", "Ранг согласно табели", true],
+  ["spouseSurname", "Фамилия супруга"],
+  ["spouseName", "Имя супруга"],
+  ["spousePatronymic", "Отчество супруга"],
+  ["nobility", "Дворянство"],
+  ["serviceStatus", "Статус мужчины"],
+  ["awards", "Сведения о награждениях"],
+  ["institutionType", "Род институции"],
+  ["institutionName", "Название институции"],
+  ["arshin", "Аршин"],
+  ["quarter", "Четверть"],
+].map(([key, label, visible = false]) => ({ key, label, visible, numeric: false }));
+const sourceRowColumn = { key: "sourceRowNumber", label: "Порядковый номер строки в таблице", numeric: false };
+const columns = EstateTable.columns.flatMap(column => column.key === "rank" ? [column, extraColumns[0]] : [column])
+  .concat(extraColumns.slice(1), sourceRowColumn);
+const columnsByKey = new Map(columns.map(column => [column.key, column]));
+const extraByKey = new Map(extraColumns.map(column => [column.key, column.label]));
+const headerKey = label => EstateTable.normalize(label).replace(/\s+/g, " ")
+  .replace(/ \((?:если указано|действующий \/ отставной)\)$/, "");
+const rowPageSize = 100;
+const facetBatchSize = 100;
+
+function draftObject(value, original) {
+  if (typeof value !== "string") return value ?? original;
+  try {
+    return JSON.parse(value) || {};
+  } catch {
+    return original;
+  }
+}
+
+export function withExtraColumns(record, draft) {
+  const sourceData = draftObject(draft?.sourceData, record.sourceData);
+  const extraData = draftObject(draft?.extra, record.extra);
+  const source = new Map(Object.entries(sourceData || {}).map(([label, value]) => [headerKey(label), value]));
+  const extra = new Map(Object.entries(extraData || {}).map(([label, value]) => [headerKey(label), value]));
+  const fields = Object.fromEntries(extraColumns.map(({ key, label }) => {
+    const header = headerKey(label);
+    return [key, extra.get(header) ?? source.get(header) ?? ""];
+  }));
+  return { ...record, ...fields, sourceRowNumber: source.get(headerKey(sourceRowColumn.label)) ?? "", ...draft };
+}
+
+export function mergeExtraColumnEdits(changes, originalExtra) {
+  let extra;
+  for (const [key, value] of Object.entries(changes)) {
+    const label = extraByKey.get(key);
+    if (!label) continue;
+    extra ??= { ...(changes.extra ?? originalExtra) };
+    const header = headerKey(label);
+    const aliases = Object.keys(extra).filter(existing => headerKey(existing) === header);
+    const storedLabel = aliases[0] ?? label;
+    for (const alias of aliases) delete extra[alias];
+    // An empty override also clears a value present in the original workbook data.
+    extra[storedLabel] = value;
+    delete changes[key];
+  }
+  if (extra) changes.extra = extra;
+  return changes;
+}
+
+export const columnLabel = key => columnsByKey.get(key)?.label || key;
+export const isExtraColumn = key => extraByKey.has(key);
 export const recordFieldLabel = key => key === "settlementId" ? "Поселение" : columnLabel(key);
 
 export function recordFieldText(key, value) {
@@ -10,10 +73,10 @@ export function recordFieldText(key, value) {
   return String(value ?? "");
 }
 
-const defaultColumns = () => new Set(EstateTable.columns.filter(column => column.visible).map(column => column.key));
+const defaultColumns = () => new Set(columns.filter(column => column.visible).map(column => column.key));
 
 function columnFields(key) {
-  if (key === "id") return [];
+  if (key === "id" || key === sourceRowColumn.key) return [];
   if (key === "owner") return ["surname", "name", "patronymic"];
   return [key === "settlement" ? "settlementId" : key];
 }
@@ -26,11 +89,12 @@ function cellText(record, column) {
     const number = EstateTable.number(value);
     return number == null ? "—" : formatNumber(number);
   }
-  return key === "scanUrl" && value ? "Ссылка на скан" : value || "—";
+  return key === "scanUrl" && value ? "Ссылка на скан" : String(value ?? "") || "—";
 }
 
 export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChanges, changeRecord, changeRecords, openRecord }) {
   let query = "", city = "", sort = null, filterColumn = null, activeCell, searchTimer;
+  let page = 0, rows = [], recordCount = 0;
   let visibleColumns = defaultColumns();
   const filters = new Map();
   const block = el("section", "estate-table-section editor-table");
@@ -46,7 +110,7 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
   const search = searchBox("Поиск по усадьбам", "", value => {
     query = value;
     clearTimeout(searchTimer);
-    searchTimer = setTimeout(draw, 120);
+    searchTimer = setTimeout(() => { if (block.isConnected) draw(); }, 120);
   });
   const replacePanel = el("div", "editor-replace");
   replacePanel.id = "editor-replace";
@@ -104,7 +168,6 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
   table.id = "dsTable";
   const head = table.createTHead();
   const body = table.createTBody();
-  const columnsByKey = new Map(EstateTable.columns.map(column => [column.key, column]));
   body.onclick = event => {
     const control = event.target.closest(".editor-cell, .editor-map-link");
     if (!control) return;
@@ -120,10 +183,14 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
   wrap.append(table);
   const range = el("p", "editor-table-count");
   range.setAttribute("role", "status");
-  block.append(toolbar, replacePanel, filterBar, facetsPanel, wrap, range);
+  const pagination = el("div", "editor-table-pagination");
+  const previous = button("Предыдущая страница", () => changePage(-1), { icon: "left", iconOnly: true });
+  const next = button("Следующая страница", () => changePage(1), { icon: "right", iconOnly: true });
+  pagination.append(range, previous, next);
+  block.append(toolbar, replacePanel, filterBar, facetsPanel, wrap, pagination);
 
-  const selection = () => ({ scope: null, query, city, sort, filters });
-  const replaceColumns = EstateTable.columns.filter(column => !["id", "owner"].includes(column.key));
+  const selection = () => ({ scope: null, query, city, sort, filters, columns });
+  const replaceColumns = columns.filter(column => columnFields(column.key).length === 1);
   const replaceFieldsByColumn = replaceColumns.map(column => [columnFields(column.key)[0], column.label]);
   const textKeys = replaceFieldsByColumn.map(([key]) => key)
     .filter(key => key !== "settlementId" && !numericRecordFields.includes(key) && !jsonRecordFields.includes(key));
@@ -200,9 +267,10 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
     }
   }
 
-  function previewReplacement(records = getRecords(), rows = EstateTable.select(records, selection())) {
+  function previewReplacement(records = getRecords(), rows) {
     wholeLabel.hidden = columnPicker.value === "settlementId";
-    const plan = replacementPlan(records, rows);
+    const selectedRows = scopePicker.value === "selection" ? rows ?? EstateTable.select(records, selection()) : records;
+    const plan = replacementPlan(records, selectedRows);
     replaceAll.disabled = !plan.cells;
     replaceSummary.classList.toggle("is-error", Boolean(plan.error));
     replaceSummary.textContent = plan.error || (!find.value.trim() ? "Введите значение для поиска."
@@ -246,7 +314,7 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
     }
     pickerLabel.replaceChildren(glyph("table"), el("span", "", "Столбцы · " + visibleColumns.size), glyph("chevron"));
     choices.replaceChildren();
-    for (const column of EstateTable.columns) {
+    for (const column of columns) {
       const input = el("input");
       input.type = "checkbox";
       input.checked = visibleColumns.has(column.key);
@@ -275,7 +343,7 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
     const label = columnLabel(key);
     const close = () => {
       filterColumn = null;
-      draw(true);
+      updateFacetPanel();
       head.querySelector(`[data-filter-column="${key}"]`)?.focus();
     };
     header.append(el("strong", "", label), button("Закрыть фильтр", close, { icon: "close", iconOnly: true, className: "editor-quiet" }));
@@ -283,10 +351,12 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
     const apply = value => {
       if (EstateTable.active(value)) filters.set(key, value);
       else filters.delete(key);
-      close();
+      filterColumn = null;
+      draw();
+      head.querySelector(`[data-filter-column="${key}"]`)?.focus();
     };
     const reset = button("Сбросить", () => apply(null), { className: "editor-quiet" });
-    if (EstateTable.columns.find(column => column.key === key).numeric) {
+    if (columnsByKey.get(key).numeric) {
       const bounds = el("div", "editor-range-fields");
       const min = textInput("От", filters.get(key)?.min, { placeholder: "—" });
       const max = textInput("До", filters.get(key)?.max, { placeholder: "—" });
@@ -305,37 +375,70 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
       facetsPanel.append(header, bounds, footer);
       return;
     }
-    const facets = EstateTable.facets(records, state, key);
+    const facets = EstateTable.facets(records, { ...state, sort: null }, key);
     const selected = new Set(filters.get(key)?.values ?? facets.map(([value]) => value));
     const list = el("div", "editor-facet-values");
-    const renderValues = query => {
-      list.replaceChildren();
-      const needle = EstateTable.normalize(query);
-      for (const [value, count] of facets) {
-        const name = value || "(Пустые)";
-        if (!EstateTable.normalize(name).includes(needle)) continue;
+    const options = facets.map(([value, count]) => {
+      const name = value || "(Пустые)";
+      return { value, count, name, searchText: EstateTable.normalize(name) };
+    });
+    let matching = options, rendered = 0;
+    const more = button("Показать ещё значения", appendValues, { className: "editor-quiet" });
+    function appendValues() {
+      const fragment = document.createDocumentFragment();
+      const end = Math.min(rendered + facetBatchSize, matching.length);
+      for (const { value, name, count } of matching.slice(rendered, end)) {
         const input = el("input");
         input.type = "checkbox";
         input.checked = selected.has(value);
         input.onchange = () => { if (input.checked) selected.add(value); else selected.delete(value); };
         const item = el("label", "editor-facet-option");
         item.append(input, el("span", "", name), el("small", "", formatNumber(count)));
-        list.append(item);
+        fragment.append(item);
       }
-      if (!list.children.length) list.append(el("p", "editor-inline-note", "Нет подходящих значений"));
+      const firstNew = fragment.firstElementChild;
+      list.append(fragment);
+      if (rendered && firstNew) firstNew.querySelector("input").focus();
+      rendered = end;
+      more.hidden = rendered >= matching.length;
+    }
+    const renderValues = query => {
+      const needle = EstateTable.normalize(query);
+      matching = needle ? options.filter(option => option.searchText.includes(needle)) : options;
+      rendered = 0;
+      list.replaceChildren();
+      if (matching.length) appendValues();
+      else {
+        list.append(el("p", "editor-inline-note", "Нет подходящих значений"));
+        more.hidden = true;
+      }
+      list.scrollTop = 0;
     };
     const find = searchBox("Найти значение", "", renderValues);
     renderValues("");
     footer.append(reset, button("Применить", () => apply({
       values: facets.every(([value]) => selected.has(value)) ? null : selected, min: "", max: "",
     }), { className: "editor-primary" }));
-    facetsPanel.append(header, find, list, footer);
+    facetsPanel.append(header, find, list, more, footer);
+  }
+
+  function updateFacetPanel() {
+    for (const toggle of head.querySelectorAll("[data-filter-column]"))
+      toggle.setAttribute("aria-expanded", String(toggle.dataset.filterColumn === filterColumn));
+    renderFacets(filterColumn ? getRecords() : [], selection());
+  }
+
+  function closeCellOnClickOutside(event) {
+    if (event.button !== 0 || event.composedPath().includes(activeCell.cell)) return;
+    finishCell();
+    if (!replacePanel.hidden) previewReplacement();
   }
 
   function finishCell() {
     if (!activeCell) return;
     const { cell, id, column, focusOnClose } = activeCell;
     activeCell = null;
+    document.removeEventListener("pointerdown", closeCellOnClickOutside, true);
     renderCell(cell, getRecord(id), column);
     if (focusOnClose) cell.firstElementChild?.focus({ preventScroll: true });
   }
@@ -346,6 +449,7 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
     const before = getChanges(id);
     const originals = Object.fromEntries(keys.map(key => [key, before?.[key]]));
     activeCell = { cell, id, column };
+    document.addEventListener("pointerdown", closeCellOnClickOutside, true);
     cell.classList.add("is-editing");
     const group = el("div", "editor-cell-fields");
     const inputs = keys.map(key => {
@@ -368,7 +472,7 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
       return input;
     });
     group.onfocusout = event => {
-      if (group.contains(event.relatedTarget)) return;
+      if (activeCell?.cell !== cell || group.contains(event.relatedTarget)) return;
       finishCell();
       if (!replacePanel.hidden) previewReplacement();
     };
@@ -409,14 +513,14 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
   function draw(keepRowPosition = false) {
     clearTimeout(searchTimer);
     finishCell();
-    const top = wrap.scrollTop, left = wrap.scrollLeft;
     const records = getRecords();
-    const activeFilters = getSnapshot().site.tableFilters;
-    for (const key of filters.keys()) if (!activeFilters.includes(key)) filters.delete(key);
-    if (filterColumn && !activeFilters.includes(filterColumn)) filterColumn = null;
+    const enabled = new Set([...getSnapshot().site.tableFilters, ...extraByKey.keys(), sourceRowColumn.key]);
+    for (const key of filters.keys()) if (!enabled.has(key)) filters.delete(key);
+    if (filterColumn && !enabled.has(filterColumn)) filterColumn = null;
     const state = selection();
-    const rows = EstateTable.select(records, state);
-    const shown = EstateTable.columns.filter(column => visibleColumns.has(column.key));
+    rows = EstateTable.select(records, state);
+    recordCount = records.length;
+    if (!keepRowPosition) page = 0;
     if (!replacePanel.hidden) previewReplacement(records, rows);
     renderFacets(records, state);
     filterBar.replaceChildren();
@@ -432,7 +536,7 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
     filterBar.hidden = !filters.size;
     head.replaceChildren();
     const header = head.insertRow();
-    for (const column of shown) {
+    for (const column of columns.filter(column => visibleColumns.has(column.key))) {
       const { key, label } = column;
       const th = el("th");
       th.dataset.column = key;
@@ -448,10 +552,10 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
       sortButton.dataset.sortColumn = key;
       sortButton.title = "Сортировать по столбцу «" + label + "»";
       group.append(sortButton);
-      if (activeFilters.includes(key)) {
+      if (enabled.has(key)) {
         const toggle = button("Фильтр: " + label, () => {
           filterColumn = filterColumn === key ? null : key;
-          draw(true);
+          updateFacetPanel();
           if (filterColumn) facetsPanel.querySelector("input")?.focus();
           else head.querySelector(`[data-filter-column="${key}"]`)?.focus();
         }, { icon: "filter", iconOnly: true, className: "table-filter-button" + (filters.has(key) ? " is-filtered" : "") });
@@ -465,8 +569,26 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
     const mapHeading = el("th", "", "Карта");
     mapHeading.scope = "col";
     header.append(mapHeading);
+    renderRows(keepRowPosition);
+  }
+
+  function changePage(delta) {
+    finishCell();
+    page += delta;
+    renderRows(false);
+    const control = delta < 0 ? previous : next;
+    if (control.disabled) (delta < 0 ? next : previous).focus();
+  }
+
+  function renderRows(keepRowPosition) {
+    const top = wrap.scrollTop, left = wrap.scrollLeft;
+    const shown = columns.filter(column => visibleColumns.has(column.key));
+    const lastPage = Math.max(0, Math.ceil(rows.length / rowPageSize) - 1);
+    page = Math.min(Math.max(page, 0), lastPage);
+    const start = page * rowPageSize, end = Math.min(start + rowPageSize, rows.length);
     const results = document.createDocumentFragment();
-    for (const record of rows) {
+    for (const { id } of rows.slice(start, end)) {
+      const record = getRecord(id);
       const row = el("tr");
       row.dataset.recordId = record.id;
       for (const column of shown) renderCell(row.insertCell(), record, column);
@@ -480,12 +602,16 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
       const empty = row.insertCell();
       empty.colSpan = shown.length + 1;
       empty.className = "table-empty";
-      empty.textContent = records.length ? "По этим условиям ничего не найдено." : "В таблице пока нет усадеб.";
+      empty.textContent = recordCount ? "По этим условиям ничего не найдено." : "В таблице пока нет усадеб.";
       results.append(row);
     }
     body.replaceChildren(results);
-    range.textContent = rows.length === records.length ? `Усадеб: ${formatNumber(records.length)}`
-      : `Найдено: ${formatNumber(rows.length)} из ${formatNumber(records.length)}`;
+    const total = rows.length === recordCount ? `Усадеб: ${formatNumber(recordCount)}`
+      : `Найдено: ${formatNumber(rows.length)} из ${formatNumber(recordCount)}`;
+    range.textContent = lastPage ? `${total} · Строки ${formatNumber(start + 1)}–${formatNumber(end)}` : total;
+    previous.hidden = next.hidden = !lastPage;
+    previous.disabled = page === 0;
+    next.disabled = page === lastPage;
     wrap.scrollTo(left, keepRowPosition ? top : 0);
   }
 
@@ -499,6 +625,7 @@ export function createEstateEditor({ getSnapshot, getRecords, getRecord, getChan
       query = city = "";
       search.querySelector("input").value = "";
       sort = filterColumn = null;
+      page = 0;
       filters.clear();
       visibleColumns = defaultColumns();
       picker.open = false;
