@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Мастерская карты — ГИС Екатеринбург</title>
-    <link rel="stylesheet" href="/admin/admin.css?v=inline-2" />
+    <link rel="stylesheet" href="/admin/admin.css?v=import-preview" />
   </head>
   <body>
     <section id="login" class="login-screen">
@@ -315,6 +315,16 @@
                 Добавить в коллекцию →
               </button>
             </div>
+            <section id="reviewChanges" class="review-plan-section" aria-labelledby="reviewChangesTitle" hidden>
+              <h3 id="reviewChangesTitle">Предпросмотр изменений усадеб</h3>
+              <p id="reviewChangesSummary" class="muted" role="status"></p>
+              <div id="reviewConflictOptions" hidden>
+                <label class="check-label"><input type="checkbox" id="overwriteEdits" /> Обновить усадьбы с ручными правками</label>
+              </div>
+              <button id="retryReviewChanges" class="secondary" type="button" hidden>Повторить проверку изменений</button>
+              <input id="reviewChangesSearch" type="search" aria-label="Поиск по номеру усадьбы или поселению" placeholder="Номер усадьбы или поселение" hidden />
+              <div id="reviewChangesList" class="review-changes-list"></div>
+            </section>
             <div class="review-plan-section">
               <div class="plan-review-heading">
                 <div>
@@ -340,23 +350,9 @@
               <aside class="review-details">
                 <h3>Что мы нашли</h3>
                 <div id="reviewSummary"></div>
-                <label class="check-label"
-                  ><input type="checkbox" id="replaceScope" /> Заменить набор
-                  этих поселений</label
-                >
                 <p class="muted small-text">
-                  Без этой отметки существующие усадьбы сохранятся, совпадающие
-                  номера обновятся.
+                  При импорте заполняются поля из набора. Существующие усадьбы и контуры сохраняются.
                 </p>
-                <div id="conflictOptions" hidden>
-                  <label class="check-label"
-                    ><input type="checkbox" id="overwriteEdits" /> Перезаписать
-                    ручные правки</label
-                  >
-                  <p class="muted small-text">
-                    По умолчанию правки в мастерской сохраняются.
-                  </p>
-                </div>
                 <h3>На что обратить внимание</h3>
                 <div id="reviewWarnings"></div>
               </aside>
@@ -462,6 +458,6 @@
     <script src="/js/layers.js?v=20261108-confluences"></script>
     <script src="/js/table-model.js?v=4"></script>
     <script src="/js/glossary-icons.js?v=1"></script>
-    <script type="module" src="/admin/admin.js?v=estate-columns"></script>
+    <script type="module" src="/admin/admin.js?v=import-preview"></script>
   </body>
 </html>

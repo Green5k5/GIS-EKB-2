@@ -106,7 +106,10 @@ export function searchBox(label, value, onInput) {
   return box;
 }
 
-export const formatNumber = value => value.toLocaleString("ru", { maximumFractionDigits: 2 });
+const numberFormat = new Intl.NumberFormat("ru", { maximumFractionDigits: 2 });
+export const formatNumber = value => numberFormat.format(value);
+const htmlEntities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+export const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, character => htmlEntities[character]);
 export const splitLines = value => [...new Set(String(value || "").split("\n").map(line => line.trim()).filter(Boolean))];
 
 export function emptyState(text) {

@@ -1,19 +1,9 @@
 import { fileKind, ignoredReason } from "./import-policy.js";
-import { createSiteEditor } from "./site-editor.js?v=estate-columns";
+import { createSiteEditor } from "./site-editor.js?v=import-preview";
+import { recordFieldLabel } from "./editor-table.js?v=import-preview";
+import { escapeHtml as esc } from "./editor-dom.js?v=import-preview";
 ("use strict");
-const $ = (id) => document.getElementById(id),
-  esc = (s) =>
-    String(s ?? "").replace(
-      /[&<>"']/g,
-      (c) =>
-        ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;",
-        })[c],
-    );
+const $ = (id) => document.getElementById(id);
 const HISTORY_ICON = '<svg class="admin-icon" width="22" height="22" aria-hidden="true" focusable="false"><use href="/assets/admin-icons.svg?v=1#history" width="100%" height="100%"></use></svg>';
 const ROOT = "/api/admin/workspace";
 // Legacy plans have paths relative to the site root, not to /admin/.
@@ -44,6 +34,8 @@ let csrf = "",
 let ignoredFiles = [],
   uploading = false,
   reviewResult = null,
+  reviewChanges = [],
+  reviewChangesRequest = 0,
   planSelection = new Set();
 function toast(message, error = false) {
   $("toast").textContent = message;
@@ -1137,13 +1129,13 @@ function showReview(r) {
     " · " +
     r.summary.records +
     " усадьбы";
-  $("joinDescription").textContent = r.joinDescription;
+  $("joinDescription").textContent = r.plots.length
+    ? r.joinDescription : "В загруженных файлах нет новых контуров.";
   $("reviewSummary").innerHTML = [
     ["Записей в таблице", r.summary.records],
-    ["Усадеб с контуром", r.summary.plots],
+    ["Контуров в наборе", r.summary.plots],
     ["Исторических планов", r.summary.overlays],
     ["Планов выбрано", planSelection.size],
-    ["Без контура", r.summary.unmatched],
   ]
     .map(
       ([k, v]) =>
@@ -1158,9 +1150,12 @@ function showReview(r) {
         )
         .join("")
     : '<p class="muted small-text">Всё сошлось. Все усадьбы нашли своё место.</p>';
-  $("conflictOptions").hidden = !r.conflicts?.length;
+  $("reviewChanges").hidden = data.importProcessor !== "browser";
+  $("reviewConflictOptions").hidden = !r.conflicts?.length;
   $("overwriteEdits").checked = false;
-  $("replaceScope").checked = false;
+  $("reviewChangesSearch").value = "";
+  $("applyButton").disabled = false;
+  if (!$("reviewChanges").hidden) loadReviewChanges();
   if (!reviewMap) {
     reviewMap = createMap("reviewMap");
     reviewFeatures = new Kartograf.FeatureLayer();
@@ -1207,10 +1202,80 @@ function showReview(r) {
       toast(
         "У усадьбы " +
           button.dataset.warning +
-          " нет контура. Укажите место после добавления набора.",
+        " нет нового контура в загруженных файлах.",
       );
   };
 }
+async function loadReviewChanges() {
+  const request = ++reviewChangesRequest;
+  const id = batchId;
+  $("applyButton").disabled = true;
+  $("reviewChangesSummary").textContent = "Сравниваем с рабочей базой…";
+  $("reviewChangesList").replaceChildren();
+  $("reviewChangesSearch").hidden = $("retryReviewChanges").hidden = true;
+  try {
+    const { counts, records } = await api(`/batches/${id}/changes?overwrite=${Number($("overwriteEdits").checked)}`);
+    if (request !== reviewChangesRequest || id !== batchId) return;
+    const format = new Intl.NumberFormat("ru");
+    $("reviewChangesSummary").textContent = [
+      `Добавится: ${format.format(counts.created)}`,
+      `Обновится: ${format.format(counts.updated)}`,
+      `Без изменений: ${format.format(counts.unchanged)}`,
+      ...(counts.kept ? [`С ручными правками: ${format.format(counts.kept)}`] : []),
+    ].join(" · ");
+    const settlements = new Map(reviewResult.settlements.map(item => [item.id, item.name]));
+    reviewChanges = records.map(record => ({
+      ...record,
+      label: `№ ${record.num} · ${settlements.get(record.settlementId) || record.settlementId}`,
+    }));
+    renderReviewChanges();
+    $("reviewChangesSearch").hidden = !records.length;
+    $("applyButton").disabled = false;
+  } catch (error) {
+    if (request !== reviewChangesRequest || id !== batchId) return;
+    $("reviewChangesSummary").textContent = error.message;
+    $("retryReviewChanges").hidden = false;
+  }
+}
+function renderReviewChanges() {
+  const query = EstateTable.normalize($("reviewChangesSearch").value);
+  const matches = reviewChanges.map((record, index) => ({ record, index }))
+    .filter(({ record }) => EstateTable.normalize(record.label).includes(query));
+  $("reviewChangesList").innerHTML = matches.map(({ record, index }) => `
+    <details data-review-change="${index}">
+      <summary>${esc(record.label)} <span>${record.status === "created" ? "Добавление" : "Обновление"}</span></summary>
+    </details>`).join("") || '<p class="muted">Нет подходящих изменений усадеб.</p>';
+}
+const importChangeLabels = { geometry: "Контур", sourceKey: "Номер строки в источнике", issues: "Предупреждения" };
+function reviewValue(value) {
+  if (value == null || value === "" || (Array.isArray(value) && !value.length)) return "—";
+  if (Array.isArray(value)) return value.join(" · ");
+  return typeof value === "object" ? JSON.stringify(value) : String(value);
+}
+function reviewChangeTable(changes) {
+  const rows = changes.map(([field, header, before, after]) => {
+    const label = importChangeLabels[field] || recordFieldLabel(field);
+    return `<tr><th scope="row">${esc(header ? `${label} · ${header}` : label)}</th>
+      <td>${esc(reviewValue(before))}</td><td>${esc(reviewValue(after))}</td></tr>`;
+  }).join("");
+  return `<div class="review-change-table"><table><thead><tr><th>Поле</th><th>Было</th><th>Станет</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+$("reviewChangesList").addEventListener("toggle", ({ target }) => {
+  if (!target.open || target.children.length !== 1 || target.dataset.reviewChange === undefined) return;
+  const { changes } = reviewChanges[Number(target.dataset.reviewChange)];
+  const fields = changes.filter(([field]) => field !== "sourceData");
+  const source = changes.filter(([field]) => field === "sourceData");
+  if (!changes.length) {
+    target.insertAdjacentHTML("beforeend", '<p class="muted">Усадьба будет возвращена в рабочую коллекцию.</p>');
+    return;
+  }
+  if (fields.length) target.insertAdjacentHTML("beforeend", reviewChangeTable(fields));
+  if (source.length) target.insertAdjacentHTML("beforeend", `<details><summary>Исходные столбцы из файла</summary>${reviewChangeTable(source)}</details>`);
+}, true);
+$("reviewChangesSearch").oninput = renderReviewChanges;
+$("overwriteEdits").onchange = loadReviewChanges;
+$("retryReviewChanges").onclick = loadReviewChanges;
+
 function renderReviewPlanList() {
   if (!reviewResult) return;
   if ($("selectedPlanCount"))
@@ -1447,7 +1512,7 @@ $("applyButton").onclick = action(async () => {
   const result = await api("/batches/" + batchId + "/apply", {
     method: "POST",
     body: JSON.stringify({
-      mode: $("replaceScope").checked ? "replace" : "merge",
+      mode: "merge",
       overwrite: $("overwriteEdits").checked,
       planIds: [...planSelection],
     }),

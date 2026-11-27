@@ -1,5 +1,5 @@
-import { button, el, entryChanged, fieldChanged, formatNumber, glyph, splitLines, switchInput } from "./editor-dom.js?v=inline-2";
-import { createEstateEditor, isExtraColumn, jsonRecordFields, mergeExtraColumnEdits, numericRecordFields, recordFieldLabel, recordFieldText, withExtraColumns } from "./editor-table.js?v=estate-columns";
+import { button, el, entryChanged, fieldChanged, formatNumber, glyph, splitLines, switchInput } from "./editor-dom.js?v=import-preview";
+import { createEstateEditor, isExtraColumn, jsonRecordFields, mergeExtraColumnEdits, numericRecordFields, recordFieldLabel, recordFieldText, withExtraColumns } from "./editor-table.js?v=import-preview";
 import { createGlossaryEditor } from "./editor-glossary.js?v=bulk-table";
 import { createMapFilterEditor, movedFilters } from "./editor-filters.js?v=bulk-table";
 
@@ -23,7 +23,7 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
   const loading = el("p", "editor-loading", "Загружаем редактор…");
   loading.setAttribute("role", "status");
   loading.style.padding = "24px";
-  const styles = ["/css/style.css?v=glossary-icons", "/css/data-workspace.css?v=6", "/admin/site-editor.css?v=estate-columns"];
+  const styles = ["/css/style.css?v=glossary-icons", "/css/data-workspace.css?v=6", "/admin/site-editor.css?v=import-preview"];
   const styleRequests = styles.map(href => new Promise((resolve, reject) => {
     const link = el("link");
     link.rel = "stylesheet";
@@ -103,7 +103,7 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
   });
 
   let snapshot, glossaryRows, filterRows, area, tableFilters, publishedTableFilters;
-  let recordsById, settlementsById;
+  let recordsById, settlementsById, draftRecordIds;
   let section = "records", saving = false, uploads = 0, reloadNeeded = false;
   let inertBeforeExpand = [];
   const recordChanges = new Map();
@@ -125,7 +125,8 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
   const getRecords = () => Array.from(recordsById.keys(), getRecord);
   const table = createEstateEditor({
     getSnapshot, getRecords, getRecord,
-    getChanges: id => recordChanges.get(id), changeRecord, changeRecords, openRecord,
+    getChanges: id => recordChanges.get(id), isChanged: id => recordChanges.has(id) || draftRecordIds.has(id),
+    changeRecord, changeRecords, openRecord,
   });
   const glossary = createGlossaryEditor({
     getSnapshot, getRows: () => glossaryRows,
@@ -150,6 +151,7 @@ export function createSiteEditor(root, { api, refresh, toast, openRecord }) {
       ...record, settlement: settlementsById.get(record.settlementId) || record.settlementId,
     })]));
     recordChanges.clear();
+    draftRecordIds = new Set(snapshot.changedRecordIds || []);
     editedRecords.clear();
     glossaryRows = draftRows(snapshot.site.glossary.map(row => ({
       ...row, icon: row.icon || "", aliases: toList(row.aliases), filterKey: row.filterKey || "",

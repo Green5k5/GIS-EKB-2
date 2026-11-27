@@ -201,8 +201,53 @@ function backup(): string
 {
     $filename = gmdate('Y-m-d\TH-i-s') . '-' . bin2hex(random_bytes(6)) . '.sqlite';
     $path = directory(dataPath('backups')) . '/' . $filename;
-    db()->exec('VACUUM INTO ' . db()->quote($path));
+    $temporary = $path . '.tmp';
+    try {
+        $version = (string) db()->query('SELECT sqlite_version()')->fetchColumn();
+        if (version_compare($version, '3.27.0', '>=')) {
+            db()->exec('VACUUM INTO ' . db()->quote($temporary));
+        } else {
+            copyLegacyDatabase($temporary);
+        }
+        if (!rename($temporary, $path)) throw new RuntimeException('Не удалось сохранить резервную копию SQLite.');
+    } finally {
+        if (is_file($temporary)) unlink($temporary);
+    }
     return $filename;
+}
+
+function copyLegacyDatabase(string $destination): void
+{
+    query('ATTACH DATABASE ? AS backup', [$destination]);
+    try {
+        db()->exec('PRAGMA foreign_keys=OFF');
+        transaction(static function () {
+            // Tables precede indexes, views and triggers so inserts only copy data.
+            $schema = all("SELECT type,name,sql FROM main.sqlite_master WHERE sql IS NOT NULL
+                AND name NOT GLOB 'sqlite_*' ORDER BY CASE type WHEN 'table' THEN 0 ELSE 1 END,rowid");
+            foreach ($schema as $object) {
+                $sql = preg_replace('~\ACREATE (?:UNIQUE )?(?:TABLE|INDEX|VIEW|TRIGGER) (?:IF NOT EXISTS )?~i',
+                    '$0backup.', $object['sql'], 1, $matched);
+                if (!$matched) throw new RuntimeException('Не удалось скопировать схему SQLite: ' . $object['name']);
+                db()->exec($sql);
+                if ($object['type'] === 'table') {
+                    $name = '"' . str_replace('"', '""', $object['name']) . '"';
+                    db()->exec("INSERT INTO backup.$name SELECT * FROM main.$name");
+                }
+            }
+            if (one("SELECT 1 FROM main.sqlite_master WHERE name='sqlite_sequence'")) {
+                db()->exec('DELETE FROM backup.sqlite_sequence');
+                db()->exec('INSERT INTO backup.sqlite_sequence SELECT * FROM main.sqlite_sequence');
+            }
+            foreach (['user_version', 'application_id'] as $pragma) {
+                $value = (int) db()->query("PRAGMA main.$pragma")->fetchColumn();
+                db()->exec("PRAGMA backup.$pragma=$value");
+            }
+        });
+    } finally {
+        db()->exec('PRAGMA foreign_keys=ON');
+        db()->exec('DETACH DATABASE backup');
+    }
 }
 
 function saveSiteContent(string $key, mixed $value): void

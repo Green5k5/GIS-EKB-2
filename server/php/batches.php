@@ -251,7 +251,9 @@ function saveAnalysis(array &$batch, array $body): void
             if (!is_string($row['num'] ?? null) || !isset($settlements[$row['settlementId'] ?? ''])) {
                 throw new InvalidArgumentException('Номер или поселение не найдены.');
             }
-            $records[$row['settlementId'] . ':' . $row['num']] = true;
+            $key = $row['settlementId'] . ':' . $row['num'];
+            if (isset($records[$key])) throw new InvalidArgumentException('В предпросмотре повторяется номер усадьбы в одном поселении.');
+            $records[$key] = true;
         }
         foreach ($result['plots'] as $plot) {
             if (empty($records[$plot['recordKey'] ?? ''])) throw new InvalidArgumentException('Контур не связан с усадьбой.');
@@ -278,48 +280,115 @@ function saveAnalysis(array &$batch, array $body): void
     storeBatch($batch);
 }
 
-function applyBatch(array &$batch, array $options): array
+function checkBatchRevision(array $batch): void
 {
     if ($batch['status'] !== 'ready') throw new InvalidArgumentException('Дождитесь проверки файлов.');
-    if ($batch['baseRevision'] !== revision()) fail('Данные изменились после проверки. Загрузите набор заново.', 409);
+    if ($batch['baseRevision'] !== revision()) fail('Данные изменились после проверки. Запустите проверку набора заново.', 409);
+}
+
+function hasImportValue(mixed $value): bool
+{
+    return $value !== null && $value !== [] && (!is_string($value) || preg_match('~\S~u', $value) === 1);
+}
+
+function batchRecordPlan(array $data, bool $overwrite): Generator
+{
+    $current = [];
+    foreach (all("SELECT r.*, p.geometry_json AS import_geometry FROM records r
+        LEFT JOIN plots p ON p.id=r.plot_id AND p.status='active' ORDER BY r.status<>'active',r.id") as $row) {
+        $current[$row['settlement_id'] . ':' . $row['num']] ??= $row;
+    }
+    $plots = array_column($data['plots'], 'geometry', 'recordKey');
+    $fields = array_diff(array_keys(RECORD_FIELDS), ['localEdit','plotId','lat','lng','issues']);
+    foreach ($data['records'] as $incoming) {
+        $key = $incoming['settlementId'] . ':' . $incoming['num'];
+        $old = $current[$key] ?? null;
+        $geometry = $plots[$key] ?? null;
+        $previous = $old ? record($old) : [];
+        $row = $previous;
+        $changes = [];
+        foreach ($fields as $field) {
+            $value = $incoming[$field] ?? null;
+            $before = $previous[$field] ?? null;
+            if (!hasImportValue($value)) continue;
+            if ($field === 'sex' && $value === 'Не определено' && hasImportValue($before)) continue;
+            if ($field === 'sourceKey' && $value === $incoming['num'] && hasImportValue($before) &&
+                !isset($incoming['sourceData']['Порядковый номер строки в таблице'])) continue;
+            if (in_array($field, ['extra','sourceData'], true)) {
+                $merged = (array) $before;
+                foreach (array_filter((array) $value, 'hasImportValue') as $header => $entry) {
+                    $prior = $merged[$header] ?? null;
+                    if ($prior === $entry) continue;
+                    $changes[] = [$field, (string) $header, $prior, $entry];
+                    $merged[$header] = $entry;
+                }
+                $row[$field] = $merged;
+            } elseif ($field === 'area_sazh' ? ($before === null || (float) $value !== (float) $before) : $value !== $before) {
+                $changes[] = [$field, null, $before, $value];
+                $row[$field] = $value;
+            }
+        }
+        if ($geometry && ($old['import_geometry'] ?? null) !== null &&
+            $geometry == decode($old['import_geometry'])) $geometry = null;
+        if ($geometry) $changes[] = ['geometry', null, isset($old['import_geometry']) ? 'Есть контур' : null, 'Новый контур'];
+        $changedFields = array_fill_keys(array_column($changes, 0), true);
+        $issues = array_values(array_filter($previous['issues'] ?? [], static fn($issue) => !isset($changedFields[$issue['field'] ?? ''])));
+        foreach ($incoming['issues'] ?? [] as $issue) {
+            if (!in_array($issue, $issues, true)) $issues[] = $issue;
+        }
+        if ($issues !== ($previous['issues'] ?? [])) {
+            $changes[] = ['issues', null, array_column($previous['issues'] ?? [], 'message'), array_column($issues, 'message')];
+        }
+        $row['issues'] = $issues;
+        $status = ($old['status'] ?? '') === 'active' ? ($changes ? 'updated' : 'unchanged') : 'created';
+        if ($status === 'updated' && $old['local_edit'] && !$overwrite) $status = 'kept';
+        yield [$status, $old['id'] ?? null, $row, $geometry, $changes];
+    }
+}
+
+function previewBatchChanges(array $batch, bool $overwrite): array
+{
+    return transaction(static function () use ($batch, $overwrite) {
+        checkBatchRevision($batch);
+        $counts = ['created'=>0, 'updated'=>0, 'kept'=>0, 'unchanged'=>0];
+        $records = [];
+        foreach (batchRecordPlan($batch['result'], $overwrite) as [$status, $id, $row, $geometry, $changes]) {
+            $counts[$status]++;
+            if (in_array($status, ['created','updated'], true)) {
+                $records[] = ['status'=>$status, 'num'=>$row['num'], 'settlementId'=>$row['settlementId'], 'changes'=>$changes];
+            }
+        }
+        return ['counts'=>$counts, 'records'=>$records];
+    });
+}
+
+function applyBatch(array &$batch, array $options): array
+{
+    checkBatchRevision($batch);
     $copy = backup();
     $data = $batch['result'];
     $out = transaction(function () use ($batch, $data, $options) {
-        if ($batch['baseRevision'] !== revision()) fail('Данные изменились после проверки. Загрузите набор заново.', 409);
+        checkBatchRevision($batch);
+        $counts = ['created'=>0, 'updated'=>0, 'kept'=>0, 'unchanged'=>0];
+        $records = batchRecordPlan($data, !empty($options['overwrite']));
         foreach ($data['settlements'] as $s) {
             query('INSERT INTO settlements(id,slug,name,color,bounds_json,active) VALUES(?,?,?,?,?,1)
-                ON CONFLICT(id) DO UPDATE SET name=excluded.name,bounds_json=excluded.bounds_json,active=1',
-                [$s['id'], $s['id'], $s['name'], $s['color'], encode($s['bounds'])]);
-            if (($options['mode'] ?? '') === 'replace') {
-                $present = array_fill_keys(array_column(array_filter($data['records'],
-                    static fn($r) => $r['settlementId'] === $s['id']), 'num'), true);
-                foreach (all("SELECT id,num,local_edit FROM records WHERE settlement_id=? AND status='active'", [$s['id']]) as $row) {
-                    if (!isset($present[$row['num']]) && (!$row['local_edit'] || !empty($options['overwrite']))) {
-                        query("UPDATE records SET status='archived' WHERE id=?", [$row['id']]);
-                    }
-                }
-            }
-            query('DELETE FROM workspace_warnings WHERE settlement_id=?', [$s['id']]);
+                ON CONFLICT(id) DO UPDATE SET name=excluded.name,
+                bounds_json=COALESCE(excluded.bounds_json,settlements.bounds_json),active=1',
+                [$s['id'], $s['id'], $s['name'], $s['color'], isset($s['bounds']) ? encode($s['bounds']) : null]);
         }
-        $counts = ['created'=>0, 'updated'=>0, 'kept'=>0];
-        $plots = array_column($data['plots'], 'geometry', 'recordKey');
-        foreach ($data['records'] as $row) {
-            $old = one("SELECT * FROM records WHERE settlement_id=? AND num=?
-                ORDER BY CASE status WHEN 'active' THEN 0 ELSE 1 END,id LIMIT 1", [$row['settlementId'], $row['num']]);
-            if (($old['status'] ?? '') === 'active' && $old['local_edit'] && empty($options['overwrite'])) {
-                $counts['kept']++;
-                continue;
-            }
-            unset($row['plotId']);
-            $geometry = $plots[$row['settlementId'] . ':' . $row['num']] ?? null;
+        foreach ($records as [$status, $id, $row, $geometry]) {
+            $counts[$status]++;
+            if (!in_array($status, ['created','updated'], true)) continue;
             if ($geometry) $row = placePlot($row, $geometry);
-            saveRecord($row, $old['id'] ?? null, false);
-            $counts[$old ? 'updated' : 'created']++;
+            saveRecord($row, $id, false);
         }
         foreach ($data['warnings'] as $warning) {
             if (($warning['severity'] ?? '') === 'warning' && empty($warning['recordNum'])) {
-                query('INSERT INTO workspace_warnings(settlement_id,batch_id,message) VALUES(?,?,?)',
-                    [$data['settlements'][0]['id'] ?? null, $batch['id'], $warning['message']]);
+                $settlement = $data['settlements'][0]['id'] ?? null;
+                query('INSERT INTO workspace_warnings(settlement_id,batch_id,message)
+                    SELECT ?,?,? WHERE NOT EXISTS (SELECT 1 FROM workspace_warnings WHERE settlement_id IS ? AND message=?)',
+                    [$settlement, $batch['id'], $warning['message'], $settlement, $warning['message']]);
             }
         }
         $defaults = array_column(array_filter($data['overlays'], static fn($o) => $o['included'] ?? true), 'sourceFileId');

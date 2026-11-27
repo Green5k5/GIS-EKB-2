@@ -5,14 +5,46 @@ function currentWorkspace(): array
 {
     $current = snapshot();
     $latest = one('SELECT snapshot_json FROM releases ORDER BY id DESC LIMIT 1');
+    $published = $latest ? decode($latest['snapshot_json']) : [];
+    $draft = decode(encode($current));
+    $publishedRecords = array_column($published['records'] ?? [], null, 'id');
+    $publishedPlots = array_column($published['plots'] ?? [], null, 'id');
+    $draftPlots = array_column($draft['plots'], null, 'id');
+    $changedRecordIds = [];
+    foreach ($draft['records'] as $row) {
+        $previous = $publishedRecords[$row['id']] ?? [];
+        $plotId = $row['plotId'];
+        $changedGeometry = $plotId !== null &&
+            ($draftPlots[$plotId]['geometry'] ?? null) != ($publishedPlots[$plotId]['geometry'] ?? null);
+        if ($changedGeometry || hasUnpublishedRecordChanges($row, $previous)) {
+            $changedRecordIds[] = $row['id'];
+        }
+    }
     return [
         ...$current,
-        'hasChanges'=>!$latest || decode($latest['snapshot_json']) != decode(encode($current)),
+        'hasChanges'=>!$latest || $published != $draft,
+        'changedRecordIds'=>$changedRecordIds,
         'revision'=>revision(),
         'site'=>siteConfiguration($current),
         'releases'=>all('SELECT id,created_at AS createdAt,note FROM releases ORDER BY id DESC LIMIT 30'),
         'importProcessor'=>'browser',
     ];
+}
+
+function hasUnpublishedRecordChanges(array $row, array $previous): bool
+{
+    if (!$previous) return true;
+    foreach ($row as $field => $value) {
+        if ($field === 'localEdit') continue;
+        $old = $previous[$field] ?? null;
+        if ($old === null && ($value === '' || $value === [])) continue;
+        if (in_array($field, NUMBER_FIELDS, true) && $value !== null && $old !== null) {
+            if ((float) $old !== (float) $value) return true;
+        } elseif ($value !== $old) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function saveEditorChanges(string $route): void
@@ -49,6 +81,7 @@ function batchOperation(string $id, string $action, string $file, string $method
             sendFile($path, MIME[extension($path)] ?? 'application/octet-stream', 'private, no-store', true);
         }
         if ($action === '') respond(batchInfo($batch));
+        if ($action === 'changes' && !$file) respond(previewBatchChanges($batch, ($_GET['overwrite'] ?? '') === '1'));
         fail('Действие не найдено.', 404);
     }
     [$result, $status] = editBatch($id, function (array $batch) use ($id, $action, $file, $method) {
